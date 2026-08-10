@@ -24,8 +24,8 @@ function scrollTop() {
 
 function renderRound() {
   const sample = rounds[roundIndex];
-  elements.round.textContent = `ROUND ${String(roundIndex + 1).padStart(2, "0")} / ${TOTAL_ROUNDS}`;
-  elements.sample.textContent = `SAMPLE ${String(roundIndex + 1).padStart(2, "0")}`;
+  elements.round.textContent = `${roundIndex + 1} / ${TOTAL_ROUNDS}번째 과일`;
+  elements.sample.textContent = `과일 ${String(roundIndex + 1).padStart(2, "0")}`;
   elements.progress.style.width = `${((roundIndex + 1) / TOTAL_ROUNDS) * 100}%`;
   elements.color.textContent = sample.color;
   elements.texture.textContent = sample.texture;
@@ -52,9 +52,9 @@ function predict(prediction) {
   elements.result.hidden = false;
   elements.feedback.classList.add(correct ? "correct" : "incorrect");
   elements.mark.textContent = correct ? "O" : "X";
-  elements.title.textContent = correct ? "예측이 일치했습니다." : "예측이 일치하지 않았습니다.";
-  elements.copy.innerHTML = `실제 분류는 <strong>${answer}</strong>입니다. 이전 데이터와 비교해 가설을 수정해 보세요.`;
-  elements.next.innerHTML = roundIndex === TOTAL_ROUNDS - 1 ? "결과 보기 <span aria-hidden=\"true\">→</span>" : "다음 샘플 <span aria-hidden=\"true\">→</span>";
+  elements.title.textContent = correct ? "맞았습니다." : "정답과 달랐습니다.";
+  elements.copy.innerHTML = `실제 정답은 <strong>${answer}</strong>입니다. 지난 기록과 비교해 내 생각을 다시 확인해 보세요.`;
+  elements.next.innerHTML = roundIndex === TOTAL_ROUNDS - 1 ? "결과 보기 <span aria-hidden=\"true\">→</span>" : "다음 과일 <span aria-hidden=\"true\">→</span>";
   updateScore();
   renderLog();
   elements.next.focus();
@@ -93,10 +93,10 @@ function filteredAttempts() {
 function renderLog() {
   const visible = filteredAttempts();
   if (!visible.length) {
-    elements.logBody.innerHTML = `<tr class="empty-row"><td colspan="7">${attempts.length ? "이 조건에 해당하는 기록이 없습니다." : "첫 예측을 제출하면 데이터가 기록됩니다."}</td></tr>`;
+    elements.logBody.innerHTML = `<tr class="empty-row"><td colspan="6">${attempts.length ? "이 조건에 맞는 기록이 없습니다." : "첫 번째 과일을 선택하면 기록이 나타납니다."}</td></tr>`;
     return;
   }
-  elements.logBody.innerHTML = visible.map((a) => `<tr><th scope="row">${String(a.round).padStart(2, "0")}</th><td>${a.color}</td><td>${a.texture}</td><td>${a.season}</td><td>${a.prediction}</td><td>${a.answer}</td><td><span class="result ${a.correct ? "ok" : "no"}"><span aria-hidden="true">${a.correct ? "O" : "X"}</span><span class="sr-only">${a.correct ? "정답" : "오답"}</span></span></td></tr>`).join("");
+  elements.logBody.innerHTML = visible.map((a) => `<tr><th scope="row">${String(a.round).padStart(2, "0")}</th><td>${a.color}</td><td>${a.texture}</td><td>${a.season}</td><td>${a.answer}</td><td><span class="result ${a.correct ? "ok" : "no"}"><span aria-hidden="true">${a.correct ? "O" : "X"}</span><span class="sr-only">${a.correct ? "정답" : "오답"}</span></span></td></tr>`).join("");
 }
 
 function restart() {

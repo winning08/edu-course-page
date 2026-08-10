@@ -25,3 +25,11 @@ test("화면에는 숨은 점수나 가중치 설명이 없다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
   assert.doesNotMatch(html, /가중치|색깔 점수|촉감 점수|임계값/);
 });
+
+test("정답 확인표에는 내 예측 열이 없고 쉬운 표현을 쓴다", async () => {
+  const html = await readFile(new URL("index.html", lessonRoot), "utf8");
+  assert.doesNotMatch(html, /내 예측/);
+  assert.doesNotMatch(html, /관측값|가설|데이터 로그|분류 규칙을 추론/);
+  assert.match(html, /정답 확인표/);
+  assert.match(html, /내 생각 점검/);
+});
