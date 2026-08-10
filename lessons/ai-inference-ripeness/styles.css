@@ -42,6 +42,10 @@ h1 { margin:0; font-size:clamp(2.8rem,7vw,5.8rem); font-weight:760; line-height:
 .sample-id { color:var(--accent); font:700 .68rem ui-monospace,monospace; letter-spacing:.12em; }
 .sample-head h2 { margin:.25rem 0 0; font-size:clamp(1.25rem,3vw,1.7rem); letter-spacing:-.035em; }
 .sample-head>p { max-width:360px; margin:0; color:var(--muted); font-size:.86rem; line-height:1.55; }
+.specimen { display:flex; align-items:center; gap:1.1rem; margin:0 clamp(1rem,3vw,1.8rem) 1.1rem; padding:.85rem 1.1rem; background:#f9fafc; border:1px solid var(--line); }
+.specimen-visual { flex:none; width:76px; height:76px; }
+.specimen-visual svg { display:block; width:100%; height:100%; }
+.specimen-caption { margin:0; color:var(--muted); font-size:.82rem; line-height:1.55; }
 .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin:0 clamp(1rem,3vw,1.8rem) 1.4rem; padding:1px; background:var(--line); border:1px solid var(--line); }
 .feature-grid>div { min-height:118px; display:flex; flex-direction:column; justify-content:space-between; padding:1rem 1.1rem 1.2rem; background:#f9fafc; }
 .feature-grid dt { display:flex; gap:.55rem; color:#535e70; font-size:.77rem; font-weight:650; }
@@ -103,9 +107,10 @@ footer { display:flex; justify-content:space-between; gap:1rem; padding:2rem 0 3
 body.projector-mode { --ink:#000; --muted:#303030; --paper:#fff; --line:#767676; --line-strong:#333; --accent:#153eaa; font-size:112%; }
 .projector-mode .topbar { background:#000; }
 .projector-mode .experiment,.projector-mode .log-section { box-shadow:none; }
-.projector-mode .feature-grid>div,.projector-mode .feedback { background:#fff; }
+.projector-mode .feature-grid>div,.projector-mode .feedback,.projector-mode .specimen { background:#fff; }
 @media(max-width:720px){
   .topbar{grid-template-columns:1fr auto}.module-title{display:none}.intro{grid-template-columns:1fr;gap:1.3rem;padding-top:2.5rem}.sample-head>p{display:none}
+  .specimen{gap:.75rem;padding:.7rem .85rem}.specimen-visual{width:56px;height:56px}.specimen-caption{font-size:.78rem}
   .feature-grid{grid-template-columns:repeat(3,1fr)}.feature-grid>div{min-height:94px;padding:.75rem}.feature-grid dt{font-size:.68rem}.feature-grid dd{font-size:clamp(1.2rem,6vw,1.75rem)}
   #feedback-result{grid-template-columns:auto 1fr}#next-button{grid-column:1/-1;width:100%}.log-head,footer{align-items:flex-start;flex-direction:column}
 }

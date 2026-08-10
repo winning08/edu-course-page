@@ -1,8 +1,10 @@
 import { classify, makeRounds, summarize, TOTAL_ROUNDS } from "./game-core.js";
+import { buildSpecimenLabel, buildSpecimenSvg } from "./specimen-visual.js";
 
 const $ = (selector) => document.querySelector(selector);
 const elements = {
   round: $("#round-label"), progress: $("#progress-bar"), accuracy: $("#accuracy"), sample: $("#sample-id"),
+  specimen: $("#specimen-visual"),
   color: $("#feature-color"), texture: $("#feature-texture"), season: $("#feature-season"),
   ripe: $("#predict-ripe"), unripe: $("#predict-unripe"), feedback: $("#feedback"), waiting: $("#feedback-waiting"),
   result: $("#feedback-result"), mark: $("#feedback-mark"), title: $("#feedback-title"), copy: $("#feedback-copy"),
@@ -30,6 +32,8 @@ function renderRound() {
   elements.color.textContent = sample.color;
   elements.texture.textContent = sample.texture;
   elements.season.textContent = sample.season;
+  elements.specimen.setAttribute("aria-label", buildSpecimenLabel(sample));
+  elements.specimen.innerHTML = buildSpecimenSvg(sample, `specimen-${roundIndex}`);
   elements.ripe.disabled = false;
   elements.unripe.disabled = false;
   elements.waiting.hidden = false;

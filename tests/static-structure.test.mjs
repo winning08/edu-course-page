@@ -14,6 +14,8 @@ test("독립 lesson 페이지와 접근성 장치를 제공한다", async () => 
   assert.match(html, /aria-live="polite"/);
   assert.match(html, /프로젝터 모드/);
   assert.match(html, /data-filter="wrong"/);
+  assert.match(html, /id="specimen-visual"/);
+  assert.match(html, /role="img"/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /:focus-visible/);
   assert.match(js, /prefers-reduced-motion: reduce/);
