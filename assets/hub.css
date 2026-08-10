@@ -1,0 +1,22 @@
+:root { --ink:#15171d; --muted:#626a78; --line:#d8dde6; --paper:#f4f6f9; --accent:#3157d5; }
+* { box-sizing:border-box; }
+body { margin:0; min-width:320px; color:var(--ink); background:var(--paper); font-family:Pretendard,"Noto Sans KR",system-ui,sans-serif; }
+.hub-header, main, footer { width:min(1040px,calc(100% - 2rem)); margin-inline:auto; }
+.hub-header { padding:clamp(4rem,10vw,8rem) 0 3rem; border-bottom:1px solid var(--line); }
+.eyebrow,.lesson-meta { margin:0 0 .8rem; color:var(--accent); font-size:.76rem; font-weight:800; letter-spacing:.14em; }
+h1 { margin:0; font-size:clamp(3.2rem,9vw,7rem); line-height:.95; letter-spacing:-.07em; }
+.hub-header>p:last-child { max-width:600px; margin:1.5rem 0 0; color:var(--muted); font-size:1.08rem; line-height:1.75; }
+main { padding:3rem 0 6rem; }
+.section-head { display:flex; justify-content:space-between; align-items:end; gap:1rem; margin-bottom:1.2rem; }
+.section-head span,.section-head strong { color:var(--muted); font-size:.8rem; }
+h2 { margin:.25rem 0 0; font-size:clamp(1.5rem,4vw,2.2rem); letter-spacing:-.04em; }
+.lesson-card { display:grid; grid-template-columns:auto 1fr auto; gap:1.5rem; align-items:center; padding:clamp(1.4rem,4vw,2.2rem); color:inherit; background:#fff; border:1px solid var(--line); text-decoration:none; transition:border-color .15s,transform .15s; }
+.lesson-card:hover { border-color:#8ba0e5; transform:translateY(-2px); }
+.lesson-card:focus-visible { outline:3px solid #5d7be1; outline-offset:4px; }
+.lesson-number { color:var(--accent); font:700 1rem ui-monospace,monospace; }
+.lesson-card h3 { margin:0; font-size:clamp(1.3rem,3vw,1.8rem); letter-spacing:-.035em; }
+.lesson-card p:last-child { margin:.65rem 0 0; color:var(--muted); line-height:1.65; }
+.arrow { font-size:1.8rem; }
+footer { padding:1.5rem 0 3rem; color:var(--muted); border-top:1px solid var(--line); font-size:.8rem; }
+@media(max-width:600px){.lesson-card{grid-template-columns:auto 1fr}.arrow{display:none}.section-head strong{display:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}

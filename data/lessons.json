@@ -1,0 +1,14 @@
+{
+  "lessons": [
+    {
+      "id": "ai-inference-ripeness",
+      "subject": "인공지능 기초",
+      "unit": "AI의 판단과 추론",
+      "title": "분류 규칙을 추론하라",
+      "path": "lessons/ai-inference-ripeness/",
+      "duration": 20,
+      "difficulty": "입문",
+      "status": "published"
+    }
+  ]
+}

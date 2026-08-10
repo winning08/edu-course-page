@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="피드백을 통해 인공지능 분류의 신호와 노이즈를 체험하는 수업">
+  <title>분류 규칙을 추론하라 | AI 추론 실험실</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="game.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#experiment">실험으로 바로가기</a>
+  <header class="topbar">
+    <a class="back-link" href="../../">← 수업 목록</a>
+    <div class="module-title"><span>MODULE 01</span><strong>AI 추론 실험실</strong></div>
+    <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">CLASSIFICATION EXPERIMENT</p>
+        <h1 id="page-title">분류 규칙을<br>추론하라</h1>
+      </div>
+      <div class="intro-copy">
+        <p>색깔, 촉감, 계절을 관찰해 과일의 상태를 예측하세요. 정답 피드백과 누적 데이터만으로 숨겨진 판단 기준을 찾아내는 실험입니다.</p>
+        <dl><div><dt>샘플</dt><dd>15개</dd></div><div><dt>예상 시간</dt><dd>20분</dd></div><div><dt>난이도</dt><dd>입문</dd></div></dl>
+      </div>
+    </section>
+
+    <section id="experiment" class="experiment" aria-labelledby="experiment-title">
+      <div class="experiment-head">
+        <div><span id="round-label">ROUND 01 / 15</span><div class="progress" aria-hidden="true"><i id="progress-bar"></i></div></div>
+        <div class="accuracy"><span>현재 정확도</span><strong id="accuracy">—</strong></div>
+      </div>
+
+      <div id="play-view">
+        <div class="sample-head">
+          <div><span class="sample-id" id="sample-id">SAMPLE 01</span><h2 id="experiment-title">관측값을 분석하세요.</h2></div>
+          <p>세 속성 중 어떤 정보가 실제 판단에 영향을 줄까요?</p>
+        </div>
+
+        <dl class="feature-grid" aria-label="이번 과일의 세 가지 관측값">
+          <div><dt><span>01</span>색깔</dt><dd id="feature-color">—</dd></div>
+          <div><dt><span>02</span>촉감</dt><dd id="feature-texture">—</dd></div>
+          <div><dt><span>03</span>계절</dt><dd id="feature-season">—</dd></div>
+        </dl>
+
+        <div class="predict-area">
+          <p>예측을 제출하세요. <span class="shortcut-help">키보드 1 · 2</span></p>
+          <div class="predict-buttons">
+            <button id="predict-ripe" type="button"><kbd>1</kbd><span>잘 익음</span></button>
+            <button id="predict-unripe" type="button"><kbd>2</kbd><span>안 익음</span></button>
+          </div>
+        </div>
+
+        <div id="feedback" class="feedback" aria-live="polite" aria-atomic="true">
+          <p id="feedback-waiting">예측을 제출하면 실제 분류 결과가 공개됩니다.</p>
+          <div id="feedback-result" hidden>
+            <span id="feedback-mark" class="feedback-mark" aria-hidden="true"></span>
+            <div><strong id="feedback-title"></strong><p id="feedback-copy"></p></div>
+            <button id="next-button" type="button">다음 샘플 <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+
+        <aside id="checkpoint" class="checkpoint" hidden>
+          <span>가설 점검</span>
+          <p>지금까지 어떤 정보가 가장 도움이 되었나요? 다음 샘플에서 그 가설을 검증해 보세요.</p>
+        </aside>
+      </div>
+
+      <div id="summary-view" class="summary" hidden>
+        <p class="eyebrow">EXPERIMENT COMPLETE</p>
+        <h2>최종 예측 정확도</h2>
+        <div class="final-score"><strong id="final-score">0</strong><span>%</span></div>
+        <p id="final-count"></p>
+        <div class="discussion">
+          <span>DISCUSSION</span>
+          <p>세 가지 정보 중 <strong>쓸모없었던 것 같은 정보</strong>는 무엇인가요?</p>
+          <p>반대로 판단할 때 가장 먼저 확인하게 된 정보는 무엇이었나요?</p>
+        </div>
+        <button id="restart-button" type="button">새 데이터로 다시 실험</button>
+      </div>
+    </section>
+
+    <section class="log-section" aria-labelledby="log-title">
+      <div class="log-head">
+        <div><p class="eyebrow">DATA LOG</p><h2 id="log-title">예측 기록</h2></div>
+        <p><span id="log-count">0</span>개의 데이터</p>
+      </div>
+      <div class="analysis-tip"><strong>비교 전략</strong> 한 가지 정보만 다르고 나머지는 같은 샘플을 찾아 결과를 비교해 보세요.</div>
+      <div class="filters" aria-label="기록 필터">
+        <button class="filter active" type="button" data-filter="all" aria-pressed="true">전체</button>
+        <button class="filter" type="button" data-filter="wrong" aria-pressed="false">오답만</button>
+        <button class="filter" type="button" data-filter="초록" aria-pressed="false">초록</button>
+        <button class="filter" type="button" data-filter="노랑" aria-pressed="false">노랑</button>
+        <button class="filter" type="button" data-filter="빨강" aria-pressed="false">빨강</button>
+        <button class="filter" type="button" data-filter="주황" aria-pressed="false">주황</button>
+      </div>
+      <div class="table-wrap" tabindex="0" aria-label="예측 기록 표, 가로로 스크롤할 수 있습니다">
+        <table>
+          <thead><tr><th scope="col">회차</th><th scope="col">색깔</th><th scope="col">촉감</th><th scope="col">계절</th><th scope="col">내 예측</th><th scope="col">정답</th><th scope="col">결과</th></tr></thead>
+          <tbody id="log-body"><tr class="empty-row"><td colspan="7">첫 예측을 제출하면 데이터가 기록됩니다.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer><span>INFORMATION × AI FUNDAMENTALS</span><span>OBSERVE · PREDICT · REVISE</span></footer>
+</body>
+</html>
