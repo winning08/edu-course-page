@@ -17,7 +17,7 @@ test("AI 추론 실험실 페이지를 한국어로 렌더링한다", async () =
   const html = await response.text();
   assert.match(html, /<html lang="ko">/);
   assert.match(html, /AI 추론 실험실/);
-  assert.match(html, /오늘의 과일을 진열하고 있습니다/);
+  assert.match(html, /실험 데이터를 준비하고 있습니다/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 

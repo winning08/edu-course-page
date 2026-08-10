@@ -18,7 +18,12 @@ type Attempt = Fruit & {
 const TOTAL_ROUNDS = 15;
 const colorScores: Record<Color, number> = { 초록: 0, 노랑: 2, 빨강: 3, 주황: 2 };
 const textureScores: Record<Texture, number> = { 단단함: 0, 중간: 1, 말랑함: 2 };
-const fruitEmoji: Record<Color, string> = { 초록: "🍏", 노랑: "🍋", 빨강: "🍎", 주황: "🍊" };
+const fruitHue: Record<Color, string> = {
+  초록: "#5f9368",
+  노랑: "#d8b84a",
+  빨강: "#b84f55",
+  주황: "#d17b45",
+};
 
 function shuffle<T>(items: T[]) {
   const copy = [...items];
@@ -113,7 +118,7 @@ export function RipenessGame() {
   if (!fruit) {
     return (
       <main className="market-shell loading-shell" aria-live="polite">
-        <p>오늘의 과일을 진열하고 있습니다…</p>
+        <p>실험 데이터를 준비하고 있습니다…</p>
       </main>
     );
   }
@@ -121,11 +126,11 @@ export function RipenessGame() {
   return (
     <main className="market-shell">
       <header className="lesson-header">
-        <div className="lesson-kicker">AI 추론 실험실 · 첫 번째 체험</div>
-        <h1>과일 감별사의 비밀</h1>
+        <div className="lesson-kicker"><span>MODULE 01</span> AI 추론 실험실</div>
+        <h1>분류 규칙을<br />추론하라</h1>
         <p className="lesson-lead">
-          과일의 정보를 보고 익었는지 예측하세요. 정답 피드백과 지난 기록만으로
-          감별 규칙을 찾아낼 수 있을까요?
+          세 가지 관측값을 바탕으로 과일의 상태를 예측하세요. 반복되는 피드백과
+          데이터 기록만으로 숨겨진 분류 기준을 찾아내는 실험입니다.
         </p>
       </header>
 
@@ -147,27 +152,29 @@ export function RipenessGame() {
 
           <div className="fruit-stage">
             <p className="round-label">ROUND {String(roundIndex + 1).padStart(2, "0")}</p>
-            <div className="fruit-icon" aria-hidden="true">{fruitEmoji[fruit.color]}</div>
-            <h2 id="round-title">이 과일은 잘 익었을까요?</h2>
+            <div className="specimen" style={{ "--specimen-color": fruitHue[fruit.color] } as React.CSSProperties} aria-hidden="true">
+              <span className="specimen-leaf" />
+            </div>
+            <h2 id="round-title">관측값을 분석하고 상태를 예측하세요.</h2>
           </div>
 
           <dl className="attribute-grid" aria-label="이번 과일의 세 가지 정보">
             <div className="attribute-card color-card">
-              <dt><span aria-hidden="true">●</span> 색깔</dt>
+              <dt><span aria-hidden="true">01</span> 색깔</dt>
               <dd>{fruit.color}</dd>
             </div>
             <div className="attribute-card texture-card">
-              <dt><span aria-hidden="true">✋</span> 촉감</dt>
+              <dt><span aria-hidden="true">02</span> 촉감</dt>
               <dd>{fruit.texture}</dd>
             </div>
             <div className="attribute-card season-card">
-              <dt><span aria-hidden="true">☀</span> 계절</dt>
+              <dt><span aria-hidden="true">03</span> 계절</dt>
               <dd>{fruit.season}</dd>
             </div>
           </dl>
 
           <div className="prediction-area">
-            <p className="prompt">관찰한 정보를 바탕으로 하나를 선택하세요.</p>
+            <p className="prompt">현재 데이터에 대한 예측을 제출하세요.</p>
             <div className="prediction-buttons">
               <button className="prediction ripe" onClick={() => predict("잘 익음")} disabled={Boolean(feedback)}>
                 <span aria-hidden="true">✓</span> 잘 익음
@@ -183,44 +190,44 @@ export function RipenessGame() {
               <div className={`feedback-card ${feedback.correct ? "correct" : "incorrect"}`}>
                 <div className="feedback-mark" aria-hidden="true">{feedback.correct ? "O" : "X"}</div>
                 <div>
-                  <p className="feedback-title">{feedback.correct ? "맞았습니다!" : "아쉽지만 달랐어요."}</p>
-                  <p>실제 정답은 <strong>{feedback.answer}</strong>입니다. 기록에서 비슷한 과일을 찾아보세요.</p>
+                  <p className="feedback-title">{feedback.correct ? "예측이 일치했습니다." : "예측이 일치하지 않았습니다."}</p>
+                  <p>실제 분류는 <strong>{feedback.answer}</strong>입니다. 이전 데이터와 비교해 가설을 수정해 보세요.</p>
                 </div>
                 <button className="next-button" onClick={goNext} autoFocus>
                   {roundIndex === TOTAL_ROUNDS - 1 ? "결과 보기" : "다음 과일"} <span aria-hidden="true">→</span>
                 </button>
               </div>
             ) : (
-              <p className="waiting-message">선택하면 정답과 피드백이 바로 나타납니다.</p>
+              <p className="waiting-message">예측을 제출하면 실제 분류 결과가 공개됩니다.</p>
             )}
           </div>
         </section>
       ) : (
         <section className="summary-board" aria-labelledby="summary-title">
-          <p className="summary-kicker">15번의 관찰과 예측 완료</p>
-          <h2 id="summary-title">당신의 감별 정확도</h2>
+          <p className="summary-kicker">EXPERIMENT COMPLETE · 15 SAMPLES</p>
+          <h2 id="summary-title">최종 예측 정확도</h2>
           <div className="final-score"><strong>{accuracy}</strong><span>%</span></div>
           <p className="final-count">15개 중 {correctCount}개를 맞혔습니다.</p>
           <div className="discussion-card">
-            <span className="discussion-label">함께 이야기해 볼 질문</span>
+            <span className="discussion-label">DISCUSSION</span>
             <p>세 가지 정보 중 <strong>쓸모없었던 것 같은 정보</strong>는 무엇인가요?</p>
             <p>반대로, 판단할 때 가장 먼저 확인하게 된 정보는 무엇이었나요?</p>
           </div>
           <p className="summary-hint">아래 기록에서 한 가지 정보만 바뀐 과일들을 비교해 보세요.</p>
-          <button className="restart-button" onClick={restart}>새 과일로 다시 도전</button>
+          <button className="restart-button" onClick={restart}>새 데이터로 다시 실험</button>
         </section>
       )}
 
       <section className="history-section" aria-labelledby="history-title">
         <div className="history-heading">
           <div>
-            <p className="section-kicker">관찰 노트</p>
-            <h2 id="history-title">지금까지의 감별 기록</h2>
+            <p className="section-kicker">DATA LOG</p>
+            <h2 id="history-title">예측 기록</h2>
           </div>
           <p>{attempts.length}개의 단서가 모였습니다.</p>
         </div>
         {attempts.length === 0 ? (
-          <div className="empty-history">첫 번째 과일을 판단하면 이곳에 기록이 쌓입니다.</div>
+          <div className="empty-history">첫 번째 예측을 제출하면 이곳에 데이터가 기록됩니다.</div>
         ) : (
           <div className="table-scroll" tabIndex={0} aria-label="감별 기록 표, 가로로 스크롤할 수 있습니다">
             <table>
@@ -246,8 +253,8 @@ export function RipenessGame() {
       </section>
 
       <footer className="lesson-footer">
-        <span>정보 · 인공지능 기초</span>
-        <span>관찰 → 예측 → 피드백 → 다시 관찰</span>
+        <span>INFORMATION × AI FUNDAMENTALS</span>
+        <span>OBSERVE · PREDICT · REVISE</span>
       </footer>
     </main>
   );
