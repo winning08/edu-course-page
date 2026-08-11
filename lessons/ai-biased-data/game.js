@@ -1,9 +1,9 @@
 import {
-  PHASES, TRAIN_ROUNDS, CHECKPOINT_MESSAGES, TRAIN_HINTS,
-  createSession, currentSample, submitPrediction, advancePhase, startTest, submitTestBatch, sessionResults, restartSession,
-  sortByColorAndTexture, nextHintCount,
+  PHASES, TRAIN_ROUNDS, COLORS,
+  createSession, currentSample, submitPrediction, advancePhase,
+  distribution, submitReview, startTest, submitTestBatch, sessionResults, restartSession,
 } from "./game-core.js";
-import { buildSpecimenLabel, buildSpecimenSvg } from "./specimen-visual.js";
+import { buildSpecimenLabel, buildSpecimenSvg } from "../shared/specimen-visual.js";
 
 const $ = (selector) => document.querySelector(selector);
 const elements = {
@@ -13,23 +13,23 @@ const elements = {
   color: $("#feature-color"), texture: $("#feature-texture"),
   ripe: $("#predict-ripe"), unripe: $("#predict-unripe"), feedback: $("#feedback"), waiting: $("#feedback-waiting"),
   result: $("#feedback-result"), mark: $("#feedback-mark"), title: $("#feedback-title"), copy: $("#feedback-copy"),
-  next: $("#next-button"), checkpoint: $("#checkpoint"), checkpointCopy: $("#checkpoint-copy"),
-  question: $("#question-view"), transition: $("#transition-view"), results: $("#results-view"),
-  transitionScore: $("#transition-train-score"), transitionTrainCount: $("#transition-train-count"),
-  transitionSummaryBody: $("#transition-summary-body"), startTest: $("#start-test-button"),
-  viewOrder: $("#transition-view-order"), viewColor: $("#transition-view-color"),
-  hintList: $("#hint-list"), hintButton: $("#hint-button"), hintStatus: $("#hint-status"),
+  next: $("#next-button"), checkpoint: $("#checkpoint"),
+  question: $("#question-view"), review: $("#review-view"), results: $("#results-view"),
+  reviewScoreLine: $("#review-train-score"), distBars: $("#dist-bars"),
+  reviewForm: $("#review-form"), reviewError: $("#review-error"),
+  reviewSubmit: $("#review-submit-button"), reviewResult: $("#review-result"),
+  reviewResultMark: $("#review-result-mark"), reviewResultTitle: $("#review-result-title"), reviewResultCopy: $("#review-result-copy"),
+  startTest: $("#start-test-button"),
   testView: $("#test-view"), testGrid: $("#test-grid"), testError: $("#test-error"), submitTest: $("#submit-test-button"),
-  trainScore: $("#train-score"), trainCount: $("#train-count"), testScore: $("#test-score"), testCount: $("#test-count"),
-  restart: $("#restart-button"),
-  logSection: $("#log-section"), logBody: $("#log-body"), logCount: $("#log-count"), projector: $("#projector-toggle"),
+  trainScore: $("#train-score"), trainCount: $("#train-count"),
+  reviewScoreBlock: $("#review-score"), reviewCount: $("#review-count"),
+  testScore: $("#test-score"), testCount: $("#test-count"),
+  colorBreakdownBody: $("#color-breakdown-body"),
+  restart: $("#restart-button"), projector: $("#projector-toggle"),
 };
 
 let session = createSession();
 let answered = false;
-let activeFilter = "all";
-let transitionViewMode = "color";
-let hintsRevealed = 0;
 
 function scrollTop() {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -41,11 +41,10 @@ function showPhaseView() {
   const isTest = session.phase === PHASES.TEST;
   elements.question.hidden = !isTrain;
   elements.testView.hidden = !isTest;
-  elements.transition.hidden = session.phase !== PHASES.TRANSITION;
+  elements.review.hidden = session.phase !== PHASES.REVIEW;
   elements.results.hidden = session.phase !== PHASES.RESULTS;
   elements.head.hidden = !isTrain;
   elements.accuracyBlock.hidden = !isTrain;
-  elements.logSection.hidden = session.phase === PHASES.TEST || session.phase === PHASES.TRANSITION;
 }
 
 function renderRound() {
@@ -64,9 +63,7 @@ function renderRound() {
   elements.waiting.hidden = false;
   elements.result.hidden = true;
   elements.feedback.className = "feedback";
-  const checkpointMessage = CHECKPOINT_MESSAGES[session.roundIndex];
-  elements.checkpoint.hidden = !checkpointMessage;
-  if (checkpointMessage) elements.checkpointCopy.textContent = checkpointMessage;
+  elements.checkpoint.hidden = ![4, 8].includes(session.roundIndex);
   answered = false;
 }
 
@@ -82,7 +79,7 @@ function predict(prediction) {
   elements.feedback.classList.add(outcome.correct ? "correct" : "incorrect");
   elements.mark.textContent = outcome.correct ? "O" : "X";
   elements.title.textContent = outcome.correct ? "예상이 맞았습니다." : "예상과 달랐습니다.";
-  elements.copy.innerHTML = `실제 정답은 <strong>${outcome.answer}</strong>입니다. 지난 기록과 비교하며 AI에게 필요한 정보를 다시 생각해 보세요.`;
+  elements.copy.innerHTML = `실제 정답은 <strong>${outcome.answer}</strong>입니다. 지금까지 어떤 색깔이 자주 나왔는지도 함께 기억해 두세요.`;
 
   const isLastRound = session.roundIndex === TRAIN_ROUNDS - 1;
   elements.next.innerHTML = isLastRound
@@ -90,62 +87,72 @@ function predict(prediction) {
     : "다음 과일 <span aria-hidden=\"true\">→</span>";
 
   updateScore();
-  renderLog();
   elements.next.focus();
 }
 
 function next() {
   if (!answered) return;
   const phase = advancePhase(session);
-  if (phase === PHASES.TRANSITION) return showTransition();
+  if (phase === PHASES.REVIEW) return showReview();
   renderRound();
   $("#experiment").scrollIntoView({ block: "start" });
 }
 
-function renderTransitionSummary() {
+function renderDistribution() {
+  const counts = distribution(session);
+  const max = Math.max(...Object.values(counts), 1);
+  elements.distBars.innerHTML = COLORS.map((color) => {
+    const count = counts[color];
+    const width = Math.round((count / max) * 100);
+    return `<li><span class="dist-label">${color}</span><span class="dist-track"><span class="dist-fill" style="width:${width}%"></span></span><span class="dist-count">${count}개</span></li>`;
+  }).join("");
+}
+
+function resetReviewForm() {
+  elements.reviewForm.reset();
+  elements.reviewForm.hidden = false;
+  elements.reviewError.hidden = true;
+  elements.reviewError.textContent = "";
+  elements.reviewSubmit.disabled = false;
+  elements.reviewResult.hidden = true;
+  elements.reviewResult.className = "review-result";
+  elements.startTest.hidden = true;
+  document.querySelectorAll('input[name="review-choice"]').forEach((input) => { input.disabled = false; });
+}
+
+function showReview() {
   const { train } = sessionResults(session);
-  elements.transitionScore.textContent = `${train.accuracy}%`;
-  elements.transitionTrainCount.textContent = `학습 12개 중 ${train.correct}개를 맞혔습니다.`;
-  const rows = transitionViewMode === "color" ? sortByColorAndTexture(session.trainAttempts) : session.trainAttempts;
-  elements.transitionSummaryBody.innerHTML = rows.map((a) => `<tr><th scope="row">${String(a.round).padStart(2, "0")}</th><td>${a.color}</td><td>${a.texture}</td><td>${a.prediction}</td><td>${a.answer}</td><td><span class="result ${a.correct ? "ok" : "no"}"><span aria-hidden="true">${a.correct ? "O" : "X"}</span><span class="sr-only">${a.correct ? "정답" : "오답"}</span></span></td></tr>`).join("");
-  elements.viewColor.setAttribute("aria-pressed", String(transitionViewMode === "color"));
-  elements.viewOrder.setAttribute("aria-pressed", String(transitionViewMode === "order"));
-}
-
-function setTransitionViewMode(mode) {
-  transitionViewMode = mode;
-  renderTransitionSummary();
-}
-
-function initHintList() {
-  elements.hintList.innerHTML = TRAIN_HINTS.map((hint) => `<li class="hint-step" hidden><p>${hint}</p></li>`).join("");
-}
-
-function renderHints() {
-  elements.hintList.querySelectorAll(".hint-step").forEach((item, index) => {
-    item.hidden = index >= hintsRevealed;
-  });
-  const done = hintsRevealed >= TRAIN_HINTS.length;
-  elements.hintButton.hidden = done;
-  elements.hintButton.setAttribute("aria-expanded", String(hintsRevealed > 0));
-  elements.hintButton.textContent = hintsRevealed === 0 ? "힌트 보기" : `다음 힌트 보기 (${hintsRevealed}/${TRAIN_HINTS.length}개 확인함)`;
-}
-
-function revealNextHint() {
-  hintsRevealed = nextHintCount(hintsRevealed);
-  renderHints();
-  elements.hintStatus.textContent = `${hintsRevealed}번째 힌트: ${TRAIN_HINTS[hintsRevealed - 1]}`;
-}
-
-function showTransition() {
-  transitionViewMode = "color";
-  hintsRevealed = 0;
-  renderTransitionSummary();
-  renderHints();
-  elements.hintStatus.textContent = "";
+  elements.reviewScoreLine.textContent = `${train.accuracy}%`;
+  renderDistribution();
+  resetReviewForm();
   showPhaseView();
   scrollTop();
-  elements.transition.querySelector("h2")?.focus?.();
+  elements.review.querySelector("h2")?.focus?.();
+}
+
+function submitReviewChoice(event) {
+  event.preventDefault();
+  const selected = document.querySelector('input[name="review-choice"]:checked');
+  if (!selected) {
+    elements.reviewError.hidden = false;
+    elements.reviewError.textContent = "초록, 노랑, 빨강, 주황 중 하나를 선택해 주세요.";
+    return;
+  }
+  elements.reviewError.hidden = true;
+  elements.reviewError.textContent = "";
+  const outcome = submitReview(session, selected.value);
+  document.querySelectorAll('input[name="review-choice"]').forEach((input) => { input.disabled = true; });
+  elements.reviewSubmit.disabled = true;
+
+  const counts = distribution(session);
+  elements.reviewResult.hidden = false;
+  elements.reviewResult.classList.add(outcome.correct ? "correct" : "incorrect");
+  elements.reviewResultMark.textContent = outcome.correct ? "O" : "X";
+  elements.reviewResultTitle.textContent = outcome.correct ? "잘 찾았습니다." : "다시 살펴볼까요.";
+  elements.reviewResultCopy.textContent = `정답은 '${outcome.correctAnswer}'입니다. 학습 과일 12개 중 ${outcome.correctAnswer}은(는) ${counts[outcome.correctAnswer]}개뿐이었어요. 이제 처음 보는 과일로 시험을 치러 보세요.`;
+
+  elements.startTest.hidden = false;
+  elements.startTest.focus();
 }
 
 function renderTestView() {
@@ -196,12 +203,22 @@ function submitTest() {
   showResults();
 }
 
+function renderColorBreakdown(testByColor, trainCounts) {
+  elements.colorBreakdownBody.innerHTML = COLORS.filter((color) => testByColor[color]).map((color) => {
+    const test = testByColor[color];
+    return `<tr><th scope="row">${color}</th><td>${trainCounts[color]}개</td><td>${test.total}개</td><td>${test.correct}/${test.total} · ${test.accuracy}%</td></tr>`;
+  }).join("");
+}
+
 function showResults() {
-  const { train, test } = sessionResults(session);
+  const { train, test, review, testByColor } = sessionResults(session);
   elements.trainScore.textContent = train.accuracy;
   elements.trainCount.textContent = `학습 12개 중 ${train.correct}개를 맞혔습니다.`;
+  elements.reviewScoreBlock.textContent = review.correct ? "O" : "X";
+  elements.reviewCount.textContent = `내가 고른 답: ${review.choice}`;
   elements.testScore.textContent = test.accuracy;
-  elements.testCount.textContent = `시험 5개 중 ${test.correct}개를 맞혔습니다.`;
+  elements.testCount.textContent = `시험 8개 중 ${test.correct}개를 맞혔습니다.`;
+  renderColorBreakdown(testByColor, distribution(session));
   showPhaseView();
   scrollTop();
   elements.results.querySelector("h2")?.focus?.();
@@ -211,35 +228,13 @@ function updateScore() {
   if (session.phase !== PHASES.TRAIN) return;
   const { train } = sessionResults(session);
   elements.accuracy.textContent = session.trainAttempts.length ? `${train.correct}/${session.trainAttempts.length} · ${train.accuracy}%` : "—";
-  elements.logCount.textContent = session.trainAttempts.length;
-}
-
-function filteredAttempts() {
-  const attempts = session.trainAttempts;
-  if (activeFilter === "wrong") return attempts.filter((attempt) => !attempt.correct);
-  if (activeFilter !== "all") return attempts.filter((attempt) => attempt.color === activeFilter);
-  return attempts;
-}
-
-function renderLog() {
-  const visible = filteredAttempts();
-  if (!visible.length) {
-    elements.logBody.innerHTML = `<tr class="empty-row"><td colspan="5">${session.trainAttempts.length ? "이 조건에 맞는 기록이 없습니다." : "첫 번째 과일을 선택하면 기록이 나타납니다."}</td></tr>`;
-    return;
-  }
-  elements.logBody.innerHTML = visible.map((a) => `<tr><th scope="row">${String(a.round).padStart(2, "0")}</th><td>${a.color}</td><td>${a.texture}</td><td>${a.answer}</td><td><span class="result ${a.correct ? "ok" : "no"}"><span aria-hidden="true">${a.correct ? "O" : "X"}</span><span class="sr-only">${a.correct ? "정답" : "오답"}</span></span></td></tr>`).join("");
 }
 
 function restart() {
   restartSession(session);
   answered = false;
-  activeFilter = "all";
-  transitionViewMode = "color";
-  hintsRevealed = 0;
-  document.querySelectorAll(".filter").forEach((button) => { button.classList.toggle("active", button.dataset.filter === "all"); button.setAttribute("aria-pressed", button.dataset.filter === "all"); });
   showPhaseView();
   updateScore();
-  renderLog();
   renderRound();
   scrollTop();
 }
@@ -247,29 +242,21 @@ function restart() {
 elements.ripe.addEventListener("click", () => predict("잘 익음"));
 elements.unripe.addEventListener("click", () => predict("안 익음"));
 elements.next.addEventListener("click", next);
+elements.reviewForm.addEventListener("submit", submitReviewChoice);
 elements.startTest.addEventListener("click", beginTest);
 elements.submitTest.addEventListener("click", submitTest);
 elements.restart.addEventListener("click", restart);
-elements.viewOrder.addEventListener("click", () => setTransitionViewMode("order"));
-elements.viewColor.addEventListener("click", () => setTransitionViewMode("color"));
-elements.hintButton.addEventListener("click", revealNextHint);
 elements.projector.addEventListener("click", () => {
   const enabled = document.body.classList.toggle("projector-mode");
   elements.projector.setAttribute("aria-pressed", String(enabled));
 });
-document.querySelectorAll(".filter").forEach((button) => button.addEventListener("click", () => {
-  activeFilter = button.dataset.filter;
-  document.querySelectorAll(".filter").forEach((item) => { const active = item === button; item.classList.toggle("active", active); item.setAttribute("aria-pressed", String(active)); });
-  renderLog();
-}));
 document.addEventListener("keydown", (event) => {
-  if (event.target.matches("button, a") && ["Enter", " "].includes(event.key)) return;
+  if (event.target.matches("button, a, input")) return;
   if (session.phase !== PHASES.TRAIN) return;
   if (!answered && event.key === "1") predict("잘 익음");
   if (!answered && event.key === "2") predict("안 익음");
   if (answered && ["Enter", "ArrowRight"].includes(event.key)) next();
 });
 
-initHintList();
 showPhaseView();
 renderRound();

@@ -1,0 +1,12 @@
+/* 활동 03 전용 스타일. 공통 레이아웃·컴포넌트는 ../shared/lab-base.css를 사용한다. */
+.dist-wrap { max-width:720px; margin:1.8rem auto 0; padding:1.4rem 1.5rem; text-align:left; background:#fff; border:1px solid var(--line); }
+.dist-wrap h3 { margin:0 0 1rem; font-size:1.05rem; letter-spacing:-.02em; }
+.dist-bars { display:grid; gap:.65rem; margin:0; padding:0; list-style:none; }
+.dist-bars li { display:grid; grid-template-columns:3.4rem 1fr 2.4rem; align-items:center; gap:.75rem; }
+.dist-bars .dist-label { font-size:.86rem; font-weight:650; }
+.dist-bars .dist-track { height:16px; background:var(--soft); border-radius:99px; overflow:hidden; }
+.dist-bars .dist-fill { display:block; height:100%; background:var(--accent); border-radius:99px 0 0 99px; }
+.dist-bars .dist-count { text-align:right; font-variant-numeric:tabular-nums; font-weight:700; }
+.color-breakdown { max-width:960px; margin:2rem auto 0; padding:0 clamp(1rem,3vw,1.8rem); text-align:left; }
+.color-breakdown h3 { margin:0 0 .4rem; font-size:1.1rem; letter-spacing:-.02em; }
+.color-breakdown>p { margin:0 0 1rem; color:var(--muted); font-size:.88rem; line-height:1.6; }

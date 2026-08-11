@@ -1,0 +1,44 @@
+{
+  "groups": [
+    {
+      "id": "ai-learning",
+      "order": 1,
+      "title": "AI는 어떻게 학습할까?",
+      "description": "마트 과일 선별 AI를 직접 학습시키고 시험하며 입력 정보, 관계없는 정보, 편향된 데이터 같은 인공지능 기초 개념을 순서대로 체험합니다.",
+      "path": "units/ai-learning/",
+      "status": "published",
+      "children": [
+        {
+          "id": "ai-inference-ripeness",
+          "order": 1,
+          "title": "잘 익은 과일 찾기",
+          "path": "lessons/ai-inference-ripeness/",
+          "duration": 20,
+          "difficulty": "보통",
+          "status": "published",
+          "objective": "색깔·촉감 같은 입력 정보로 AI를 학습시키고, 같은 판단 규칙을 다른 과일에 적용해 시험해 본다."
+        },
+        {
+          "id": "ai-signal-noise",
+          "order": 2,
+          "title": "정보가 많으면 더 정확할까?",
+          "path": "lessons/ai-signal-noise/",
+          "duration": 15,
+          "difficulty": "입문",
+          "status": "published",
+          "objective": "판단과 관계없는 정보(노이즈)를 가려내며, 정보가 많다고 항상 도움이 되지는 않는다는 것을 확인한다."
+        },
+        {
+          "id": "ai-biased-data",
+          "order": 3,
+          "title": "학습 자료가 한쪽으로 치우치면?",
+          "path": "lessons/ai-biased-data/",
+          "duration": 15,
+          "difficulty": "입문",
+          "status": "published",
+          "objective": "치우친 학습 자료로 학습한 AI의 한계를 시험해 보고 편향된 데이터 개념을 이해한다."
+        }
+      ]
+    }
+  ]
+}

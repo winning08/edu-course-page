@@ -3,52 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="정답을 확인하며 인공지능이 판단에 사용하는 정보를 찾아보는 수업">
-  <title>AI의 판단 규칙 찾기 | AI 생각 실험실</title>
+  <meta name="description" content="마트의 과일 선별 AI를 직접 학습시키고 같은 판단 규칙을 다른 과일에 적용해 시험까지 치러보는 수업">
+  <title>잘 익은 과일 찾기 | 마트 AI 실습실</title>
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="game.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#experiment">실험으로 바로가기</a>
   <header class="topbar">
-    <a class="back-link" href="../../">← 수업 목록</a>
-    <div class="module-title"><span>수업 01</span><strong>AI 생각 실험실</strong></div>
+    <a class="back-link" href="../../units/ai-learning/">← 활동 목록</a>
+    <div class="module-title"><span>수업 01</span><strong>마트 AI 실습실</strong></div>
     <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
   </header>
 
   <main>
     <section class="intro" aria-labelledby="page-title">
       <div>
-        <p class="eyebrow">AI 판단 체험</p>
-        <h1 id="page-title">AI의 판단 규칙<br>찾기</h1>
+        <p class="eyebrow">마트 AI 훈련</p>
+        <h1 id="page-title">잘 익은 과일<br>찾기</h1>
       </div>
       <div class="intro-copy">
-        <p>색깔, 촉감, 계절을 보고 과일이 익었는지 예상하세요. 정답과 지난 기록을 비교해 AI가 어떤 규칙으로 판단하는지 찾아보는 활동입니다.</p>
-        <dl><div><dt>과일</dt><dd>15개</dd></div><div><dt>걸리는 시간</dt><dd>20분</dd></div><div><dt>난이도</dt><dd>쉬움</dd></div></dl>
+        <p>여러분은 마트에서 손님 대신 잘 익은 과일을 골라주는 <strong>AI 역할</strong>을 맡아 AI를 훈련시키는 임무를 진행합니다. 학습 과일 12개의 색깔·촉감과 실제 정답을 하나씩 직접 보면서 어떤 정보가 판단 기준이 되는지 스스로 찾아내고, 마지막에는 같은 판단 기준을 다른 과일 5개에 적용해 AI를 직접 시험해 봅니다.</p>
+        <dl><div><dt>과일</dt><dd>학습 12 · 시험 5</dd></div><div><dt>걸리는 시간</dt><dd>20분</dd></div><div><dt>난이도</dt><dd>보통</dd></div></dl>
       </div>
     </section>
 
     <section id="experiment" class="experiment" aria-labelledby="experiment-title">
-      <div class="experiment-head">
-        <div><span id="round-label">1 / 15번째 과일</span><div class="progress" aria-hidden="true"><i id="progress-bar"></i></div></div>
-        <div class="accuracy"><span>현재 정확도</span><strong id="accuracy">—</strong></div>
+      <div class="experiment-head" id="experiment-head">
+        <div><span id="round-label">1 / 12번째 학습 과일</span><div class="progress" aria-hidden="true"><i id="progress-bar"></i></div></div>
+        <div class="accuracy" id="accuracy-block"><span>현재 정확도</span><strong id="accuracy">—</strong></div>
       </div>
 
-      <div id="play-view">
+      <div id="question-view">
         <div class="sample-head">
-          <div><span class="sample-id" id="sample-id">과일 01</span><h2 id="experiment-title">세 가지 정보를 살펴보세요.</h2></div>
-          <p>어떤 정보가 익음 여부를 판단하는 데 도움이 될까요?</p>
+          <div><span class="sample-id" id="sample-id">과일 01</span><h2 id="experiment-title">이 과일의 정보를 확인하세요</h2></div>
+          <p id="question-hint">색깔과 촉감을 함께 보고 잘 익었는지 예상해 보세요.</p>
         </div>
 
         <div class="specimen">
           <div class="specimen-visual" id="specimen-visual" role="img" aria-label="과일 이미지"></div>
-          <p class="specimen-caption">이미지의 색과 표면으로도 색깔·촉감을 확인할 수 있어요.</p>
+          <p class="specimen-caption">그림 속 색과 표면으로도 색깔·촉감을 확인할 수 있어요.</p>
         </div>
 
-        <dl class="feature-grid" aria-label="이번 과일의 세 가지 정보">
+        <dl class="feature-grid" aria-label="이번 과일의 색깔과 촉감 정보">
           <div><dt><span>01</span>색깔</dt><dd id="feature-color">—</dd></div>
           <div><dt><span>02</span>촉감</dt><dd id="feature-texture">—</dd></div>
-          <div><dt><span>03</span>계절</dt><dd id="feature-season">—</dd></div>
         </dl>
 
         <div class="predict-area">
@@ -60,7 +59,7 @@
         </div>
 
         <div id="feedback" class="feedback" aria-live="polite" aria-atomic="true">
-          <p id="feedback-waiting">하나를 선택하면 실제 정답을 알려드립니다.</p>
+          <p id="feedback-waiting">예상을 선택하면 정답을 바로 확인할 수 있어요.</p>
           <div id="feedback-result" hidden>
             <span id="feedback-mark" class="feedback-mark" aria-hidden="true"></span>
             <div><strong id="feedback-title"></strong><p id="feedback-copy"></p></div>
@@ -70,25 +69,101 @@
 
         <aside id="checkpoint" class="checkpoint" hidden>
           <span>내 생각 점검</span>
-          <p>지금까지 어떤 정보가 가장 도움이 되었나요? 다음 과일을 보며 내 생각이 맞는지 확인해 보세요.</p>
+          <p id="checkpoint-copy">색깔과 촉감을 함께 볼 때 어떤 판단 규칙이 보이나요? 다음 과일로 내 생각이 맞는지 확인해 보세요.</p>
         </aside>
       </div>
 
-      <div id="summary-view" class="summary" hidden>
-        <p class="eyebrow">활동 완료</p>
-        <h2>내가 맞힌 비율</h2>
-        <div class="final-score"><strong id="final-score">0</strong><span>%</span></div>
-        <p id="final-count"></p>
+      <div id="test-view" class="test-view" hidden aria-labelledby="test-view-title">
+        <div class="sample-head">
+          <div><span class="sample-id">시험</span><h2 id="test-view-title" tabindex="-1">시험 과일 5개를 모두 확인하고 답을 골라 보세요</h2></div>
+          <p>학습 때 찾은 규칙으로 색깔과 촉감을 보고 잘 익었는지 예상해 보세요. 다섯 문제를 모두 고른 뒤 한 번에 제출합니다.</p>
+        </div>
+        <p id="test-error" class="test-error" role="alert" hidden></p>
+        <div class="test-grid" id="test-grid"></div>
+        <div class="test-submit-area">
+          <button id="submit-test-button" type="button">시험 답안 제출 <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+
+      <div id="transition-view" class="transition" hidden>
+        <p class="eyebrow">학습 완료</p>
+        <h2 tabindex="-1">이제 AI가 배운 규칙을 시험합니다</h2>
+        <p>과일 12개로 AI를 학습시켰고, 학습 정확도는 <strong id="transition-train-score">0%</strong>였습니다.</p>
+        <ul class="transition-steps">
+          <li>같은 판단 규칙을 다른 과일 5개에 적용해 시험을 치릅니다.</li>
+          <li>시험 문제 5개가 한 화면에 모두 나타나고, 다섯 문제를 모두 고른 뒤 한 번에 제출합니다.</li>
+          <li>제출 전까지는 정답을 알려주지 않고, 제출한 뒤에도 문제별 정답은 공개하지 않은 채 전체 점수만 확인할 수 있어요.</li>
+        </ul>
+
+        <div class="transition-summary">
+          <div class="transition-summary-head">
+            <h3>학습 결과 전체 보기</h3>
+            <p id="transition-train-count"></p>
+            <p>과일 12개의 색깔·촉감과 내 판단, 실제 정답을 한 번에 비교할 수 있어요. <strong>색깔과 촉감을 비교해 규칙을 정리해 보세요.</strong></p>
+          </div>
+          <div class="table-view-toggle" role="group" aria-label="학습 결과 표 정렬 방식">
+            <button id="transition-view-color" class="filter" type="button" aria-pressed="true">색깔별로 보기</button>
+            <button id="transition-view-order" class="filter" type="button" aria-pressed="false">학습 순서대로 보기</button>
+          </div>
+          <div class="analysis-tip"><strong>비교하는 방법</strong> 같은 색깔끼리 비교하며 촉감이 달라질 때 정답이 바뀌는지 확인해 보세요.</div>
+          <div class="table-wrap" tabindex="0" aria-label="학습 결과 전체 표, 가로로 스크롤할 수 있습니다">
+            <table>
+              <thead><tr><th scope="col">순서</th><th scope="col">색깔</th><th scope="col">촉감</th><th scope="col">내 판단</th><th scope="col">실제 정답</th><th scope="col">결과</th></tr></thead>
+              <tbody id="transition-summary-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="hint-ladder">
+          <p class="hint-ladder-lead">힌트가 필요하면 하나씩 열어 보세요. 힌트를 봐도 괜찮아요.</p>
+          <ol id="hint-list"></ol>
+          <button id="hint-button" type="button" aria-expanded="false" aria-controls="hint-list">힌트 보기</button>
+          <p id="hint-status" class="sr-only" role="status" aria-live="polite"></p>
+        </div>
+
+        <button id="start-test-button" type="button">시험 시작하기 <span aria-hidden="true">→</span></button>
+      </div>
+
+      <div id="results-view" class="summary" hidden>
+        <p class="eyebrow">시험 완료</p>
+        <h2 tabindex="-1">학습 점수와 시험 점수</h2>
+        <div class="score-compare">
+          <div class="score-block">
+            <span>학습 점수 · 과일 12개</span>
+            <strong id="train-score">0</strong><span class="unit">%</span>
+            <p id="train-count"></p>
+          </div>
+          <div class="score-block">
+            <span>시험 점수 · 과일 5개</span>
+            <strong id="test-score">0</strong><span class="unit">%</span>
+            <p id="test-count"></p>
+          </div>
+        </div>
         <div class="discussion">
           <span>함께 생각해 보기</span>
-          <p>세 가지 정보 중 <strong>쓸모없었던 것 같은 정보</strong>는 무엇인가요?</p>
-          <p>반대로 판단할 때 가장 먼저 확인하게 된 정보는 무엇이었나요?</p>
+          <p>색깔과 촉감을 함께 보고 찾은 규칙을 <strong>다른 과일 5개</strong>에 적용했을 때도 잘 맞았나요?</p>
+          <p>두 점수가 다르다면 내가 찾은 규칙을 어떻게 다듬으면 좋을지 이야기해 보세요.</p>
+        </div>
+        <div class="concept-map">
+          <h3>방금 한 활동을 AI 개념과 연결해 보기</h3>
+          <dl>
+            <div><dt>색깔·촉감</dt><dd>AI가 관찰한 <strong>입력 정보</strong></dd></div>
+            <div><dt>학습 과일 12개 + 정답</dt><dd><strong>학습 자료</strong></dd></div>
+            <div><dt>과일 12개를 하나씩 확인한 과정</dt><dd><strong>학습</strong></dd></div>
+            <div><dt>다른 과일 5개에 규칙 적용</dt><dd><strong>시험</strong></dd></div>
+            <div><dt>시험에서 맞힌 비율</dt><dd><strong>시험 정확도</strong></dd></div>
+          </dl>
+          <p class="misconception">실제 AI는 사람처럼 이유를 말로 설명하며 규칙을 찾지 않습니다. 아주 많은 자료를 계산하면서 판단 기준을 조금씩 맞춰 나갑니다.</p>
+        </div>
+        <div class="next-step">
+          <p>다음 활동에서는 새로운 정보를 하나 더 추가했을 때 AI 판단에 정말 도움이 되는지 확인합니다.</p>
+          <a class="next-step-link" href="../ai-signal-noise/">활동 02 · 정보가 많으면 더 정확할까? <span aria-hidden="true">→</span></a>
         </div>
         <button id="restart-button" type="button">새 과일로 다시 시작</button>
       </div>
     </section>
 
-    <section class="log-section" aria-labelledby="log-title">
+    <section id="log-section" class="log-section" aria-labelledby="log-title">
       <div class="log-head">
         <div><p class="eyebrow">지난 기록</p><h2 id="log-title">정답 확인표</h2></div>
         <p><span id="log-count">0</span>개의 기록</p>
@@ -104,12 +179,17 @@
       </div>
       <div class="table-wrap" tabindex="0" aria-label="예측 기록 표, 가로로 스크롤할 수 있습니다">
         <table>
-          <thead><tr><th scope="col">순서</th><th scope="col">색깔</th><th scope="col">촉감</th><th scope="col">계절</th><th scope="col">정답</th><th scope="col">결과</th></tr></thead>
-          <tbody id="log-body"><tr class="empty-row"><td colspan="6">첫 번째 과일을 선택하면 기록이 나타납니다.</td></tr></tbody>
+          <thead><tr><th scope="col">순서</th><th scope="col">색깔</th><th scope="col">촉감</th><th scope="col">정답</th><th scope="col">결과</th></tr></thead>
+          <tbody id="log-body"><tr class="empty-row"><td colspan="5">첫 번째 과일을 선택하면 기록이 나타납니다.</td></tr></tbody>
         </table>
       </div>
     </section>
+
+    <nav class="lesson-pager" aria-label="다른 활동으로 이동">
+      <a href="../../units/ai-learning/"><em>활동 목록</em><strong>← 활동 묶음 목록으로</strong></a>
+      <a class="next" href="../ai-signal-noise/"><em>다음 활동</em><strong>활동 02 · 정보가 많으면 더 정확할까? →</strong></a>
+    </nav>
   </main>
-  <footer><span>정보 · 인공지능 기초</span><span>살펴보기 · 예상하기 · 다시 생각하기</span></footer>
+  <footer><span>정보 · 인공지능 기초</span><span>살펴보기 · 예상하기 · 시험하기</span></footer>
 </body>
 </html>

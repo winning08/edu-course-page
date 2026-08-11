@@ -4,9 +4,32 @@
       "id": "ai-inference-ripeness",
       "subject": "인공지능 기초",
       "unit": "AI의 판단과 추론",
-      "title": "AI의 판단 규칙 찾기",
+      "order": 1,
+      "title": "잘 익은 과일 찾기",
       "path": "lessons/ai-inference-ripeness/",
       "duration": 20,
+      "difficulty": "보통",
+      "status": "published"
+    },
+    {
+      "id": "ai-signal-noise",
+      "subject": "인공지능 기초",
+      "unit": "AI의 판단과 추론",
+      "order": 2,
+      "title": "정보가 많으면 더 정확할까?",
+      "path": "lessons/ai-signal-noise/",
+      "duration": 15,
+      "difficulty": "입문",
+      "status": "published"
+    },
+    {
+      "id": "ai-biased-data",
+      "subject": "인공지능 기초",
+      "unit": "AI의 판단과 추론",
+      "order": 3,
+      "title": "학습 자료가 한쪽으로 치우치면?",
+      "path": "lessons/ai-biased-data/",
+      "duration": 15,
       "difficulty": "입문",
       "status": "published"
     }
