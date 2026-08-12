@@ -5,16 +5,16 @@ import test from "node:test";
 const repoRoot = new URL("../", import.meta.url);
 const LESSON_IDS = ["ai-inference-ripeness", "ai-signal-noise", "ai-biased-data"];
 
-test("루트 허브는 메인 제목과 활동 묶음 카드를 보여주고 그룹 목록 페이지로 연결한다", async () => {
+test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 목록 페이지로 연결한다", async () => {
   const html = await readFile(new URL("index.html", repoRoot), "utf8");
-  assert.match(html, /<title>인공지능 기초 활동지/);
-  assert.match(html, /<h1>인공지능 기초 활동지<\/h1>/);
+  assert.match(html, /<title>인공지능 기초 활동지 모음<\/title>/);
+  assert.match(html, /<h1>인공지능 기초 활동지 모음<\/h1>/);
   assert.match(html, /class="group-card" href="units\/ai-learning\/"/);
   assert.match(html, />AI는 어떻게 학습할까\?</);
   assert.doesNotMatch(html, /href="lessons\//, "루트 허브는 개별 lesson으로 바로 연결하지 않아야 함");
 });
 
-test("활동 묶음 목록 페이지는 세 활동을 01/02/03 순서로 등록하고 각 lesson 폴더로 직접 연결한다", async () => {
+test("활동지 목록 페이지는 세 활동을 01/02/03 순서로 등록하고 각 lesson 폴더로 직접 연결한다", async () => {
   const html = await readFile(new URL("units/ai-learning/index.html", repoRoot), "utf8");
   const positions = LESSON_IDS.map((id) => html.indexOf(`lessons/${id}/`));
   for (const [index, position] of positions.entries()) {
@@ -29,7 +29,7 @@ test("활동 묶음 목록 페이지는 세 활동을 01/02/03 순서로 등록�
   }
 });
 
-test("세 활동 페이지의 상단 back-link는 활동 묶음 목록 페이지로 돌아간다", async () => {
+test("세 활동 페이지의 상단 back-link는 활동지 목록 페이지로 돌아간다", async () => {
   for (const id of LESSON_IDS) {
     const html = await readFile(new URL(`lessons/${id}/index.html`, repoRoot), "utf8");
     assert.match(html, /class="back-link" href="\.\.\/\.\.\/units\/ai-learning\/"/, `${id}의 back-link가 그룹 페이지를 가리키지 않음`);

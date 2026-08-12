@@ -4,14 +4,14 @@
 // 실제 접근 차단(보안 경계)은 그룹·활동 페이지(guardPage)에서만 일어나며, 그곳은 로드 실패 시 항상
 // 보수적으로(비활성 취급) 처리한다. 반면 허브 카드(guardHub)는 안내용 진입점일 뿐이므로, JSON을
 // 불러오지 못했다고 해서(예: file://로 직접 열었거나 네트워크가 불안정한 경우) 이미 화면에 나와 있는
-// 모든 묶음 카드를 영구히 잠그지 않는다 — 실패 시에는 카드를 열어 두고(fail-open) 안내 문구만 보여준다.
+// 모든 활동지 카드를 영구히 잠그지 않는다 — 실패 시에는 카드를 열어 두고(fail-open) 안내 문구만 보여준다.
 const GROUPS_URL = new URL("../data/activity-groups.json", import.meta.url);
 
 async function fetchGroups() {
   const response = await fetch(GROUPS_URL, { cache: "no-store" });
-  if (!response.ok) throw new Error(`활동 묶음 정보를 불러오지 못했습니다 (${response.status})`);
+  if (!response.ok) throw new Error(`활동지 정보를 불러오지 못했습니다 (${response.status})`);
   const data = await response.json();
-  if (!data || !Array.isArray(data.groups)) throw new Error("활동 묶음 데이터 형식이 올바르지 않습니다");
+  if (!data || !Array.isArray(data.groups)) throw new Error("활동지 데이터 형식이 올바르지 않습니다");
   return data.groups;
 }
 
@@ -51,8 +51,8 @@ async function guardHub() {
       }
     });
   } catch (error) {
-    // 최신 active 상태를 확인하지 못했을 뿐, 이미 허브에 카드가 존재하는 묶음은 게시된 것으로 간주하고
-    // 그대로 열어 둔다. 실제로 비활성인 묶음이라면 이동한 뒤 그룹·활동 페이지의 guardPage가 막는다.
+    // 최신 active 상태를 확인하지 못했을 뿐, 이미 허브에 카드가 존재하는 활동지는 게시된 것으로 간주하고
+    // 그대로 열어 둔다. 실제로 비활성인 활동지라면 이동한 뒤 그룹·활동 페이지의 guardPage가 막는다.
     cards.forEach((card) => status.set(card, "active"));
     const errorBox = document.getElementById("groups-load-error");
     if (errorBox) errorBox.hidden = false;

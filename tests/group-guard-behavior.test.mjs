@@ -69,7 +69,7 @@ function setupDom({ scope, guardGroup, cardIds = [] } = {}) {
   return { cards, errorBox, documentElementAttrs };
 }
 
-test("허브: JSON fetch가 실패해도(file:// 등) 이미 카드가 있는 묶음은 영구 잠기지 않고 클릭이 통과된다(fail-open)", async () => {
+test("허브: JSON fetch가 실패해도(file:// 등) 이미 카드가 있는 활동지는 영구 잠기지 않고 클릭이 통과된다(fail-open)", async () => {
   const { cards, errorBox } = setupDom({ scope: "hub", cardIds: ["ai-learning", "ai-vocabulary"] });
   globalThis.fetch = async () => {
     throw new Error("file:// 환경에서는 fetch를 쓸 수 없음");

@@ -106,7 +106,7 @@ test("루트 허브의 group-card는 data/activity-groups.json의 group.path로 
   }
 });
 
-test("활동 묶음 목록 페이지는 data/activity-groups.json의 children을 order 순서대로 모두 담는다", async () => {
+test("활동지 목록 페이지는 data/activity-groups.json의 children을 order 순서대로 모두 담는다", async () => {
   const data = await loadGroups();
   const group = data.groups.find((candidate) => candidate.id === "ai-learning");
   const html = await readFile(new URL(group.path + "index.html", repoRoot), "utf8");

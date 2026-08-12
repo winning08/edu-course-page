@@ -139,7 +139,7 @@ test("시험 제출 후 결과 화면은 개별 정답이나 O\\/X 없이 전체
   assert.match(resultsHtml, /id="test-count"/);
 });
 
-test("README와 활동 묶음 목록 페이지 소개 문구는 시험 5문제를 한 화면에서 동시에 치른다고 설명한다", async () => {
+test("README와 활동지 목록 페이지 소개 문구는 시험 5문제를 한 화면에서 동시에 치른다고 설명한다", async () => {
   const [readme, groupPage] = await Promise.all([
     readFile(new URL("../../README.md", lessonRoot), "utf8"),
     readFile(new URL("../../units/ai-learning/index.html", lessonRoot), "utf8"),
@@ -224,7 +224,7 @@ test("숨은 판정 규칙(빨강 항상 익음·초록 항상 안 익음·노�
   assert.equal(classify({ color: "주황", texture: "말랑함" }), "잘 익음");
 });
 
-test("활동1 페이지·활동 묶음 목록 페이지·data/lessons.json의 난이도 표기가 '보통'으로 통일되어 있다", async () => {
+test("활동1 페이지·활동지 목록 페이지·data/lessons.json의 난이도 표기가 '보통'으로 통일되어 있다", async () => {
   const [html, groupPage, lessonsJson] = await Promise.all([
     readFile(new URL("index.html", lessonRoot), "utf8"),
     readFile(new URL("../../units/ai-learning/index.html", lessonRoot), "utf8"),
