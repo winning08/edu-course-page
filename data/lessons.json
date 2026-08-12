@@ -32,6 +32,17 @@
       "duration": 15,
       "difficulty": "입문",
       "status": "published"
+    },
+    {
+      "id": "ai-keyword-bingo",
+      "subject": "인공지능 기초",
+      "unit": "인공지능 핵심 용어 익히기",
+      "order": 1,
+      "title": "인공지능 핵심 용어 빙고",
+      "path": "lessons/ai-keyword-bingo/",
+      "duration": 20,
+      "difficulty": "입문",
+      "status": "published"
     }
   ]
 }

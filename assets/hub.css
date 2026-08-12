@@ -40,5 +40,8 @@ a:focus-visible,button:focus-visible { outline:3px solid #5d7be1; outline-offset
 .concept-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.9rem; margin:1.6rem 0 0; padding:0; list-style:none; }
 .concept-list li { padding:.9rem 1rem; background:#fff; border:1px solid var(--line); font-size:.85rem; color:var(--muted); }
 .concept-list li strong { display:block; margin-bottom:.3rem; color:var(--ink); font-size:.92rem; }
+.term-preview-label { margin-top:1.6rem; }
+.term-preview { display:flex; flex-wrap:wrap; gap:.5rem; margin:.6rem 0 0; padding:0; list-style:none; }
+.term-preview li { padding:.4rem .9rem; color:var(--ink); background:#fff; border:1px solid var(--line); border-radius:99px; font-size:.84rem; font-weight:650; }
 @media(max-width:600px){.lesson-card{grid-template-columns:auto 1fr}.group-card{grid-template-columns:auto 1fr}.arrow{display:none}.group-cta{display:none}.section-head strong{display:none}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}

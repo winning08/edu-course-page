@@ -2,15 +2,25 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="마트 AI에 계절 정보까지 더해도 판단에 정말 도움이 되는지 확인하는 후속 실험">
   <title>정보가 많으면 더 정확할까? | 마트 AI 실습실</title>
   <link rel="stylesheet" href="../shared/lab-base.css">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
   <script type="module" src="game.js"></script>
 </head>
-<body>
+<body data-guard-scope="page" data-guard-group="ai-learning">
   <a class="skip-link" href="#experiment">실험으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel">
+    <h1>아직 준비 중인 활동입니다</h1>
+    <p>이 활동은 현재 준비 중입니다. 곧 열릴 예정이니 잠시 후 다시 확인해 주세요.</p>
+    <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
+  </div>
+  <div id="guard-content">
   <header class="topbar">
     <a class="back-link" href="../../units/ai-learning/">← 활동 목록</a>
     <div class="module-title"><span>수업 02</span><strong>마트 AI 실습실</strong></div>
@@ -169,5 +179,6 @@
     </nav>
   </main>
   <footer><span>정보 · 인공지능 기초</span><span>비교하기 · 판단하기 · 시험하기</span></footer>
+  </div>
 </body>
 </html>

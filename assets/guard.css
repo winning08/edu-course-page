@@ -1,0 +1,19 @@
+/* 허브/그룹/활동 페이지가 공통으로 쓰는 활성화 가드 스타일. group-guard.js와 함께 쓴다. */
+#guard-loading, #guard-blocked { display: none; max-width: 640px; margin: 4rem auto; padding: 0 1rem; text-align: center; }
+#guard-blocked h1 { margin: 0 0 1rem; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+#guard-loading p, #guard-blocked p { margin: 0 0 1.5rem; color: var(--muted, #626a78); line-height: 1.7; }
+.guard-home-link { display: inline-block; min-height: 44px; padding: .7rem 1.3rem; color: #fff; background: var(--accent, #3157d5); text-decoration: none; border-radius: 4px; font-weight: 700; }
+.guard-home-link:focus-visible { outline: 3px solid #5d7be1; outline-offset: 3px; }
+html[data-guard="pending"] #guard-content { display: none; }
+html[data-guard="pending"] #guard-loading { display: block; }
+html[data-guard="blocked"] #guard-content { display: none; }
+html[data-guard="blocked"] #guard-blocked { display: block; }
+
+.group-card.group-card--locked { opacity: .6; cursor: not-allowed; }
+.group-card.group-card--locked:hover { transform: none; border-color: var(--line, #d8dde6); }
+/* group-guard.js가 .group-card(grid-template-columns:auto 1fr auto)에 배지를 4번째 자식으로 붙이므로,
+   기존 3열을 건드리지 않도록 배지 전용 행으로 전체 폭에 걸치게(grid-column:1/-1) 한다. */
+.group-card > .group-status-badge { grid-column: 1 / -1; margin: .6rem 0 0; justify-self: start; }
+.group-status-badge { display: inline-block; padding: .2rem .65rem; color: #7a5b00; background: #fff3cd; border: 1px solid #f0d78c; border-radius: 99px; font-size: .72rem; font-weight: 700; vertical-align: middle; }
+.guard-error { max-width: 1040px; margin: 0 auto 1rem; padding: .8rem 1rem; color: #7a1f27; background: #fff2f3; border: 1px solid #d9535f; border-radius: 4px; font-size: .86rem; }
+@media (prefers-reduced-motion: reduce) { #guard-loading, #guard-blocked { transition: none !important; } }

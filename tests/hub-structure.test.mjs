@@ -36,10 +36,10 @@ test("세 활동 페이지의 상단 back-link는 활동 묶음 목록 페이지
   }
 });
 
-test("data/lessons.json은 세 활동을 order 1/2/3, published 상태로 담는다", async () => {
+test("data/lessons.json은 ai-learning 세 활동을 order 1/2/3, published 상태로 담는다", async () => {
   const raw = await readFile(new URL("data/lessons.json", repoRoot), "utf8");
   const data = JSON.parse(raw);
-  assert.equal(data.lessons.length, 3);
+  assert.ok(data.lessons.length >= 3);
   const byId = Object.fromEntries(data.lessons.map((lesson) => [lesson.id, lesson]));
   for (const id of LESSON_IDS) {
     assert.ok(byId[id], `${id}가 lessons.json에 없음`);
