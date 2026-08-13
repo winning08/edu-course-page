@@ -17,18 +17,63 @@
           "duration": 20,
           "difficulty": "입문",
           "status": "published",
+          "active": true,
           "objective": "인공지능·데이터 핵심 용어 25개를 빙고 활동으로 반복해서 접하며 용어에 익숙해진다."
         }
       ]
     },
     {
-      "id": "ai-learning",
+      "id": "ai-evaluation",
       "order": 2,
+      "title": "지능과 인공지능의 이해",
+      "description": "지능이란 무엇이고, 인공지능이 그것을 갖추었는지 우리는 어떻게 판단할 수 있을까요? 튜링 테스트와 최신 AI 평가 방식인 ARC-AGI를 직접 체험하며 답을 찾아봅니다.",
+      "path": "units/ai-evaluation/",
+      "status": "published",
+      "active": true,
+      "children": [
+        {
+          "id": "turing-test-questions",
+          "order": 1,
+          "title": "내가 만약 튜링 테스트에 들어간다면?",
+          "path": "lessons/turing-test-questions/",
+          "duration": 15,
+          "difficulty": "입문",
+          "status": "published",
+          "active": true,
+          "objective": "튜링 테스트의 원리를 이해하고, 대화만으로 사람과 AI를 구별하기 위한 질문을 직접 설계해 본다."
+        },
+        {
+          "id": "arc-puzzle-challenge",
+          "order": 2,
+          "title": "AI도 못 푸는 퍼즐, 나는 풀 수 있을까?",
+          "path": "lessons/arc-puzzle-challenge/",
+          "duration": 20,
+          "difficulty": "입문",
+          "status": "published",
+          "active": true,
+          "objective": "몇 개의 예시만 보고 새로운 그림 퍼즐의 규칙을 스스로 찾아 적용해 보며, 최신 AI 평가 방식인 ARC-AGI를 체험한다."
+        },
+        {
+          "id": "turing-vs-arc-compare",
+          "order": 3,
+          "title": "튜링 테스트와 ARC-AGI, 뭐가 다를까?",
+          "path": "lessons/turing-vs-arc-compare/",
+          "duration": 5,
+          "difficulty": "입문",
+          "status": "published",
+          "active": true,
+          "objective": "튜링 테스트와 ARC-AGI가 각각 무엇을 측정하는지 비교한다."
+        }
+      ]
+    },
+    {
+      "id": "ai-learning",
+      "order": 3,
       "title": "AI는 어떻게 학습할까?",
       "description": "마트 과일 선별 AI를 직접 학습시키고 시험하며 입력 정보, 관계없는 정보, 편향된 데이터 같은 인공지능 기초 개념을 순서대로 체험합니다.",
       "path": "units/ai-learning/",
       "status": "published",
-      "active": true,
+      "active": false,
       "children": [
         {
           "id": "ai-inference-ripeness",
@@ -38,6 +83,7 @@
           "duration": 20,
           "difficulty": "보통",
           "status": "published",
+          "active": true,
           "objective": "색깔·촉감 같은 입력 정보로 AI를 학습시키고, 같은 판단 규칙을 다른 과일에 적용해 시험해 본다."
         },
         {
@@ -48,6 +94,7 @@
           "duration": 15,
           "difficulty": "입문",
           "status": "published",
+          "active": true,
           "objective": "판단과 관계없는 정보(노이즈)를 가려내며, 정보가 많다고 항상 도움이 되지는 않는다는 것을 확인한다."
         },
         {
@@ -58,6 +105,7 @@
           "duration": 15,
           "difficulty": "입문",
           "status": "published",
+          "active": true,
           "objective": "치우친 학습 자료로 학습한 AI의 한계를 시험해 보고 편향된 데이터 개념을 이해한다."
         }
       ]

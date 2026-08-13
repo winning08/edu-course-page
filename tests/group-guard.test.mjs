@@ -12,6 +12,7 @@ async function loadGroups() {
 const GROUP_PAGES = {
   "ai-learning": ["units/ai-learning/index.html", "lessons/ai-inference-ripeness/index.html", "lessons/ai-signal-noise/index.html", "lessons/ai-biased-data/index.html"],
   "ai-vocabulary": ["units/ai-vocabulary/index.html", "lessons/ai-keyword-bingo/index.html"],
+  "ai-evaluation": ["units/ai-evaluation/index.html", "lessons/turing-test-questions/index.html", "lessons/arc-puzzle-challenge/index.html", "lessons/turing-vs-arc-compare/index.html"],
 };
 
 test("모든 group은 명시적인 active boolean 필드를 갖는다", async () => {
@@ -31,11 +32,15 @@ test("새 그룹 ai-vocabulary는 초기 active=true다", async () => {
   assert.equal(group.children[0].id, "ai-keyword-bingo");
 });
 
-test("기존 ai-learning 그룹도 active=true로 명시되어 있다", async () => {
+test("ai-learning 그룹은 일단 숨김 처리되어 active=false다(다른 그룹은 영향받지 않음)", async () => {
   const data = await loadGroups();
   const group = data.groups.find((candidate) => candidate.id === "ai-learning");
   assert.ok(group);
-  assert.equal(group.active, true);
+  assert.equal(group.active, false);
+  const others = data.groups.filter((candidate) => candidate.id !== "ai-learning");
+  for (const other of others) {
+    assert.equal(other.active, true, `${other.id}는 영향받지 않고 active=true를 유지해야 함`);
+  }
 });
 
 test("assets/group-guard.js와 assets/guard.css가 존재하고, 로더는 data/activity-groups.json을 스스로의 위치 기준 상대 경로로 불러온다", async () => {
@@ -91,6 +96,54 @@ test("모든 unit·lesson 페이지는 공통 가드(pending 초기 상태, 소�
       assert.match(html, /class="guard-home-link"/, `${page}에 홈 복귀 링크가 없음`);
       assert.match(html, /assets\/group-guard\.js/, `${page}에 group-guard.js 로드가 없음`);
       assert.match(html, /assets\/guard\.css/, `${page}에 guard.css 로드가 없음`);
+    }
+  }
+});
+
+test("모든 group의 children은 명시적인 active boolean 필드를 갖는다", async () => {
+  const data = await loadGroups();
+  for (const group of data.groups) {
+    for (const child of group.children) {
+      assert.equal(typeof child.active, "boolean", `${group.id}의 ${child.id}에 active boolean이 없음`);
+    }
+  }
+});
+
+test("ai-evaluation 그룹의 활동 3개는 모두 active=true다(개별 활동 숨김은 현재 쓰지 않음)", async () => {
+  const data = await loadGroups();
+  const group = data.groups.find((candidate) => candidate.id === "ai-evaluation");
+  assert.ok(group, "ai-evaluation group을 찾을 수 없음");
+  const byId = Object.fromEntries(group.children.map((child) => [child.id, child]));
+  assert.equal(byId["turing-test-questions"].active, true);
+  assert.equal(byId["arc-puzzle-challenge"].active, true);
+  assert.equal(byId["turing-vs-arc-compare"].active, true);
+  assert.equal(group.active, true);
+});
+
+test("모든 활동 페이지(<body>)는 data-guard-lesson으로 자기 자신의 child id를 선언한다", async () => {
+  const LESSON_PAGE_TO_ID = {
+    "lessons/ai-keyword-bingo/index.html": "ai-keyword-bingo",
+    "lessons/ai-inference-ripeness/index.html": "ai-inference-ripeness",
+    "lessons/ai-signal-noise/index.html": "ai-signal-noise",
+    "lessons/ai-biased-data/index.html": "ai-biased-data",
+    "lessons/turing-test-questions/index.html": "turing-test-questions",
+    "lessons/arc-puzzle-challenge/index.html": "arc-puzzle-challenge",
+    "lessons/turing-vs-arc-compare/index.html": "turing-vs-arc-compare",
+  };
+  for (const [page, lessonId] of Object.entries(LESSON_PAGE_TO_ID)) {
+    const html = await readFile(new URL(page, repoRoot), "utf8");
+    assert.match(html, new RegExp(`data-guard-lesson="${lessonId}"`), `${page}에 data-guard-lesson="${lessonId}"가 없음`);
+  }
+});
+
+test("모든 활동지 목록 페이지는 각 하위 활동 카드에 data-lesson-card로 child id를 붙인다", async () => {
+  for (const [groupId, pages] of Object.entries(GROUP_PAGES)) {
+    const groupPagePath = pages[0]; // GROUP_PAGES의 각 배열 첫 항목은 units/<group-id>/index.html
+    const html = await readFile(new URL(groupPagePath, repoRoot), "utf8");
+    const data = await loadGroups();
+    const group = data.groups.find((candidate) => candidate.id === groupId);
+    for (const child of group.children) {
+      assert.match(html, new RegExp(`data-lesson-card="${child.id}"`), `${groupPagePath}에 ${child.id}의 data-lesson-card가 없음`);
     }
   }
 });

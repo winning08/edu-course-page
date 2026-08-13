@@ -55,18 +55,23 @@ class FakeElement {
   }
 }
 
-function setupDom({ scope, guardGroup, cardIds = [] } = {}) {
+function setupDom({ scope, guardGroup, guardLesson, cardIds = [], lessonCardIds = [] } = {}) {
   const cards = cardIds.map((id) => new FakeElement({ dataset: { groupCard: id } }));
+  const lessonCards = lessonCardIds.map((id) => new FakeElement({ dataset: { lessonCard: id } }));
   const errorBox = new FakeElement();
   const documentElementAttrs = new Map();
   globalThis.document = {
-    body: { dataset: { guardScope: scope, ...(guardGroup ? { guardGroup } : {}) } },
+    body: { dataset: { guardScope: scope, ...(guardGroup ? { guardGroup } : {}), ...(guardLesson ? { guardLesson } : {}) } },
     documentElement: { setAttribute: (name, value) => documentElementAttrs.set(name, value) },
-    querySelectorAll: (selector) => (selector === "[data-group-card]" ? cards : []),
+    querySelectorAll: (selector) => {
+      if (selector === "[data-group-card]") return cards;
+      if (selector === "[data-lesson-card]") return lessonCards;
+      return [];
+    },
     getElementById: (id) => (id === "groups-load-error" ? errorBox : null),
     createElement: () => new FakeElement(),
   };
-  return { cards, errorBox, documentElementAttrs };
+  return { cards, lessonCards, errorBox, documentElementAttrs };
 }
 
 test("허브: JSON fetch가 실패해도(file:// 등) 이미 카드가 있는 활동지는 영구 잠기지 않고 클릭이 통과된다(fail-open)", async () => {
@@ -147,4 +152,83 @@ test("그룹·활동 페이지: active=true인 그룹은 정상적으로 콘텐�
   await flushMicrotasks();
 
   assert.equal(documentElementAttrs.get("data-guard"), "active");
+});
+
+test("활동 페이지: 그룹은 active여도 그 활동 자신(child)이 active=false면 차단된다", async () => {
+  const { documentElementAttrs } = setupDom({
+    scope: "page", guardGroup: "ai-evaluation", guardLesson: "turing-vs-arc-compare",
+  });
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      groups: [{
+        id: "ai-evaluation", active: true,
+        children: [
+          { id: "turing-test-questions", active: true },
+          { id: "turing-vs-arc-compare", active: false },
+        ],
+      }],
+    }),
+  });
+
+  await loadGuardModule();
+  await flushMicrotasks();
+
+  assert.equal(documentElementAttrs.get("data-guard"), "blocked");
+});
+
+test("활동 페이지: 그룹과 그 활동(child) 둘 다 active여야 정상적으로 열린다", async () => {
+  const { documentElementAttrs } = setupDom({
+    scope: "page", guardGroup: "ai-evaluation", guardLesson: "turing-test-questions",
+  });
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      groups: [{
+        id: "ai-evaluation", active: true,
+        children: [
+          { id: "turing-test-questions", active: true },
+          { id: "turing-vs-arc-compare", active: false },
+        ],
+      }],
+    }),
+  });
+
+  await loadGuardModule();
+  await flushMicrotasks();
+
+  assert.equal(documentElementAttrs.get("data-guard"), "active");
+});
+
+test("활동지 목록 페이지: 그룹이 active면, 그 안의 활동 카드 중 active=false인 child의 카드만 잠기고 클릭이 막힌다(fail-open 방식은 허브와 동일)", async () => {
+  const { lessonCards, documentElementAttrs } = setupDom({
+    scope: "page", guardGroup: "ai-evaluation",
+    lessonCardIds: ["turing-test-questions", "turing-vs-arc-compare"],
+  });
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      groups: [{
+        id: "ai-evaluation", active: true,
+        children: [
+          { id: "turing-test-questions", active: true },
+          { id: "turing-vs-arc-compare", active: false },
+        ],
+      }],
+    }),
+  });
+
+  await loadGuardModule();
+  await flushMicrotasks();
+
+  assert.equal(documentElementAttrs.get("data-guard"), "active");
+
+  const [activeCard, inactiveCard] = lessonCards;
+  assert.equal(activeCard.classNames.has("group-card--locked"), false);
+  assert.equal(activeCard.dispatchClick().defaultPrevented, false);
+
+  assert.equal(inactiveCard.classNames.has("group-card--locked"), true);
+  assert.equal(inactiveCard.attributes.get("aria-disabled"), "true");
+  assert.equal(inactiveCard.dispatchClick().defaultPrevented, true);
+  assert.ok(inactiveCard.children.some((child) => child.className === "group-status-badge"));
 });

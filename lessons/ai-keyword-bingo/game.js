@@ -1,7 +1,7 @@
 import { KEYWORDS } from "./keywords.js";
 import {
   TOTAL_KEYWORDS, PHASES,
-  createSession, toggleChecked, startDraw, drawNext, undoLastDraw,
+  createSession, toggleChecked, startDraw, drawNext, drawSpecific, undoLastDraw,
   resetDraw, currentTerm, isDrawComplete, serializeSession, deserializeSession,
 } from "./game-core.js";
 
@@ -117,8 +117,9 @@ let termBoardPositioned = false;
 let termBoardObserver = null;
 
 function buildTermBoardTiles() {
+  // 각 칩은 버튼처럼 클릭(또는 Enter/Space)으로 그 용어를 직접 뽑을 수 있다("다음 뽑기"의 무작위 추첨 대신).
   elements.termBoard.innerHTML = KEYWORDS.map((term) => (
-    `<li class="term-tile" data-term="${term}"><span class="term-order-badge" aria-hidden="true"></span><span class="term-label">${term}</span></li>`
+    `<li class="term-tile" data-term="${term}" tabindex="0" role="button"><span class="term-order-badge" aria-hidden="true"></span><span class="term-label">${term}</span></li>`
   )).join("");
   termTileByTerm.clear();
   elements.termBoard.querySelectorAll("li").forEach((li) => {
@@ -198,9 +199,13 @@ function renderTermBoard() {
   KEYWORDS.forEach((term) => {
     const li = termTileByTerm.get(term);
     const order = drawOrderByTerm.get(term);
-    li.classList.toggle("is-drawn", Boolean(order));
+    const drawn = Boolean(order);
+    li.classList.toggle("is-drawn", drawn);
     li.classList.toggle("is-current", term === current);
-    li.setAttribute("aria-label", order ? `${term}, ${order}번째로 뽑힘` : term);
+    // 이미 뽑힌 칩은 다시 뽑을 수 없으므로 탭 순서·클릭 대상에서 뺀다.
+    li.setAttribute("aria-disabled", String(drawn));
+    li.tabIndex = drawn ? -1 : 0;
+    li.setAttribute("aria-label", order ? `${term}, ${order}번째로 뽑힘` : `${term}. 클릭하면 이 용어를 직접 뽑습니다.`);
     li.querySelector(".term-order-badge").textContent = order ?? "";
   });
 
@@ -219,7 +224,7 @@ function renderDrawStatus() {
   } else if (term) {
     elements.drawCurrent.textContent = `방금 뽑힌 용어: ${term}`;
   } else {
-    elements.drawCurrent.textContent = "아래 \"다음 뽑기\"를 눌러 첫 용어를 뽑아 주세요";
+    elements.drawCurrent.textContent = "아래 \"다음 뽑기\"를 누르거나, 용어판에서 용어를 직접 클릭해 첫 용어를 뽑아 주세요";
     elements.drawCurrent.classList.add("is-placeholder");
   }
 
@@ -262,6 +267,19 @@ function handleDrawNext() {
   if (isDrawComplete(session) && focusWasOnNextButton) {
     elements.drawResetButton.focus();
   }
+}
+
+// 용어판의 칩을 직접 클릭(또는 Enter/Space)해서 그 용어를 뽑은 것으로 기록한다 —
+// 무작위 추첨("다음 뽑기") 대신 교사가 순서를 직접 정하고 싶을 때 쓴다.
+function handleManualDraw(term) {
+  if (session.phase !== PHASES.DRAW || isDrawComplete(session)) return;
+  try {
+    drawSpecific(session, term);
+  } catch {
+    return; // 이미 뽑힌 용어를 다시 클릭한 경우 등은 조용히 무시한다.
+  }
+  saveSession();
+  renderDrawStatus();
 }
 
 function handleUndo() {
@@ -312,6 +330,18 @@ document.querySelectorAll("#term-grid input[type=\"checkbox\"]").forEach((checkb
   });
 });
 
+elements.termBoard.addEventListener("click", (event) => {
+  const tile = event.target.closest("li[data-term]");
+  if (tile) handleManualDraw(tile.dataset.term);
+});
+elements.termBoard.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " " && event.code !== "Space") return;
+  const tile = event.target.closest("li[data-term]");
+  if (!tile) return;
+  event.preventDefault();
+  handleManualDraw(tile.dataset.term);
+});
+
 elements.fullscreenToggle.addEventListener("click", () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen?.().catch(() => {});
@@ -339,6 +369,7 @@ document.addEventListener("keydown", (event) => {
   if (session.phase !== PHASES.DRAW) return;
   const tag = (event.target?.tagName || "").toLowerCase();
   if (["input", "textarea", "button", "a"].includes(tag)) return;
+  if (event.target?.closest("#term-board")) return; // 용어판 칩 자체의 keydown 핸들러가 처리한다.
   if (event.key === "Enter" || event.key === " " || event.code === "Space") {
     event.preventDefault();
     handleDrawNext();

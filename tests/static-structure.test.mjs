@@ -157,7 +157,7 @@ test("시험 안내는 '한 번도 보여주지 않은 새 과일' 대신 같은
   assert.doesNotMatch(html, /한 번도 보여주지 않은|처음 보는 과일/);
   assert.match(html, /같은 판단 규칙|같은 규칙/);
 
-  const activity1Section = groupPage.match(/<a class="lesson-card" href="\.\.\/\.\.\/lessons\/ai-inference-ripeness\/">[\s\S]*?<\/a>/)[0];
+  const activity1Section = groupPage.match(/<a class="lesson-card" href="\.\.\/\.\.\/lessons\/ai-inference-ripeness\/"[^>]*>[\s\S]*?<\/a>/)[0];
   assert.doesNotMatch(activity1Section, /처음 보는 과일/);
 
   const activity1Readme = readme.match(/^1\. .*$/m)[0];
@@ -232,7 +232,7 @@ test("활동1 페이지·활동지 목록 페이지·data/lessons.json의 난이
   ]);
   assert.match(html, /<dt>난이도<\/dt><dd>보통<\/dd>/);
 
-  const activity1Card = groupPage.match(/<a class="lesson-card" href="\.\.\/\.\.\/lessons\/ai-inference-ripeness\/">[\s\S]*?<\/a>/)[0];
+  const activity1Card = groupPage.match(/<a class="lesson-card" href="\.\.\/\.\.\/lessons\/ai-inference-ripeness\/"[^>]*>[\s\S]*?<\/a>/)[0];
   assert.match(activity1Card, /실습 · 20분 · 보통/);
 
   const lessons = JSON.parse(lessonsJson).lessons;

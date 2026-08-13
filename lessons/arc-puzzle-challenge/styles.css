@@ -1,0 +1,71 @@
+/* 활동 · AI도 못 푸는 퍼즐, 나는 풀 수 있을까? 공통 레이아웃/토큰은 ../shared/lab-base.css를 사용한다.
+   격자 색상(symbol-0..9)은 ARC-AGI 공식 인터페이스와 동일한 배색을 그대로 쓴다. */
+main { width: min(980px, calc(100% - 2rem)); margin-inline: auto; padding: clamp(1.6rem, 4vw, 3rem) 0 4rem; }
+
+section + section { margin-top: clamp(2.2rem, 5vw, 3.4rem); padding-top: clamp(2.2rem, 5vw, 3.4rem); border-top: 1px solid var(--line); }
+
+.eyebrow { margin: 0 0 .7rem; color: var(--accent); font: 750 .7rem ui-monospace, monospace; letter-spacing: .14em; }
+#intro-title { margin: 0 0 1rem; font-size: clamp(1.6rem, 3.8vw, 2.3rem); letter-spacing: -.03em; }
+.intro-copy-text { max-width: 760px; margin: 0 0 1rem; color: var(--muted); font-size: 1rem; line-height: 1.75; }
+.intro-note { display: inline-block; margin: .4rem 0 0; padding: .5rem .9rem; color: var(--ink); background: #eef1f6; border-radius: 8px; font-size: .88rem; }
+
+.puzzle-progress { margin: 0 0 .6rem; }
+.puzzle-progress span { display: inline-block; padding: .4rem .9rem; color: var(--ink); background: #eef1f6; border-radius: 99px; font: 700 .85rem ui-monospace, monospace; }
+#puzzle-title { margin: 0 0 1.2rem; font-size: clamp(1.3rem, 3vw, 1.8rem); }
+
+.train-examples { display: flex; flex-wrap: wrap; gap: 1.4rem; margin: 0 0 1.8rem; }
+.train-pair-label { margin: 0 0 .4rem; color: var(--muted); font-size: .82rem; font-weight: 700; }
+.train-pair-grids { display: flex; align-items: center; gap: .6rem; }
+.train-pair-arrow { color: var(--muted); font-size: 1.2rem; }
+
+.test-area { display: flex; flex-wrap: wrap; gap: 2rem; margin: 0 0 1.2rem; }
+.test-column-label { margin: 0 0 .5rem; color: var(--ink); font-weight: 700; font-size: .9rem; }
+.color-selected-name { font-weight: 500; color: var(--muted); }
+
+.arc-grid { display: grid; grid-template-columns: repeat(var(--arc-cols), 30px); gap: 2px; width: fit-content; padding: 2px; background: var(--line-strong); border-radius: 4px; }
+.arc-cell { width: 30px; height: 30px; padding: 0; margin: 0; border: 0; }
+.arc-grid-editable .arc-cell { cursor: pointer; }
+.arc-grid-editable .arc-cell:hover { box-shadow: inset 0 0 0 2px var(--accent); }
+.arc-grid-editable .arc-cell:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.arc-grid-editable.is-locked .arc-cell { cursor: default; }
+.arc-grid-editable.is-locked .arc-cell:hover { box-shadow: none; }
+
+.color-palette { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.4rem; }
+.color-swatch { width: 38px; height: 38px; padding: 0; border: 3px solid transparent; border-radius: 6px; }
+.color-swatch[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px #fff inset; }
+.color-swatch:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.symbol-0 { background: #000; }
+.symbol-1 { background: #0074D9; }
+.symbol-2 { background: #FF4136; }
+.symbol-3 { background: #2ECC40; }
+.symbol-4 { background: #FFDC00; }
+.symbol-5 { background: #AAAAAA; }
+.symbol-6 { background: #F012BE; }
+.symbol-7 { background: #FF851B; }
+.symbol-8 { background: #7FDBFF; }
+.symbol-9 { background: #870C25; }
+
+.puzzle-controls { display: flex; flex-wrap: wrap; gap: .7rem; margin: 0 0 1rem; }
+.puzzle-controls button { min-height: 44px; padding: .6rem 1.1rem; border-radius: 4px; font-size: .9rem; font-weight: 700; }
+#check-button { color: #fff; background: var(--accent); border: 1px solid var(--accent); }
+#check-button:hover:not(:disabled) { background: var(--accent-dark); }
+#clear-button, #hint-button, #skip-button { color: var(--ink); background: #fff; border: 1px solid var(--line-strong); }
+.puzzle-controls button:disabled { opacity: .5; cursor: not-allowed; }
+
+.hint-text { max-width: 700px; margin: 0 0 1rem; padding: .7rem .9rem; color: var(--ink); background: #fff8e6; border: 1px solid #f0dca0; border-radius: 8px; font-size: .9rem; }
+
+.puzzle-feedback { min-height: 1.4rem; margin: 0 0 1rem; font-weight: 700; }
+.puzzle-feedback.is-success { color: var(--ok); }
+.puzzle-feedback.is-retry { color: #8a5a12; }
+
+#next-button { min-height: 48px; padding: .75rem 1.4rem; color: #fff; background: var(--accent); border: 1px solid var(--accent); border-radius: 4px; font-size: .95rem; font-weight: 720; }
+#next-button:hover { background: var(--accent-dark); }
+
+.results-summary { max-width: 720px; margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.7; }
+.results-note { max-width: 720px; margin: 0 0 1.4rem; padding: .9rem 1.1rem; color: var(--muted); background: #eef1f6; border-radius: 10px; font-size: .9rem; line-height: 1.7; }
+.results-back-link { display: inline-block; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

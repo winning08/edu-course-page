@@ -31,13 +31,14 @@ test("data/activity-groups.json은 group 필수 필드(id/order/title/descriptio
   }
 });
 
-test("data/activity-groups.json의 children은 필수 필드(id/order/title/path/duration/difficulty/status/objective)를 갖는다", async () => {
+test("data/activity-groups.json의 children은 필수 필드(id/order/title/path/duration/difficulty/status/active/objective)를 갖는다", async () => {
   const data = await loadGroups();
   for (const group of data.groups) {
     for (const child of group.children) {
-      for (const field of ["id", "order", "title", "path", "duration", "difficulty", "status", "objective"]) {
+      for (const field of ["id", "order", "title", "path", "duration", "difficulty", "status", "active", "objective"]) {
         assert.ok(field in child, `${group.id}의 하위 활동 ${child.id ?? "?"}에 ${field} 필드가 없음`);
       }
+      assert.equal(typeof child.active, "boolean", `${child.id}의 active가 boolean이 아님`);
       assert.match(child.path, /\/$/, `${child.id}의 path는 트레일링 슬래시로 끝나야 함`);
       assert.equal(typeof child.objective, "string");
       assert.ok(child.objective.length > 0, `${child.id}의 objective가 비어있음`);

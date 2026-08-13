@@ -43,6 +43,39 @@
       "duration": 20,
       "difficulty": "입문",
       "status": "published"
+    },
+    {
+      "id": "turing-test-questions",
+      "subject": "인공지능 기초",
+      "unit": "지능과 인공지능의 이해",
+      "order": 1,
+      "title": "내가 만약 튜링 테스트에 들어간다면?",
+      "path": "lessons/turing-test-questions/",
+      "duration": 15,
+      "difficulty": "입문",
+      "status": "published"
+    },
+    {
+      "id": "arc-puzzle-challenge",
+      "subject": "인공지능 기초",
+      "unit": "지능과 인공지능의 이해",
+      "order": 2,
+      "title": "AI도 못 푸는 퍼즐, 나는 풀 수 있을까?",
+      "path": "lessons/arc-puzzle-challenge/",
+      "duration": 20,
+      "difficulty": "입문",
+      "status": "published"
+    },
+    {
+      "id": "turing-vs-arc-compare",
+      "subject": "인공지능 기초",
+      "unit": "지능과 인공지능의 이해",
+      "order": 3,
+      "title": "튜링 테스트와 ARC-AGI, 뭐가 다를까?",
+      "path": "lessons/turing-vs-arc-compare/",
+      "duration": 5,
+      "difficulty": "입문",
+      "status": "published"
     }
   ]
 }

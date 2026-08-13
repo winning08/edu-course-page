@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="예시 몇 개만 보고 규칙을 찾아 그림 퍼즐을 완성하는 ARC-AGI 체험 활동">
+  <title>AI도 못 푸는 퍼즐, 나는 풀 수 있을까? | 지능과 인공지능의 이해</title>
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="game.js"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-evaluation" data-guard-lesson="arc-puzzle-challenge">
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel">
+    <h1>아직 준비 중인 활동입니다</h1>
+    <p>이 활동은 현재 준비 중입니다. 곧 열릴 예정이니 잠시 후 다시 확인해 주세요.</p>
+    <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
+  </div>
+  <div id="guard-content">
+  <header class="topbar">
+    <a class="back-link" href="../../units/ai-evaluation/">← 활동 목록</a>
+    <div class="module-title"><span>수업 02</span><strong>지능과 인공지능의 이해</strong></div>
+  </header>
+
+  <main id="main-content">
+    <section id="intro-view" aria-labelledby="intro-title">
+      <p class="eyebrow">1단계 · ARC-AGI란</p>
+      <h1 id="intro-title">AI도 못 푸는 퍼즐, 나는 풀 수 있을까?</h1>
+      <p class="intro-copy-text">앞 활동에서는 "대화만으로 사람과 AI를 구별할 수 있는가"를 다루는 튜링 테스트를 살펴봤습니다. 이번에는 정반대 방식의 시험을 체험합니다. <strong>ARC-AGI</strong>는 정답을 외워서는 풀 수 없도록, 예시 몇 개만 보여주고 처음 보는 문제의 규칙을 그 자리에서 스스로 찾아내야 하는 그림 퍼즐 시험입니다. 사람에게는 쉬운 문제가 많지만, 최신 AI도 아직 잘 풀지 못하는 유형이 섞여 있습니다.</p>
+      <p class="intro-copy-text">아래 네모 칸 그림 퍼즐마다 <strong>입력 → 출력</strong> 예시가 3개씩 있습니다. 예시들 사이의 공통 규칙을 찾아, 마지막 문제의 빈 칸을 규칙에 맞게 채워 보세요.</p>
+      <p class="intro-note">정답이 하나뿐인 문제들이라 채점은 되지만, 틀려도 몇 번이든 다시 시도할 수 있고 언제든 건너뛸 수 있습니다.</p>
+    </section>
+
+    <section id="puzzle-view" aria-labelledby="puzzle-title">
+      <div class="puzzle-progress" aria-live="polite">
+        <span id="puzzle-progress-label">문제 1 / 4</span>
+      </div>
+      <p class="eyebrow">2단계 · 규칙 찾기</p>
+      <h2 id="puzzle-title"></h2>
+
+      <div id="train-examples" class="train-examples" aria-label="입력과 출력 예시"></div>
+
+      <div class="test-area">
+        <div class="test-column">
+          <p class="test-column-label">문제 입력</p>
+          <div id="test-input-grid" class="arc-grid" role="img"></div>
+        </div>
+        <div class="test-column">
+          <p class="test-column-label">내가 채울 출력<span id="color-selected-name" class="color-selected-name"></span></p>
+          <div id="test-output-grid" class="arc-grid arc-grid-editable"></div>
+        </div>
+      </div>
+
+      <div id="color-palette" class="color-palette" role="group" aria-label="색깔 고르기"></div>
+
+      <div class="puzzle-controls">
+        <button id="check-button" type="button">정답 확인</button>
+        <button id="clear-button" type="button">모두 지우기</button>
+        <button id="hint-button" type="button" aria-expanded="false" aria-controls="hint-text">힌트 보기</button>
+        <button id="skip-button" type="button">이 문제 건너뛰기</button>
+      </div>
+
+      <p id="hint-text" class="hint-text" hidden></p>
+      <p id="puzzle-feedback" class="puzzle-feedback" role="status" aria-live="polite"></p>
+
+      <button id="next-button" type="button" hidden>다음 문제 →</button>
+    </section>
+
+    <section id="results-view" hidden aria-labelledby="results-title">
+      <p class="eyebrow">3단계 · 결과</p>
+      <h2 id="results-title">오늘 체험 결과</h2>
+      <p id="results-summary" class="results-summary"></p>
+      <p class="results-note">ARC-AGI는 이 몇 문제만으로 "AI가 지능을 가졌는지"를 판정하지 않습니다. 오늘 확인한 것은 딱 하나, <strong>사람에게는 쉬워 보이는 규칙 찾기도 AI에게는 늘 쉽지만은 않다</strong>는 사실입니다. 지금 이 순간 최신 AI가 이런 문제를 얼마나 잘 푸는지는 계속 바뀌고 있으니, 정확한 수치가 궁금하다면 <a href="https://arcprize.org/leaderboard" rel="noreferrer">arcprize.org/leaderboard</a>에서 직접 확인해 보세요.</p>
+      <a class="back-link results-back-link" href="../../units/ai-evaluation/">← 활동 목록으로 돌아가기</a>
+    </section>
+  </main>
+  <footer>중·고등학교 정보·인공지능 수업 자료</footer>
+  </div>
+</body>
+</html>

@@ -4,7 +4,7 @@ import test from "node:test";
 import { KEYWORDS } from "../lessons/ai-keyword-bingo/keywords.js";
 import {
   TOTAL_KEYWORDS, PHASES,
-  createSession, remainingTerms, toggleChecked, startDraw, drawNext, undoLastDraw,
+  createSession, remainingTerms, toggleChecked, startDraw, drawNext, drawSpecific, undoLastDraw,
   resetDraw, currentTerm, isDrawComplete, serializeSession, deserializeSession,
 } from "../lessons/ai-keyword-bingo/game-core.js";
 
@@ -15,9 +15,9 @@ const referenceUrl = new URL("../../참고/bingo.html", import.meta.url);
 // 참고 원본(../참고/bingo.html)의 keywords 배열을 그대로 옮겨 적은 값. 철자·띄어쓰기·순서를 고정해 회귀를 막는다.
 const EXPECTED_KEYWORDS = [
   "인공지능", "머신러닝", "딥러닝", "수치형 데이터", "범주형 데이터",
-  "결측치", "이상치", "데이터 편향성", "알고리즘 편향성", "튜링 테스트",
+  "결측치", "이상치", "데이터 편향성", "데이터 시각화", "튜링 테스트",
   "인공 신경망", "지도 학습", "비지도 학습", "강화 학습", "회귀",
-  "분류", "군집화", "연관 규칙", "선형 회귀 모델", "오차 함수",
+  "분류", "군집화", "정확도", "선형 회귀 모델", "오차 함수",
   "분류 모델", "결정 트리", "KNN 알고리즘", "군집 모델", "K-평균 군집화",
 ];
 
@@ -71,6 +71,32 @@ test("drawNext는 prep 단계에서는 호출할 수 없고, draw 단계에서�
   const term = drawNext(session, makeSequentialRandom());
   assert.ok(KEYWORDS.includes(term));
   assert.equal(session.drawOrder.length, 1);
+});
+
+test("drawSpecific은 draw 단계에서 지정한 용어를 직접 뽑고, prep 단계에서는 호출할 수 없다", () => {
+  const session = createSession();
+  assert.throws(() => drawSpecific(session, KEYWORDS[0]));
+  startDraw(session);
+  const term = drawSpecific(session, KEYWORDS[3]);
+  assert.equal(term, KEYWORDS[3]);
+  assert.deepEqual(session.drawOrder, [KEYWORDS[3]]);
+  assert.equal(currentTerm(session), KEYWORDS[3]);
+});
+
+test("drawSpecific은 단어 목록에 없는 용어나 이미 뽑힌 용어는 거부한다", () => {
+  const session = createSession();
+  startDraw(session);
+  assert.throws(() => drawSpecific(session, "존재하지않는용어"));
+  drawSpecific(session, KEYWORDS[0]);
+  assert.throws(() => drawSpecific(session, KEYWORDS[0]), "이미 뽑힌 용어는 다시 뽑을 수 없어야 함");
+});
+
+test("drawSpecific으로 직접 뽑은 용어도 drawNext(무작위 추첨)의 remainingTerms 계산에 반영된다", () => {
+  const session = createSession();
+  startDraw(session);
+  drawSpecific(session, KEYWORDS[0]);
+  assert.ok(!remainingTerms(session).includes(KEYWORDS[0]));
+  assert.equal(remainingTerms(session).length, TOTAL_KEYWORDS - 1);
 });
 
 test("25번 뽑으면 중복 없이 25개 용어가 모두 나오고, 그 다음은 에러를 던진다", () => {
@@ -197,6 +223,21 @@ test("추첨 시작 전에는 확인 절차가 있고, 추첨 화면에는 현�
   assert.match(html, /id="draw-reset-button"/);
   assert.match(html, /id="reset-confirm-overlay"/);
   assert.match(html, /id="fullscreen-toggle"/);
+});
+
+test("용어판의 칩은 클릭·키보드(Enter/Space)로 그 용어를 직접 뽑을 수 있게 role=button과 tabindex를 갖고, game.js가 클릭·keydown 핸들러를 연결한다", async () => {
+  const [html, js] = await Promise.all([
+    readFile(new URL("index.html", lessonRoot), "utf8"),
+    readFile(new URL("game.js", lessonRoot), "utf8"),
+  ]);
+  assert.match(html, /용어를 직접 클릭/);
+  assert.match(js, /role="button"/);
+  assert.match(js, /tabindex="0"/);
+  assert.match(js, /function handleManualDraw/);
+  assert.match(js, /termBoard\.addEventListener\("click"/);
+  assert.match(js, /termBoard\.addEventListener\("keydown"/);
+  assert.match(js, /drawSpecific/);
+  assert.match(js, /aria-disabled/);
 });
 
 test("교사 전용 화면이므로 학생 의견을 묻는 마무리 영역이 없다", async () => {

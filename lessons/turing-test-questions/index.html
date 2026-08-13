@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="튜링 테스트의 원리와 예시를 살펴보고, 대화만으로 사람과 AI를 구별하기 위한 질문을 설문에 직접 적어 제출하는 활동">
+  <title>내가 만약 튜링 테스트에 들어간다면? | 지능과 인공지능의 이해</title>
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-evaluation" data-guard-lesson="turing-test-questions">
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel">
+    <h1>아직 준비 중인 활동입니다</h1>
+    <p>이 활동은 현재 준비 중입니다. 곧 열릴 예정이니 잠시 후 다시 확인해 주세요.</p>
+    <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
+  </div>
+  <div id="guard-content">
+  <header class="topbar">
+    <a class="back-link" href="../../units/ai-evaluation/">← 활동 목록</a>
+    <div class="module-title"><span>수업 01</span><strong>지능과 인공지능의 이해</strong></div>
+  </header>
+
+  <main id="main-content">
+    <section id="intro-view" aria-labelledby="intro-title">
+      <p class="eyebrow">1단계 · 튜링 테스트란</p>
+      <h1 id="intro-title">내가 만약 튜링 테스트에 들어간다면?</h1>
+      <p class="intro-copy-text">용어 빙고에서 만났던 <strong>튜링 테스트</strong>, 기억하나요? 1950년 수학자 앨런 튜링은 "기계가 생각할 수 있는가?"라는 답하기 어려운 질문 대신, "글로만 대화해서 상대가 사람인지 기계인지 구별할 수 있는가?"를 시험해보자고 제안했습니다. 심사자는 상대를 보지 못한 채 글로만 대화를 나누고, 누가 사람이고 누가 AI인지 맞혀야 합니다.</p>
+      <p class="intro-copy-text">오늘은 여러분이 그 심사자가 됩니다. <strong>AI에게 던질 질문을 직접 설계</strong>해 보세요. "이 질문에 AI가 어떻게 답할지", "왜 이 질문이 사람과 AI를 가려낼 수 있을지"를 함께 생각하는 것이 이 활동의 핵심입니다.</p>
+      <p class="intro-note">참고로 정답이 정해진 활동이 아닙니다. 좋은 질문을 만드는 과정 자체가 목표예요.</p>
+    </section>
+
+    <section id="question-view" aria-labelledby="question-title">
+      <p class="eyebrow">2단계 · 예시로 배우기</p>
+      <h2 id="question-title">먼저 예시를 보고 힌트를 얻어보세요</h2>
+
+      <div class="example-block">
+        <p class="example-lead">튜링은 1950년 논문에서 심사자와 상대가 나눌 법한 대화를 직접 예시로 들었습니다.</p>
+        <dl class="example-dialogue">
+          <div class="example-turn">
+            <dt>질문</dt>
+            <dd>포스교(Forth Bridge)를 주제로 소네트(짧은 시)를 하나 써줘.</dd>
+          </div>
+          <div class="example-turn">
+            <dt>답</dt>
+            <dd>그건 저한테는 안 되는 일이에요. 저는 시를 써본 적이 없어서요.</dd>
+          </div>
+          <div class="example-turn">
+            <dt>질문</dt>
+            <dd>34957 더하기 70764는?</dd>
+          </div>
+          <div class="example-turn">
+            <dt>답</dt>
+            <dd>(30초쯤 멈췄다가) 105621.</dd>
+          </div>
+        </dl>
+        <p class="example-analysis">같은 대화 안에서도 질문마다 상대를 가려내는 힘이 다릅니다. 덧셈 질문은 사람도 기계도 비슷하게 답할 수 있어 심사에 큰 도움이 안 되지만, 시를 써달라는 질문은 대답을 회피하는 방식 자체가 힌트가 됩니다.</p>
+
+        <div class="example-compare">
+          <div class="example-weak">
+            <p class="example-compare-label">약한 질문</p>
+            <p class="example-compare-q">"9 곱하기 8은 얼마야?"</p>
+            <p class="example-compare-why">AI도 사람도 척척 답해서 구별에 도움이 안 돼요.</p>
+          </div>
+          <div class="example-strong">
+            <p class="example-compare-label">강한 질문</p>
+            <p class="example-compare-q">"방금 내가 한 말이 왜 웃긴지 설명해줄래?"</p>
+            <p class="example-compare-why">맥락과 감정을 이해해야 답할 수 있어서 차이가 드러날 가능성이 커요.</p>
+          </div>
+        </div>
+
+        <p class="example-note">참고로 2025년 한 연구에서는 최신 AI(GPT-4.5)가 5분 대화 중 73%의 경우 "사람"으로 판정됐습니다. 요즘 AI는 이미 대화를 꽤 잘 흉내 내기 때문에, 좋은 질문을 만드는 게 더 중요해졌습니다.</p>
+      </div>
+
+      <p class="example-next">이제 3단계 설문에서 여러분의 질문을 직접 적어보세요.</p>
+    </section>
+
+    <section id="submit-view" aria-labelledby="submit-title">
+      <p class="eyebrow">3단계 · 질문 작성 및 제출</p>
+      <h2 id="submit-title">AI를 가려낼 질문을 적어서 제출하세요</h2>
+      <p class="submit-copy-text">아래 설문에 질문과 이유를 직접 적어 제출하세요. 최소 1개만 적어도 제출할 수 있습니다. 제출한 질문은 선생님이 모아서 화면에 함께 보여줍니다.</p>
+
+      <div id="submit-embed" class="submit-embed">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdkUJhvWQ6NhDpCru-X8TsKH63tny0_W6r9U9sq-mCzAUHQfg/viewform?embedded=true" title="튜링 테스트 질문 제출" loading="lazy">로드 중…</iframe>
+      </div>
+
+      <p class="submit-fallback">
+        <a id="submit-fallback-link" class="submit-fallback-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdkUJhvWQ6NhDpCru-X8TsKH63tny0_W6r9U9sq-mCzAUHQfg/viewform" target="_blank" rel="noreferrer">새 탭에서 제출 링크 열기 →</a>
+      </p>
+    </section>
+  </main>
+  <footer>중·고등학교 정보·인공지능 수업 자료</footer>
+  </div>
+</body>
+</html>

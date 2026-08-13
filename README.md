@@ -8,24 +8,27 @@
 - `units/<group-id>/index.html`: 활동지 하나에 속한 하위 활동을 01/02/03 순서로 보여주는 목록 페이지. 예: `units/ai-learning/`
 - `lessons/<lesson-id>/`: 활동 하나의 독립 웹페이지(기존 URL은 이동·삭제하지 않습니다)
 - `lessons/shared/`: 여러 활동이 함께 쓰는 CSS·JS 공통 자산
-- `data/activity-groups.json`: 활동지(group)과 하위 활동(children)을 함께 관리하는 확장용 스키마. group마다 `id/order/title/description/path/status/active/children`을, children마다 `id/order/title/path/duration/difficulty/status/objective`를 가집니다. 제목·설명·카드 같은 내용은 여전히 루트/그룹/활동 페이지의 HTML을 직접 최신 상태로 유지하는 **관리 원본이자 검증 소스**로 쓰지만(`tests/activity-groups.test.mjs`가 HTML과 JSON이 어긋나지 않는지 확인), `active` 필드만은 예외로 `assets/group-guard.js`가 배포된 페이지에서 런타임에 fetch해 확인합니다. 자세한 동작은 아래 "활동지 켜고 끄기(active)"를 참고하세요.
+- `data/activity-groups.json`: 활동지(group)과 하위 활동(children)을 함께 관리하는 확장용 스키마. group마다 `id/order/title/description/path/status/active/children`을, children마다 `id/order/title/path/duration/difficulty/status/active/objective`를 가집니다. 제목·설명·카드 같은 내용은 여전히 루트/그룹/활동 페이지의 HTML을 직접 최신 상태로 유지하는 **관리 원본이자 검증 소스**로 쓰지만(`tests/activity-groups.test.mjs`가 HTML과 JSON이 어긋나지 않는지 확인), `active` 필드(group·child 둘 다)만은 예외로 `assets/group-guard.js`가 배포된 페이지에서 런타임에 fetch해 확인합니다. 자세한 동작은 아래 "활동지 켜고 끄기(active)"를 참고하세요.
 - `data/lessons.json`: 활동별 메타데이터를 담은 기존 평면 목록(하위 호환용으로 그대로 유지). `activity-groups.json`의 각 child와 id·order·path·duration·difficulty가 일치해야 합니다.
 - `assets/group-guard.js`, `assets/guard.css`: 허브·그룹·활동 페이지가 공통으로 쓰는 활성화 가드. 아래 "활동지 켜고 끄기(active)"에서 설명합니다.
 - `tests/`: 수업 로직과 정적 페이지 구조를 확인하는 테스트 하네스
 
 ## 활동지 켜고 끄기(active)
 
-각 group은 `data/activity-groups.json`에 `"active": true | false`를 명시적으로 갖습니다. GitHub Pages에 배포된 정적 사이트에서 **이 `active` 값만 바꿔 다시 배포**하면(HTML을 건드리지 않아도) 학생 화면의 동작이 즉시 바뀝니다.
+각 group은 `data/activity-groups.json`에 `"active": true | false`를 명시적으로 갖고, **각 child(개별 활동)도 마찬가지로 자신만의 `"active": true | false`를 갖습니다.** GitHub Pages에 배포된 정적 사이트에서 **이 `active` 값만 바꿔 다시 배포**하면(HTML을 건드리지 않아도) 학생 화면의 동작이 즉시 바뀝니다. 그룹 전체를 끌 수도 있고, 그룹은 켜 둔 채 그 안의 활동 하나만 끌 수도 있습니다.
 
 - `active: true`인 그룹은 루트 허브에서 평소처럼 클릭해 들어갈 수 있고, 그룹·활동 페이지도 정상적으로 열립니다.
 - `active: false`인 그룹은 루트 허브 카드에 "준비 중" 표시가 붙고 클릭(키보드 Enter 포함)이 막히며, 그 그룹의 `units/<group-id>/`와 하위 `lessons/<lesson-id>/` 페이지에 **직접 URL로 접속해도** 실제 콘텐츠 대신 "아직 준비 중인 활동입니다" 안내와 전체 활동지 홈으로 돌아가는 링크만 보여줍니다.
+- 그룹이 `active: true`여도 특정 child가 `active: false`면, 그 활동지 목록 페이지(`units/<group-id>/`)의 해당 `.lesson-card`에만 "준비 중" 표시가 붙고 클릭이 막히며, 그 활동 페이지(`lessons/<lesson-id>/`)에 직접 URL로 접속해도 같은 "아직 준비 중인 활동입니다" 안내로 막힙니다. 나머지 형제 활동과 그룹 자체는 평소처럼 동작합니다.
 
 ### 동작 원리
 
 모든 허브/그룹/활동 페이지는 `assets/group-guard.js`(ES 모듈)와 `assets/guard.css`를 불러옵니다.
 
-- 그룹·활동 페이지는 `<body data-guard-scope="page" data-guard-group="<group-id>">`로 자신이 속한 group id를 선언하고, `<head>`의 인라인 스크립트가 즉시(자바스크립트 파싱 시점에) `<html data-guard="pending">`을 설정해 `#guard-content`(실제 콘텐츠)를 CSS로 숨깁니다. `group-guard.js`가 `data/activity-groups.json`을 fetch해서 해당 group의 `active`가 `true`로 확인되면 `data-guard="active"`로 바꿔 콘텐츠를 보여주고, `false`이거나 **fetch에 실패하면(네트워크 오류, JSON 손상 등)** `data-guard="blocked"`로 바꿔 `#guard-blocked` 안내만 보여줍니다. 즉 **그룹·활동 페이지는 불러오기에 실패했을 때도 항상 "준비 중"으로 보수적으로(fail-closed) 처리**하고, 확인되지 않은 콘텐츠가 실수로 노출되지 않도록 합니다. 실제로 `active: false`인 그룹의 콘텐츠를 막는 접근 차단(보안 경계)은 오직 이 페이지 단계에서만 일어나며, 배포 환경(GitHub Pages)에서 직접 URL로 접속해도 동일하게 적용됩니다. 자바스크립트가 아예 꺼져 있으면 인라인 스크립트도 실행되지 않으므로 `data-guard` 속성이 설정되지 않고, 이 경우 CSS 기본값대로 콘텐츠가 그대로 보입니다(무JS 환경에서는 이 가드가 활성화를 강제할 수 없다는 한계가 있습니다).
-- 루트 허브는 `<body data-guard-scope="hub">`이고, 각 그룹 카드(`<a class="group-card">`)에 `data-group-card="<group-id>"`를 붙입니다. 카드는 페이지 로드 즉시(비동기 fetch 완료 전부터) 클릭 이벤트를 가로채고, group id별 상태가 `"active"`로 확인되기 전까지는 항상 이동을 막습니다. fetch가 끝나면 실제로 `active: false`로 확인된 그룹 카드에만 "준비 중" 배지가 붙고 이동이 막힙니다. 반면 허브 카드는 접근을 차단하는 보안 경계가 아니라 안내용 진입점일 뿐이므로, **JSON을 아예 불러오지 못한 경우(`file://`로 직접 열었을 때는 브라우저가 로컬 JSON에 대한 fetch를 막고, 배포 환경에서도 일시적인 네트워크 오류가 날 수 있습니다)에는 이미 화면에 카드가 나와 있는 활동지를 모두 열어 둡니다(fail-open)** — 카드를 영구히 잠그는 대신 `#groups-load-error` 안내만 보여줍니다. 실제로 비활성인 활동지였다면 이동한 뒤 그룹·활동 페이지의 fail-closed 가드가 최종적으로 막으므로, 허브에서 fail-open으로 처리해도 비활성 콘텐츠가 새어 나가지는 않습니다. 잠금 배지(`.group-status-badge`)는 `.group-card`의 `grid-template-columns: auto 1fr auto` 3열 레이아웃에 4번째 자식으로 추가되므로, `guard.css`에서 `grid-column: 1 / -1`로 전체 폭의 별도 행에 배치해 기존 3열이 깨지지 않도록 합니다.
+- 활동 페이지는 `<body data-guard-scope="page" data-guard-group="<group-id>" data-guard-lesson="<lesson-id>">`로 자신이 속한 group id와 자기 자신의 lesson id를 함께 선언하고(그룹 목록 페이지는 그룹 전체를 나타내므로 `data-guard-lesson`이 없습니다), `<head>`의 인라인 스크립트가 즉시(자바스크립트 파싱 시점에) `<html data-guard="pending">`을 설정해 `#guard-content`(실제 콘텐츠)를 CSS로 숨깁니다. `group-guard.js`가 `data/activity-groups.json`을 fetch해서 해당 group의 `active`가 `true`이고(`data-guard-lesson`이 있다면) 그 child의 `active`도 `true`로 확인되면 `data-guard="active"`로 바꿔 콘텐츠를 보여주고, 둘 중 하나라도 `false`이거나 **fetch에 실패하면(네트워크 오류, JSON 손상 등)** `data-guard="blocked"`로 바꿔 `#guard-blocked` 안내만 보여줍니다. 즉 **활동 페이지는 불러오기에 실패했을 때도 항상 "준비 중"으로 보수적으로(fail-closed) 처리**하고, 확인되지 않은 콘텐츠가 실수로 노출되지 않도록 합니다. 실제로 `active: false`인 그룹·활동의 콘텐츠를 막는 접근 차단(보안 경계)은 오직 이 페이지 단계에서만 일어나며, 배포 환경(GitHub Pages)에서 직접 URL로 접속해도 동일하게 적용됩니다. 자바스크립트가 아예 꺼져 있으면 인라인 스크립트도 실행되지 않으므로 `data-guard` 속성이 설정되지 않고, 이 경우 CSS 기본값대로 콘텐츠가 그대로 보입니다(무JS 환경에서는 이 가드가 활성화를 강제할 수 없다는 한계가 있습니다).
+- 루트 허브는 `<body data-guard-scope="hub">`이고, 각 그룹 카드(`<a class="group-card">`)에 `data-group-card="<group-id>"`를 붙입니다. 카드는 페이지 로드 즉시(비동기 fetch 완료 전부터) 클릭 이벤트를 가로채고, group id별 상태가 `"active"`로 확인되기 전까지는 항상 이동을 막습니다. fetch가 끝나면 실제로 `active: false`로 확인된 그룹 카드에만 "준비 중" 배지가 붙고 이동이 막힙니다. 반면 허브 카드는 접근을 차단하는 보안 경계가 아니라 안내용 진입점일 뿐이므로, **JSON을 아예 불러오지 못한 경우(`file://`로 직접 열었을 때는 브라우저가 로컬 JSON에 대한 fetch를 막고, 배포 환경에서도 일시적인 네트워크 오류가 날 수 있습니다)에는 이미 화면에 카드가 나와 있는 활동지를 모두 열어 둡니다(fail-open)** — 카드를 영구히 잠그는 대신 `#groups-load-error` 안내만 보여줍니다. 실제로 비활성인 활동지였다면 이동한 뒤 그룹·활동 페이지의 fail-closed 가드가 최종적으로 막으므로, 허브에서 fail-open으로 처리해도 비활성 콘텐츠가 새어 나가지는 않습니다.
+- 활동지 목록 페이지(`units/<group-id>/index.html`)도 자신의 `data-guard-group`으로 그룹 전체 활성 여부를 fail-closed로 판정하는 동시에, 그 안의 각 `.lesson-card`(`data-lesson-card="<lesson-id>"`)에 대해서는 허브 카드와 똑같은 fail-open 잠금 로직을 적용합니다(잠금 대상이 그룹이 아니라 child라는 점만 다름). 이 페이지 자체가 fetch에 실패해 통째로 막히는 경우(fail-closed)에는 안에 있는 개별 활동 카드까지 따로 열어 둘 필요가 없으므로, 이 fail-open 처리는 그룹이 정상적으로 active로 확인된 뒤에만 의미가 있습니다.
+- 잠금 배지(`.group-status-badge`)는 `.group-card`·`.lesson-card` 둘 다의 `grid-template-columns: auto 1fr auto` 3열 레이아웃에 4번째 자식으로 추가되므로, `guard.css`에서 `grid-column: 1 / -1`로 전체 폭의 별도 행에 배치해 기존 3열이 깨지지 않도록 합니다.
 
 ### 새 활동지를 추가하려면
 
@@ -36,9 +39,9 @@
 
 ### 기존 활동지에 하위 활동을 추가하려면
 
-1. `lessons/<새-lesson-id>/`에 독립 웹페이지를 만듭니다(다른 활동처럼 `index.html`·`game-core.js`·`game.js`·`styles.css`, 필요하면 `lessons/shared/`의 공통 자산 재사용). 이 페이지에도 위와 같은 가드 마크업(`data-guard-scope="page" data-guard-group="<소속-group-id>"`, `#guard-content`, `#guard-loading`, `#guard-blocked`, guard.css·group-guard.js 로드)을 포함해야, 소속 그룹이 나중에 `active: false`가 되었을 때 직접 URL 접근이 막힙니다.
-2. 해당 활동지의 `units/<group-id>/index.html`에 새 `.lesson-card`를 순서(01/02/03…)에 맞게 추가하고 `../../lessons/<새-lesson-id>/`로 연결합니다.
-3. `data/activity-groups.json`의 해당 group `children` 배열과 `data/lessons.json`의 `lessons` 배열에 같은 내용(id/order/title/path/duration/difficulty/status, children에는 objective 추가)을 등록합니다.
+1. `lessons/<새-lesson-id>/`에 독립 웹페이지를 만듭니다(다른 활동처럼 `index.html`·`game-core.js`·`game.js`·`styles.css`, 필요하면 `lessons/shared/`의 공통 자산 재사용). 이 페이지에도 위와 같은 가드 마크업(`data-guard-scope="page" data-guard-group="<소속-group-id>" data-guard-lesson="<새-lesson-id>"`, `#guard-content`, `#guard-loading`, `#guard-blocked`, guard.css·group-guard.js 로드)을 포함해야, 소속 그룹이나 이 활동 자신이 나중에 `active: false`가 되었을 때 직접 URL 접근이 막힙니다.
+2. 해당 활동지의 `units/<group-id>/index.html`에 새 `.lesson-card`를 순서(01/02/03…)에 맞게 추가하고 `../../lessons/<새-lesson-id>/`로 연결하며 `data-lesson-card="<새-lesson-id>"`를 붙입니다.
+3. `data/activity-groups.json`의 해당 group `children` 배열과 `data/lessons.json`의 `lessons` 배열에 같은 내용(id/order/title/path/duration/difficulty/status, children에는 active/objective 추가)을 등록합니다. 새 활동은 보통 `active: true`로 시작합니다.
 4. 이웃 활동들의 상단 back-link(`../../units/<group-id>/`)와 하단 이전/다음 이동 링크를 새 활동을 포함하도록 갱신합니다.
 
 ### 중복 데이터 관리 기준(무엇이 관리 원본인가)
@@ -48,7 +51,7 @@
 | 필드 | 관리 원본 | 반영 시점 | 어긋나면 |
 | --- | --- | --- | --- |
 | 제목·설명·순서·소요시간·난이도·objective 등 (`active` 제외 전부) | HTML(루트/그룹/활동 페이지)과 JSON(`activity-groups.json`, `lessons.json`)을 **함께** 손으로 동기화 | 커밋 시점(정적 배포이므로 HTML을 다시 빌드·배포해야 반영) | `tests/activity-groups.test.mjs`·`tests/hub-structure.test.mjs`가 실패 |
-| `active`(그룹 활성/비활성) | `data/activity-groups.json`이 **유일한 원본**. HTML에는 이 값을 별도로 적어 두지 않음 | 배포된 JSON을 fetch하는 즉시(HTML을 다시 배포하지 않아도 반영) | 해당 없음(HTML에 중복이 없으므로 어긋날 수 없음) |
+| `active`(그룹 활성/비활성, child 활성/비활성 모두) | `data/activity-groups.json`이 **유일한 원본**. HTML에는 이 값을 별도로 적어 두지 않음 | 배포된 JSON을 fetch하는 즉시(HTML을 다시 배포하지 않아도 반영) | 해당 없음(HTML에 중복이 없으므로 어긋날 수 없음) |
 
 즉 "무엇을 보여줄지(제목·설명 등)"는 HTML이 그대로 원본이라 JSON과 함께 손으로 맞추고 테스트로 검증하지만, "지금 열 수 있는지(active)"는 오직 JSON 하나만 보고 런타임에 판단합니다. 이 둘을 섞어서 HTML에 활성 상태를 하드코딩하면 배포 없이 그룹을 껐다 켤 수 있는 목적 자체가 사라지므로 하지 마세요.
 
@@ -58,7 +61,7 @@
 
 - **`lessons/ai-keyword-bingo/`(인공지능 핵심 용어 빙고)** — 학생은 5×5 종이 빙고판에 인공지능·데이터 핵심 용어 25개를 순서와 상관없이 옮겨 적습니다(디지털 빙고판은 만들지 않습니다). 준비 화면의 "학생용 빈 빙고판 인쇄하기" 버튼을 누르면 이름 칸과 빈 25칸짜리 5×5 격자만 담은 인쇄용 화면(`#printable-board`, `window.print()`)이 열려 학생 수만큼 인쇄해 나눠줄 수 있고, 그 아래 25개 용어를 고대비 카드 목록으로 모두 보여주고, 선택 사항인 확인 체크(0/25)를 제공합니다. 교사가 "추첨 시작"을 누르기 전 확인 절차를 거친 뒤 추첨 화면으로 넘어가면, 25개 용어를 격자 칸 없이 겹치지 않는 무작위 위치에 흩뿌려(`#term-board`) 처음부터 전부 화면에 띄워 놓고 "다음 뽑기"를 누를 때마다 그중 하나를 무작위로 뽑아 그 칩을 강조 표시합니다(이미 뽑힌 칩은 파란색, 방금 막 뽑힌 칩은 초록색 + 몇 번째로 뽑혔는지 모서리 배지). 위치 계산(`game.js`의 `placeTermBoardTiles`)은 각 칩을 실제로 렌더링해 측정한 크기 기준으로 무작위 좌표를 시도하다 겹치면 다시 시도하고, 그래도 자리를 못 찾으면 중심에서 바깥으로 나선형으로 훑어 안전하게 자리를 찾습니다. 컨테이너가 아직 화면에 보이지 않을 때(활성화 가드 대기 중이거나 아직 준비 화면일 때)는 크기가 0으로 측정되어 전부 한 점에 겹쳐 버리므로, `ResizeObserver`로 실제로 폭이 생기는 시점까지 기다렸다가 딱 한 번만 배치를 계산합니다(이후 뽑을 때마다는 이미 정해진 위치를 그대로 두고 강조 색상·배지만 갱신). 준비 화면의 용어 목록과 달리 이 배치는 페이지를 새로 열 때마다 다시 계산되므로 고정된 순서를 외워 자기 종이 빙고판에 그대로 옮겨 적을 수 없습니다. 교실 앞에서 화면을 띄워 놓고 진행하는 용도라 움직이는 장식 애니메이션은 두지 않고, 정적인 배치와 색상 강조만으로 진행 상황을 보여줍니다. `N/25` 진행 상황과 방금 뽑힌 용어 이름은 화면 위 안내 문구(`#draw-current`, `aria-live`)로도 함께 전달됩니다. 추첨은 중복 없이 진행되며, 바로 직전 추첨만 취소해 되돌릴 수 있고, 확인을 거친 뒤 전체 초기화도 가능합니다. 전체화면 전환과 키보드 Enter/Space로 다음 뽑기를 지원하고, 새로고침해도 `localStorage`에 저장된 진행 상태(단계·체크·추첨 기록)를 그대로 복원합니다 — 수업 중 실수로 새로고침해도 이어서 진행할 수 있게 하기 위함이며, 완전히 새로 시작하려면 준비 화면으로 돌아갈 방법이 없으므로 추첨 화면의 "전체 초기화" 버튼으로 추첨 기록을 지우세요. 이 화면은 교사 전용이라 학생 의견을 묻는 마무리 입력 영역은 두지 않습니다. 용어 25개의 철자·띄어쓰기·순서는 참고 원본 `bingo.html`의 `keywords` 배열과 완전히 동일하게 `lessons/ai-keyword-bingo/keywords.js`에 고정되어 있습니다(`tests/ai-keyword-bingo.test.mjs`가 검증).
 
-## 활동지 02 · AI는 어떻게 학습할까? (마트 AI 실습실)
+## 활동지 03 · AI는 어떻게 학습할까? (마트 AI 실습실)
 
 같은 마트 과일 선별 AI를 소재로 세 활동이 이어지는, 루트 허브의 두 번째 활동지입니다. 활동지 목록 페이지는 `units/ai-learning/`이고, 각 활동은 `lessons/` 아래 독립된 URL로 바로 열립니다. 화면 상단 back-link와 하단(그리고 활동 01은 결과 화면에도)의 이동 링크는 `units/ai-learning/`(활동지 목록)으로 돌아가며, 활동 03의 결과 화면에는 전체 활동지 홈(`/`)으로 가는 링크도 별도로 있습니다. 활동 간 이전/다음 링크는 그대로 유지됩니다.
 

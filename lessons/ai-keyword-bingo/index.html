@@ -12,7 +12,7 @@
   <script type="module" src="../../assets/group-guard.js"></script>
   <script type="module" src="game.js"></script>
 </head>
-<body data-guard-scope="page" data-guard-group="ai-vocabulary">
+<body data-guard-scope="page" data-guard-group="ai-vocabulary" data-guard-lesson="ai-keyword-bingo">
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
   <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
   <div id="guard-blocked" class="guard-panel">
@@ -44,7 +44,7 @@
         <li class="term-card"><label><input type="checkbox" id="term-check-5" data-term="결측치"><span class="term-index">06</span><span>결측치</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-6" data-term="이상치"><span class="term-index">07</span><span>이상치</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-7" data-term="데이터 편향성"><span class="term-index">08</span><span>데이터 편향성</span></label></li>
-        <li class="term-card"><label><input type="checkbox" id="term-check-8" data-term="알고리즘 편향성"><span class="term-index">09</span><span>알고리즘 편향성</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-8" data-term="데이터 시각화"><span class="term-index">09</span><span>데이터 시각화</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-9" data-term="튜링 테스트"><span class="term-index">10</span><span>튜링 테스트</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-10" data-term="인공 신경망"><span class="term-index">11</span><span>인공 신경망</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-11" data-term="지도 학습"><span class="term-index">12</span><span>지도 학습</span></label></li>
@@ -53,7 +53,7 @@
         <li class="term-card"><label><input type="checkbox" id="term-check-14" data-term="회귀"><span class="term-index">15</span><span>회귀</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-15" data-term="분류"><span class="term-index">16</span><span>분류</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-16" data-term="군집화"><span class="term-index">17</span><span>군집화</span></label></li>
-        <li class="term-card"><label><input type="checkbox" id="term-check-17" data-term="연관 규칙"><span class="term-index">18</span><span>연관 규칙</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-17" data-term="정확도"><span class="term-index">18</span><span>정확도</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-18" data-term="선형 회귀 모델"><span class="term-index">19</span><span>선형 회귀 모델</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-19" data-term="오차 함수"><span class="term-index">20</span><span>오차 함수</span></label></li>
         <li class="term-card"><label><input type="checkbox" id="term-check-20" data-term="분류 모델"><span class="term-index">21</span><span>분류 모델</span></label></li>
@@ -83,9 +83,9 @@
         <span id="draw-count" aria-live="polite">0 / 25</span>
       </div>
       <div class="draw-announce">
-        <p id="draw-current" class="draw-current is-placeholder" tabindex="-1" aria-live="polite" aria-atomic="true">아래 "다음 뽑기"를 눌러 첫 용어를 뽑아 주세요</p>
+        <p id="draw-current" class="draw-current is-placeholder" tabindex="-1" aria-live="polite" aria-atomic="true">아래 "다음 뽑기"를 누르거나, 용어판에서 용어를 직접 클릭해 첫 용어를 뽑아 주세요</p>
       </div>
-      <ul class="term-board" id="term-board" aria-label="용어 25개 전체 목록. 뽑힌 용어는 강조 표시되고 몇 번째로 뽑혔는지 함께 안내합니다."></ul>
+      <ul class="term-board" id="term-board" aria-label="용어 25개 전체 목록. 아직 뽑히지 않은 용어를 클릭하면 그 용어를 직접 뽑을 수 있습니다. 뽑힌 용어는 강조 표시되고 몇 번째로 뽑혔는지 함께 안내합니다."></ul>
       <div class="draw-controls">
         <button id="draw-next-button" type="button">다음 뽑기 <span class="shortcut-help">Enter / Space</span></button>
         <button id="draw-undo-button" type="button" disabled>바로 전 취소</button>

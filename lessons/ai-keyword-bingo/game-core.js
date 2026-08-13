@@ -34,6 +34,16 @@ export function drawNext(session, random = Math.random) {
   return term;
 }
 
+// "다음 뽑기"의 무작위 추첨 대신, 화면에 흩뿌려진 용어 칩을 교사가 직접 클릭해서 그 용어를 뽑은 것으로
+// 기록할 때 쓴다(예: 학생이 먼저 외쳤거나 교사가 순서를 직접 정하고 싶을 때). 이미 뽑힌 용어는 다시 뽑을 수 없다.
+export function drawSpecific(session, term) {
+  if (session.phase !== PHASES.DRAW) throw new Error("추첨 단계에서만 용어를 뽑을 수 있습니다.");
+  if (!KEYWORDS.includes(term)) throw new Error(`알 수 없는 용어입니다: ${term}`);
+  if (session.drawOrder.includes(term)) throw new Error(`이미 뽑힌 용어입니다: ${term}`);
+  session.drawOrder.push(term);
+  return term;
+}
+
 export function undoLastDraw(session) {
   if (session.drawOrder.length === 0) return null;
   return session.drawOrder.pop();

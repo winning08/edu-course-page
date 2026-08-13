@@ -9,11 +9,13 @@ html[data-guard="pending"] #guard-loading { display: block; }
 html[data-guard="blocked"] #guard-content { display: none; }
 html[data-guard="blocked"] #guard-blocked { display: block; }
 
-.group-card.group-card--locked { opacity: .6; cursor: not-allowed; }
-.group-card.group-card--locked:hover { transform: none; border-color: var(--line, #d8dde6); }
+.group-card.group-card--locked, .lesson-card.group-card--locked { opacity: .6; cursor: not-allowed; }
+.group-card.group-card--locked:hover, .lesson-card.group-card--locked:hover { transform: none; border-color: var(--line, #c7ced9); }
 /* group-guard.js가 .group-card(grid-template-columns:auto 1fr auto)에 배지를 4번째 자식으로 붙이므로,
    기존 3열을 건드리지 않도록 배지 전용 행으로 전체 폭에 걸치게(grid-column:1/-1) 한다. */
 .group-card > .group-status-badge { grid-column: 1 / -1; margin: .6rem 0 0; justify-self: start; }
+/* .lesson-card도 .group-card와 동일한 3열 grid(auto 1fr auto)를 쓰므로 같은 이유로 같은 처리가 필요하다. */
+.lesson-card > .group-status-badge { grid-column: 1 / -1; margin: .6rem 0 0; justify-self: start; }
 .group-status-badge { display: inline-block; padding: .2rem .65rem; color: #7a5b00; background: #fff3cd; border: 1px solid #f0d78c; border-radius: 99px; font-size: .72rem; font-weight: 700; vertical-align: middle; }
 .guard-error { max-width: 1040px; margin: 0 auto 1rem; padding: .8rem 1rem; color: #7a1f27; background: #fff2f3; border: 1px solid #d9535f; border-radius: 4px; font-size: .86rem; }
 @media (prefers-reduced-motion: reduce) { #guard-loading, #guard-blocked { transition: none !important; } }

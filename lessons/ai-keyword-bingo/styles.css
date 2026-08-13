@@ -42,8 +42,10 @@ main { width: min(1120px, calc(100% - 2rem)); margin-inline: auto; padding: clam
 
 /* 25개 용어를 겹치지 않는 무작위 위치에 흩뿌려 놓는 정적 배치(움직이는 애니메이션 없음). 위치는 game.js가 JS로 계산해 각 li의 left/top에 지정한다. */
 .term-board { position: relative; min-height: clamp(420px, 46vw, 620px); margin: 0 0 1.6rem; padding: 0; list-style: none; background: #eef1f6; border-radius: 12px; overflow: hidden; }
-.term-board li { position: absolute; padding: .5rem 1rem; color: var(--ink); background: #fff; border: 2px solid var(--line-strong); border-radius: 999px; font-weight: 700; font-size: clamp(.78rem, 1.3vw, 1rem); line-height: 1.3; white-space: nowrap; }
-.term-board li.is-drawn { color: #fff; background: var(--accent); border-color: var(--accent); }
+.term-board li { position: absolute; padding: .5rem 1rem; color: var(--ink); background: #fff; border: 2px solid var(--line-strong); border-radius: 999px; font-weight: 700; font-size: clamp(.78rem, 1.3vw, 1rem); line-height: 1.3; white-space: nowrap; cursor: pointer; }
+.term-board li:hover:not(.is-drawn) { border-color: var(--accent); color: var(--accent); }
+.term-board li:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.term-board li.is-drawn { color: #fff; background: var(--accent); border-color: var(--accent); cursor: default; }
 .term-board li.is-current { color: #10131b; background: #8fe3b0; border-color: #8fe3b0; box-shadow: 0 0 0 3px rgba(143, 227, 176, .45); z-index: 1; }
 /* 배지는 li의 상자 크기에 영향을 주지 않도록(측정해서 배치를 끝낸 뒤 뽑힌 순번이 나중에 채워져도 자리가 안 밀리도록) 절대 위치로 살짝 겹쳐 붙인다. */
 .term-order-badge { position: absolute; top: -.6rem; right: -.5rem; display: flex; align-items: center; justify-content: center; min-width: 1.2rem; height: 1.2rem; padding: 0 .3rem; color: #fff; background: #111; border-radius: 999px; font: 700 .66rem ui-monospace, monospace; }
