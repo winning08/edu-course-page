@@ -1,8 +1,15 @@
 import { summarizeArcResults } from "./game-core.js";
 
-// arc-puzzle-challenge/puzzles.js가 정의한 문제 수와 같은 값(4). 각 활동은 독립 폴더로 유지하는
-// 프로젝트 관례상 그 파일을 직접 import하지 않고 값만 그대로 옮겨 적었다.
+// arc-puzzle-challenge/puzzles.js가 정의한 필수(tier: "required") 문제 수와 같은 값(4).
+// 각 활동은 독립 폴더로 유지하는 프로젝트 관례상 그 파일을 직접 import하지 않고 값만
+// 그대로 옮겨 적었다. 선택 도전(bonus) 문제 1개는 이 필수 개수에 포함하지 않는다.
 const ARC_PUZZLE_TOTAL = 4;
+
+const ARC_BONUS_OUTCOME_LABELS = {
+  "solved-first": "직접 성공",
+  "solved-retry": "다시 도전해서 성공",
+  "skipped": "건너뜀",
+};
 
 const $ = (selector) => document.querySelector(selector);
 const el = {
@@ -30,7 +37,7 @@ function renderTuringSummary() {
 }
 
 function renderArcSummary() {
-  const saved = readJSON("arc-puzzle-challenge:v1");
+  const saved = readJSON("arc-puzzle-challenge:v3");
   const summary = summarizeArcResults(saved?.results);
   if (summary.attempted === 0) {
     el.arcSummary.innerHTML = `
@@ -41,12 +48,17 @@ function renderArcSummary() {
     return;
   }
   const inProgress = summary.attempted < ARC_PUZZLE_TOTAL;
-  const parts = [`${ARC_PUZZLE_TOTAL}문제 중 ${summary.solved}문제를 스스로 풀었어요`];
+  const parts = [`필수 문제 ${ARC_PUZZLE_TOTAL}개 중 ${summary.solved}문제를 스스로 풀었어요`];
   if (summary.solvedRetry > 0) parts.push(`그중 ${summary.solvedRetry}문제는 다시 도전해서 성공`);
   if (summary.skipped > 0) parts.push(`${summary.skipped}문제는 건너뜀`);
+  const bonusResult = typeof saved?.bonusResult === "string" ? saved.bonusResult : null;
+  const bonusLine = bonusResult
+    ? `<p class="my-result-highlight">선택 도전(Expert): ${ARC_BONUS_OUTCOME_LABELS[bonusResult] ?? bonusResult}</p>`
+    : "";
   el.arcSummary.innerHTML = `
     <p class="my-result-title">활동 02 · ARC 퍼즐</p>
     <p class="my-result-highlight">${parts.join(", ")}</p>
+    ${bonusLine}
     ${inProgress ? '<p class="my-result-empty">아직 진행 중이에요 — <a href="../arc-puzzle-challenge/">이어서 풀기 →</a></p>' : ""}
   `;
 }

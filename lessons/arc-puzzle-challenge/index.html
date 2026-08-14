@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="예시 몇 개만 보고 규칙을 찾아 그림 퍼즐을 완성하는 ARC-AGI 체험 활동">
   <title>AI도 못 푸는 퍼즐, 나는 풀 수 있을까? | 지능과 인공지능의 이해</title>
+  <link rel="stylesheet" href="../../assets/fonts.css">
   <link rel="stylesheet" href="../shared/lab-base.css">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="../../assets/guard.css">
@@ -31,13 +32,14 @@
       <p class="eyebrow">1단계 · ARC-AGI란</p>
       <h1 id="intro-title">AI도 못 푸는 퍼즐, 나는 풀 수 있을까?</h1>
       <p class="intro-copy-text">앞 활동에서는 "대화만으로 사람과 AI를 구별할 수 있는가"를 다루는 튜링 테스트를 살펴봤습니다. 이번에는 정반대 방식의 시험을 체험합니다. <strong>ARC-AGI</strong>는 정답을 외워서는 풀 수 없도록, 예시 몇 개만 보여주고 처음 보는 문제의 규칙을 그 자리에서 스스로 찾아내야 하는 그림 퍼즐 시험입니다. 사람에게는 쉬운 문제가 많지만, 최신 AI도 아직 잘 풀지 못하는 유형이 섞여 있습니다.</p>
-      <p class="intro-copy-text">아래 네모 칸 그림 퍼즐마다 <strong>입력 → 출력</strong> 예시가 3개씩 있습니다. 예시들 사이의 공통 규칙을 찾아, 마지막 문제의 빈 칸을 규칙에 맞게 채워 보세요.</p>
+      <p class="intro-copy-text">ARC의 원래 이름은 <strong>Abstraction and Reasoning Corpus</strong>(추상화와 추론 문제 모음)입니다. 여기서 <strong>추상화</strong>는 여러 예시를 겉모습이 아니라 공통된 규칙으로 요약해 보는 것을, <strong>추론</strong>은 그렇게 찾은 규칙을 처음 보는 문제에 적용해 답을 이끌어내는 것을 뜻합니다. 오늘은 이 두 가지를 직접 해 봅니다.</p>
+      <p class="intro-copy-text">아래 네모 칸 그림 퍼즐은 <strong>ARC-AGI-1 공식 공개 문제</strong>입니다. 각 문제에 들어 있는 모든 <strong>입력 → 출력</strong> 학습 예시를 살펴보고 공통 규칙을 찾아, 마지막 시험 입력의 출력을 직접 채워 보세요. 필수 문제는 4개이고, 쉬움 → 보통 → 어려움 1 → 어려움 2 순으로 진행됩니다. 4문제를 모두 마치면 시간이 남는 사람만 선택 도전(Expert) 문제 1개에 도전할 수 있습니다. 난이도 이름은 공식 등급이 아니라 수업 진행을 위해 붙인 이름입니다.</p>
       <p class="intro-note">정답이 하나뿐인 문제들이라 채점은 되지만, 틀려도 몇 번이든 다시 시도할 수 있고 언제든 건너뛸 수 있습니다.</p>
     </section>
 
     <section id="puzzle-view" aria-labelledby="puzzle-title">
       <div class="puzzle-progress" aria-live="polite">
-        <span id="puzzle-progress-label">문제 1 / 4</span>
+        <span id="puzzle-progress-label">공식 ARC 문제를 불러오는 중…</span>
       </div>
       <p class="eyebrow">2단계 · 규칙 찾기</p>
       <h2 id="puzzle-title"></h2>
@@ -74,6 +76,13 @@
       <p class="eyebrow">3단계 · 결과</p>
       <h2 id="results-title">오늘 체험 결과</h2>
       <p id="results-summary" class="results-summary"></p>
+
+      <div id="bonus-prompt" class="bonus-prompt" hidden>
+        <p class="bonus-prompt-text">필수 문제 4개를 모두 마쳤어요! 시간이 남는다면 더 어려운 <strong>선택 도전(Expert)</strong> 문제 1개에 도전해 볼 수 있습니다. 풀지 않아도 오늘 활동은 완료된 것으로 인정됩니다.</p>
+        <button id="bonus-button" type="button">더 도전하기 (선택) →</button>
+      </div>
+      <p id="bonus-outcome" class="bonus-outcome" hidden></p>
+
       <p class="results-note">ARC-AGI는 이 몇 문제만으로 "AI가 지능을 가졌는지"를 판정하지 않습니다. 오늘 확인한 것은 딱 하나, <strong>사람에게는 쉬워 보이는 규칙 찾기도 AI에게는 늘 쉽지만은 않다</strong>는 사실입니다. 지금 이 순간 최신 AI가 이런 문제를 얼마나 잘 푸는지는 계속 바뀌고 있으니, 정확한 수치가 궁금하다면 <a href="https://arcprize.org/leaderboard" rel="noreferrer">arcprize.org/leaderboard</a>에서 직접 확인해 보세요.</p>
       <a class="back-link results-back-link" href="../../units/ai-evaluation/">← 활동 목록으로 돌아가기</a>
     </section>

@@ -34,3 +34,19 @@ export function usedColors(puzzle) {
   visit(puzzle.test.output);
   return [...colors].sort((a, b) => a - b);
 }
+
+export function requiredPuzzles(puzzles) {
+  return puzzles.filter((puzzle) => puzzle.tier === "required");
+}
+
+export function bonusPuzzles(puzzles) {
+  return puzzles.filter((puzzle) => puzzle.tier === "bonus");
+}
+
+export function summarizeRequiredResults(results, total) {
+  const list = Array.isArray(results) ? results : [];
+  const solvedFirst = list.filter((r) => r === "solved-first").length;
+  const solvedRetry = list.filter((r) => r === "solved-retry").length;
+  const skipped = list.filter((r) => r === "skipped").length;
+  return { solvedFirst, solvedRetry, skipped, total, solved: solvedFirst + solvedRetry };
+}

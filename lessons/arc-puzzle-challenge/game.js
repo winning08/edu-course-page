@@ -1,11 +1,22 @@
-import { PUZZLES } from "./puzzles.js";
-import { createBlankGrid, setCell, gridsEqual, usedColors } from "./game-core.js";
+import { loadPuzzles } from "./puzzles.js";
+import { createBlankGrid, setCell, gridsEqual, usedColors, requiredPuzzles, bonusPuzzles, summarizeRequiredResults } from "./game-core.js";
 
-const STORAGE_KEY = "arc-puzzle-challenge:v1";
+const STORAGE_KEY = "arc-puzzle-challenge:v3";
+
+const PUZZLES = await loadPuzzles();
+
+const REQUIRED_PUZZLES = requiredPuzzles(PUZZLES);
+const BONUS_PUZZLE = bonusPuzzles(PUZZLES)[0];
 
 const COLOR_NAMES = {
   0: "검정", 1: "파랑", 2: "빨강", 3: "초록", 4: "노랑",
   5: "회색", 6: "자홍", 7: "주황", 8: "하늘색", 9: "갈색",
+};
+
+const BONUS_OUTCOME_LABELS = {
+  "solved-first": "직접 풀었어요.",
+  "solved-retry": "다시 도전해서 풀었어요.",
+  "skipped": "건너뛰었어요 — 괜찮아요, 나중에 다시 도전해도 됩니다.",
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -24,16 +35,22 @@ const el = {
   skipButton: $("#skip-button"),
   nextButton: $("#next-button"),
   feedback: $("#puzzle-feedback"),
+  testArea: $(".test-area"),
   puzzleView: $("#puzzle-view"),
   resultsView: $("#results-view"),
   resultsSummary: $("#results-summary"),
+  bonusPrompt: $("#bonus-prompt"),
+  bonusButton: $("#bonus-button"),
+  bonusOutcome: $("#bonus-outcome"),
 };
 
 const state = {
+  mode: "required", // "required" | "bonus"
   puzzleIndex: 0,
   outputGrid: null,
   selectedColor: 0,
   results: [],
+  bonusResult: null,
   attemptedCurrent: false,
   locked: false,
 };
@@ -43,8 +60,11 @@ function loadProgress() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const data = JSON.parse(raw);
-    if (typeof data.puzzleIndex !== "number" || !Array.isArray(data.results)) return null;
-    return data;
+    if (!Array.isArray(data.results)) return null;
+    return {
+      results: data.results,
+      bonusResult: typeof data.bonusResult === "string" ? data.bonusResult : null,
+    };
   } catch {
     return null;
   }
@@ -52,7 +72,7 @@ function loadProgress() {
 
 function saveProgress() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ puzzleIndex: state.puzzleIndex, results: state.results }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ results: state.results, bonusResult: state.bonusResult }));
   } catch {
     // localStorage를 쓸 수 없는 환경에서는 진행 상황 저장을 건너뛴다.
   }
@@ -96,6 +116,8 @@ function renderTrainExamples(puzzle) {
     item.appendChild(label);
     const row = document.createElement("div");
     row.className = "train-pair-grids";
+    const totalColumns = pair.input[0].length + pair.output[0].length;
+    row.style.setProperty("--pair-total-cols", totalColumns);
     row.appendChild(buildGridElement(pair.input));
     const arrow = document.createElement("span");
     arrow.className = "train-pair-arrow";
@@ -160,21 +182,21 @@ function setFeedback(message, tone) {
 }
 
 function currentPuzzle() {
-  return PUZZLES[state.puzzleIndex];
+  return state.mode === "bonus" ? BONUS_PUZZLE : REQUIRED_PUZZLES[state.puzzleIndex];
 }
 
-function loadPuzzle(index) {
-  state.puzzleIndex = index;
+function renderPuzzleCommon(puzzle) {
   state.attemptedCurrent = false;
   state.locked = false;
-  const puzzle = currentPuzzle();
   const dims = puzzle.test.output;
   state.outputGrid = createBlankGrid(dims.length, dims[0].length);
   const colors = usedColors(puzzle);
   state.selectedColor = colors.find((color) => color !== 0) ?? colors[0] ?? 0;
 
-  el.progressLabel.textContent = `문제 ${index + 1} / ${PUZZLES.length}`;
   el.puzzleTitle.textContent = puzzle.title;
+  el.puzzleTitle.dataset.sourceId = puzzle.sourceId;
+  const testTotalColumns = puzzle.test.input[0].length + puzzle.test.output[0].length;
+  el.testArea.style.setProperty("--test-total-cols", testTotalColumns);
   renderTrainExamples(puzzle);
   el.testInputGrid.innerHTML = "";
   el.testInputGrid.appendChild(buildGridElement(puzzle.test.input));
@@ -189,7 +211,22 @@ function loadPuzzle(index) {
   el.clearButton.disabled = false;
   el.skipButton.disabled = false;
   setFeedback("", null);
+}
+
+function loadRequiredPuzzle(index) {
+  state.mode = "required";
+  state.puzzleIndex = index;
+  const puzzle = REQUIRED_PUZZLES[index];
+  el.progressLabel.textContent = `문제 ${index + 1} / ${REQUIRED_PUZZLES.length} · 수업용 난이도 ${puzzle.difficulty} · 공식 ID ${puzzle.sourceId}`;
+  renderPuzzleCommon(puzzle);
   saveProgress();
+}
+
+function loadBonusPuzzle() {
+  state.mode = "bonus";
+  const puzzle = BONUS_PUZZLE;
+  el.progressLabel.textContent = `선택 도전 · 수업용 난이도 ${puzzle.difficulty} · 공식 ID ${puzzle.sourceId}`;
+  renderPuzzleCommon(puzzle);
 }
 
 function lockPuzzle() {
@@ -199,14 +236,23 @@ function lockPuzzle() {
   el.clearButton.disabled = true;
   el.skipButton.disabled = true;
   el.nextButton.hidden = false;
-  el.nextButton.textContent = state.puzzleIndex === PUZZLES.length - 1 ? "결과 보기 →" : "다음 문제 →";
+  if (state.mode === "bonus") {
+    el.nextButton.textContent = "결과로 돌아가기 →";
+  } else {
+    el.nextButton.textContent = state.puzzleIndex === REQUIRED_PUZZLES.length - 1 ? "결과 보기 →" : "다음 문제 →";
+  }
 }
 
 function handleCheck() {
   const puzzle = currentPuzzle();
   const correct = gridsEqual(state.outputGrid, puzzle.test.output);
   if (correct) {
-    state.results.push(state.attemptedCurrent ? "solved-retry" : "solved-first");
+    const outcome = state.attemptedCurrent ? "solved-retry" : "solved-first";
+    if (state.mode === "bonus") {
+      state.bonusResult = outcome;
+    } else {
+      state.results.push(outcome);
+    }
     setFeedback("정답입니다! 규칙을 정확히 찾았어요.", "is-success");
     lockPuzzle();
     saveProgress();
@@ -230,15 +276,35 @@ function handleHint() {
 }
 
 function handleSkip() {
-  state.results.push("skipped");
+  if (state.mode === "bonus") {
+    state.bonusResult = "skipped";
+  } else {
+    state.results.push("skipped");
+  }
   advance();
 }
 
 function advance() {
-  if (state.puzzleIndex + 1 < PUZZLES.length) {
-    loadPuzzle(state.puzzleIndex + 1);
+  if (state.mode === "bonus") {
+    saveProgress();
+    showResults();
+    return;
+  }
+  if (state.puzzleIndex + 1 < REQUIRED_PUZZLES.length) {
+    loadRequiredPuzzle(state.puzzleIndex + 1);
   } else {
     showResults();
+  }
+}
+
+function renderBonusSection() {
+  if (state.bonusResult) {
+    el.bonusPrompt.hidden = true;
+    el.bonusOutcome.hidden = false;
+    el.bonusOutcome.textContent = `선택 도전(Expert) 결과: ${BONUS_OUTCOME_LABELS[state.bonusResult]}`;
+  } else {
+    el.bonusPrompt.hidden = false;
+    el.bonusOutcome.hidden = true;
   }
 }
 
@@ -246,13 +312,18 @@ function showResults() {
   saveProgress();
   el.puzzleView.hidden = true;
   el.resultsView.hidden = false;
-  const solvedFirst = state.results.filter((r) => r === "solved-first").length;
-  const solvedRetry = state.results.filter((r) => r === "solved-retry").length;
-  const skipped = state.results.filter((r) => r === "skipped").length;
-  const parts = [`전체 ${PUZZLES.length}문제 중 ${solvedFirst + solvedRetry}문제를 스스로 풀었어요.`];
-  if (solvedRetry > 0) parts.push(`그중 ${solvedRetry}문제는 다시 도전해서 성공했어요.`);
-  if (skipped > 0) parts.push(`${skipped}문제는 건너뛰었어요 — 괜찮아요, 나중에 다시 도전해도 됩니다.`);
+  const summary = summarizeRequiredResults(state.results, REQUIRED_PUZZLES.length);
+  const parts = [`필수 문제 ${summary.total}개 중 ${summary.solved}문제를 스스로 풀었어요.`];
+  if (summary.solvedRetry > 0) parts.push(`그중 ${summary.solvedRetry}문제는 다시 도전해서 성공했어요.`);
+  if (summary.skipped > 0) parts.push(`${summary.skipped}문제는 건너뛰었어요 — 괜찮아요, 나중에 다시 도전해도 됩니다.`);
   el.resultsSummary.textContent = parts.join(" ");
+  renderBonusSection();
+}
+
+function handleBonusStart() {
+  el.resultsView.hidden = true;
+  el.puzzleView.hidden = false;
+  loadBonusPuzzle();
 }
 
 function init() {
@@ -261,16 +332,18 @@ function init() {
   el.hintButton.addEventListener("click", handleHint);
   el.skipButton.addEventListener("click", handleSkip);
   el.nextButton.addEventListener("click", advance);
+  el.bonusButton.addEventListener("click", handleBonusStart);
 
   const saved = loadProgress();
-  if (saved && saved.results.length >= PUZZLES.length) {
-    state.results = saved.results;
+  if (saved) {
+    state.results = saved.results.slice(0, REQUIRED_PUZZLES.length);
+    state.bonusResult = saved.bonusResult;
+  }
+  if (state.results.length >= REQUIRED_PUZZLES.length) {
     showResults();
     return;
   }
-  const startIndex = saved && saved.puzzleIndex < PUZZLES.length ? saved.puzzleIndex : 0;
-  if (saved) state.results = saved.results;
-  loadPuzzle(startIndex);
+  loadRequiredPuzzle(state.results.length);
 }
 
 init();

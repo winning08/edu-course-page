@@ -13,17 +13,21 @@ section + section { margin-top: clamp(2.2rem, 5vw, 3.4rem); padding-top: clamp(2
 .puzzle-progress span { display: inline-block; padding: .4rem .9rem; color: var(--ink); background: #eef1f6; border-radius: 99px; font: 700 .85rem ui-monospace, monospace; }
 #puzzle-title { margin: 0 0 1.2rem; font-size: clamp(1.3rem, 3vw, 1.8rem); }
 
-.train-examples { display: flex; flex-wrap: wrap; gap: 1.4rem; margin: 0 0 1.8rem; }
+.train-examples { display: grid; gap: 1.4rem; margin: 0 0 1.8rem; }
+.train-pair { min-width: 0; }
 .train-pair-label { margin: 0 0 .4rem; color: var(--muted); font-size: .82rem; font-weight: 700; }
-.train-pair-grids { display: flex; align-items: center; gap: .6rem; }
+.train-pair-grids { display: flex; flex-wrap: nowrap; align-items: center; gap: .6rem; min-width: 0; }
+.train-pair-grids .arc-grid { --arc-cell-size: min(30px, calc((min(100vw, 980px) - 10rem) / var(--pair-total-cols))); flex: 0 0 auto; }
 .train-pair-arrow { color: var(--muted); font-size: 1.2rem; }
 
-.test-area { display: flex; flex-wrap: wrap; gap: 2rem; margin: 0 0 1.2rem; }
+.test-area { display: flex; flex-wrap: nowrap; align-items: flex-start; gap: 2rem; min-width: 0; margin: 0 0 1.2rem; }
+.test-column { min-width: 0; }
+.test-area .arc-grid { --arc-cell-size: min(30px, calc((min(100vw, 980px) - 11rem) / var(--test-total-cols))); }
 .test-column-label { margin: 0 0 .5rem; color: var(--ink); font-weight: 700; font-size: .9rem; }
 .color-selected-name { font-weight: 500; color: var(--muted); }
 
-.arc-grid { display: grid; grid-template-columns: repeat(var(--arc-cols), 30px); gap: 2px; width: fit-content; padding: 2px; background: var(--line-strong); border-radius: 4px; }
-.arc-cell { width: 30px; height: 30px; padding: 0; margin: 0; border: 0; }
+.arc-grid { --arc-cell-size: min(30px, calc((100vw - 6rem) / var(--arc-cols))); display: grid; grid-template-columns: repeat(var(--arc-cols), var(--arc-cell-size)); gap: 2px; width: fit-content; max-width: 100%; padding: 2px; background: var(--line-strong); border-radius: 4px; }
+.arc-cell { width: var(--arc-cell-size); height: var(--arc-cell-size); min-width: 0; padding: 0; margin: 0; border: 0; }
 .arc-grid-editable .arc-cell { cursor: pointer; }
 .arc-grid-editable .arc-cell:hover { box-shadow: inset 0 0 0 2px var(--accent); }
 .arc-grid-editable .arc-cell:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
@@ -63,9 +67,26 @@ section + section { margin-top: clamp(2.2rem, 5vw, 3.4rem); padding-top: clamp(2
 #next-button:hover { background: var(--accent-dark); }
 
 .results-summary { max-width: 720px; margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.7; }
+
+.bonus-prompt { max-width: 720px; margin: 0 0 1.4rem; padding: 1rem 1.2rem; background: #f2f5ff; border: 1px solid var(--line-strong); border-left: 3px solid var(--accent); border-radius: 8px; }
+.bonus-prompt-text { margin: 0 0 .8rem; color: var(--ink); font-size: .95rem; line-height: 1.7; }
+#bonus-button { min-height: 48px; padding: .7rem 1.3rem; color: #fff; background: var(--accent); border: 1px solid var(--accent); border-radius: 4px; font-size: .92rem; font-weight: 720; }
+#bonus-button:hover { background: var(--accent-dark); }
+.bonus-outcome { max-width: 720px; margin: 0 0 1.4rem; padding: .8rem 1rem; color: var(--ink); background: #f2f5ff; border-radius: 8px; font-size: .92rem; font-weight: 650; line-height: 1.6; }
+
 .results-note { max-width: 720px; margin: 0 0 1.4rem; padding: .9rem 1.1rem; color: var(--muted); background: #eef1f6; border-radius: 10px; font-size: .9rem; line-height: 1.7; }
 .results-back-link { display: inline-block; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+@media (max-width: 560px) {
+  .train-examples { display: grid; }
+  .train-pair { min-width: 0; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+  .train-pair-grids { flex-wrap: wrap; align-items: flex-start; }
+  .train-pair-grids .arc-grid { --arc-cell-size: min(30px, calc((100vw - 6rem) / var(--arc-cols))); }
+  .train-pair-arrow { width: 100%; line-height: 1; transform: rotate(90deg); transform-origin: left center; }
+  .test-area { display: grid; gap: 1.4rem; }
+  .test-area .arc-grid { --arc-cell-size: min(30px, calc((100vw - 6rem) / var(--arc-cols))); }
 }

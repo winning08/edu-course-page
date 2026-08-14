@@ -1,0 +1,14 @@
+/* 한글 웹폰트 공통 정의. 모든 루트/units/lessons 페이지가 이 파일을 링크해
+   같은 --font-sans 값을 쓴다. 출처·라이선스: fonts/SOURCE.md, fonts/OFL.txt 참고. */
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/NotoSansKR-Variable.woff2") format("woff2");
+}
+
+:root {
+  --font-sans: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
