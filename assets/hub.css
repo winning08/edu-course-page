@@ -31,7 +31,8 @@ a:focus-visible,button:focus-visible { outline:3px solid #5d7be1; outline-offset
 .group-card { display:grid; grid-template-columns:auto 1fr auto; gap:1.5rem; align-items:center; padding:clamp(1.6rem,4vw,2.6rem); color:inherit; background:#fff; border:1px solid var(--line-strong); box-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 24px rgba(15,23,42,.05); text-decoration:none; transition:border-color .15s,transform .15s,box-shadow .15s; }
 .group-card:hover { border-color:#3157d5; box-shadow:0 1px 2px rgba(15,23,42,.05),0 14px 30px rgba(49,87,213,.12); transform:translateY(-2px); }
 .group-card:focus-visible { outline:3px solid #5d7be1; outline-offset:4px; }
-.group-number { color:var(--accent); font:700 1rem ui-monospace,monospace; }
+.group-number { display:inline-block; width:4.5rem; color:var(--accent); font:700 1rem ui-monospace,monospace; }
+.group-number--ot { text-align:center; }
 .group-card h2 { margin:0; font-size:clamp(1.4rem,3.4vw,2rem); letter-spacing:-.035em; }
 .group-card>div>p { margin:.65rem 0 0; color:var(--muted); line-height:1.65; }
 .group-meta { display:flex; flex-wrap:wrap; gap:.6rem 1rem; margin-top:1rem; color:var(--muted); font-size:.8rem; font-weight:700; letter-spacing:.02em; }
