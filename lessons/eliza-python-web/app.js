@@ -1,0 +1,379 @@
+import { setupEditor } from "./editor.js";
+import { createPythonRunner } from "./python-runner.js";
+import { GAS_ENDPOINT, ACTIVITY_VERSION } from "./config.js";
+
+const STORAGE_KEY = "eliza-python-web:v1";
+
+const STARTER_CODE = `print("ELIZA와 대화를 시작합니다.")
+
+while True:
+    # message : 사용자의 입력
+    message = input("나: ")
+
+    # ELIZA의 대화 규칙 만들기
+    `;
+
+const $ = (selector) => document.querySelector(selector);
+
+function escapeHtml(text) {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function initApp() {
+  const runtimeStatus = $("#runtime-status");
+  const runButton = $("#run-button");
+  const stopButton = $("#stop-button");
+  const resetCodeButton = $("#reset-code-button");
+  const terminalLog = $("#terminal-log");
+  const terminalForm = $("#terminal-input-form");
+  const terminalInput = $("#terminal-input");
+  const terminalSend = $("#terminal-send");
+  const inputWaitStatus = $("#input-wait-status");
+  const studentNumberInput = $("#student-number");
+  const studentNameInput = $("#student-name");
+  const studentMotivationInput = $("#student-motivation");
+  const studentUsageImprovementInput = $("#student-usage-improvement");
+  const submitConfigNotice = $("#submit-config-notice");
+  const teacherNote = $("#teacher-note");
+  const openConfirmButton = $("#open-confirm-button");
+  const confirmPanel = $("#confirm-panel");
+  const confirmHeading = $("#confirm-heading");
+  const confirmNumber = $("#confirm-number");
+  const confirmName = $("#confirm-name");
+  const confirmMotivation = $("#confirm-motivation");
+  const confirmUsageImprovement = $("#confirm-usage-improvement");
+  const confirmCode = $("#confirm-code");
+  const confirmCancel = $("#confirm-cancel");
+  const confirmSubmit = $("#confirm-submit");
+  const submitResult = $("#submit-result");
+
+  const savedState = loadState();
+
+  const editor = setupEditor({
+    textarea: $("#code-textarea"),
+    gutter: $("#code-gutter"),
+    highlightPane: $("#code-highlight"),
+    highlightCode: $("#code-highlight-code"),
+    onChange: () => {
+      refreshSubmitAvailability();
+      saveState();
+    },
+  });
+  editor.setValue(savedState?.code ?? STARTER_CODE);
+
+  studentNumberInput.value = savedState?.studentNumber ?? "";
+  studentNameInput.value = savedState?.studentName ?? "";
+  // 기존 임시 저장값도 잃지 않도록 이전 필드에서 한 번 마이그레이션한다.
+  studentMotivationInput.value = savedState?.motivation ?? savedState?.careerContext ?? "";
+  studentUsageImprovementInput.value = savedState?.usageImprovement ?? savedState?.implementationReflection ?? savedState?.usagePlan ?? "";
+
+  function saveState() {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          code: editor.getValue(),
+          studentNumber: studentNumberInput.value,
+          studentName: studentNameInput.value,
+          motivation: studentMotivationInput.value,
+          usageImprovement: studentUsageImprovementInput.value,
+        })
+      );
+    } catch {
+      // localStorage를 쓸 수 없는 환경(사생활 보호 모드 등)에서는 저장을 건너뛴다.
+    }
+  }
+
+  // --- 터미널 출력 -------------------------------------------------------
+  let openLine = null;
+
+  function newLine() {
+    openLine = document.createElement("div");
+    openLine.className = "terminal-line";
+    terminalLog.appendChild(openLine);
+    return openLine;
+  }
+
+  function appendOutput(text, cls) {
+    if (!text) return;
+    const parts = text.split("\n");
+    parts.forEach((part, index) => {
+      if (!openLine) newLine();
+      if (part) {
+        const span = document.createElement("span");
+        if (cls) span.className = cls;
+        span.textContent = part;
+        openLine.appendChild(span);
+      }
+      if (index < parts.length - 1) openLine = null;
+    });
+    terminalLog.scrollTop = terminalLog.scrollHeight;
+  }
+
+  function appendSystemLine(text) {
+    openLine = null;
+    const line = newLine();
+    line.classList.add("terminal-system");
+    line.textContent = text;
+    openLine = null;
+    terminalLog.scrollTop = terminalLog.scrollHeight;
+  }
+
+  function appendErrorBlock(text, hint) {
+    openLine = null;
+    const line = newLine();
+    line.classList.add("terminal-error");
+    line.textContent = "⚠️ 코드 실행 중 오류가 발생했습니다.";
+    const pre = document.createElement("pre");
+    pre.className = "terminal-error-detail";
+    pre.textContent = text;
+    line.appendChild(pre);
+    if (hint) {
+      const hintEl = document.createElement("p");
+      hintEl.className = "terminal-error-hint";
+      hintEl.textContent = `💡 ${hint}`;
+      line.appendChild(hintEl);
+    }
+    openLine = null;
+    terminalLog.scrollTop = terminalLog.scrollHeight;
+  }
+
+  function clearTerminal() {
+    terminalLog.innerHTML = "";
+    openLine = null;
+  }
+
+  function enableInputRow() {
+    terminalInput.disabled = false;
+    terminalSend.disabled = false;
+    terminalInput.focus();
+    inputWaitStatus.textContent = "ELIZA가 입력을 기다리고 있습니다.";
+  }
+
+  function disableInputRow() {
+    terminalInput.disabled = true;
+    terminalSend.disabled = true;
+    inputWaitStatus.textContent = "";
+  }
+
+  // --- 실행 상태 UI --------------------------------------------------------
+  function setRunningUI(isRunning) {
+    runButton.disabled = isRunning;
+    stopButton.disabled = !isRunning;
+    resetCodeButton.disabled = isRunning;
+  }
+
+  const runner = createPythonRunner({
+    onReady(supportsInput) {
+      runtimeStatus.textContent = supportsInput
+        ? "파이썬 실행 환경 준비 완료. 실행 버튼을 눌러 시작하세요."
+        : "파이썬 실행 환경 준비 완료. 이 브라우저·네트워크 환경에서는 실시간 입력(input())이 제한될 수 있습니다.";
+    },
+    onLoadError(text) {
+      runtimeStatus.textContent = `⚠️ 파이썬 실행 환경을 불러오지 못했습니다. 네트워크 상태를 확인한 뒤 실행 버튼을 다시 눌러보세요. (${text})`;
+      setRunningUI(false);
+      disableInputRow();
+    },
+    onStdout(text) {
+      appendOutput(text, null);
+    },
+    onStderr(text) {
+      appendOutput(text, "terminal-stderr");
+    },
+    onInputRequest() {
+      enableInputRow();
+    },
+    onDone() {
+      appendSystemLine("■ 프로그램이 정상적으로 종료되었습니다.");
+      setRunningUI(false);
+      disableInputRow();
+    },
+    onError(text, hint) {
+      appendErrorBlock(text, hint);
+      setRunningUI(false);
+      disableInputRow();
+    },
+  });
+
+  runner.preload();
+
+  runButton.addEventListener("click", () => {
+    if (runner.isRunning()) return;
+    saveState();
+    clearTerminal();
+    appendSystemLine("▶ 실행을 시작합니다.");
+    setRunningUI(true);
+    disableInputRow();
+    runner.run(editor.getValue());
+  });
+
+  stopButton.addEventListener("click", () => {
+    runner.stop();
+    appendSystemLine("⏹ 실행을 중지했습니다.");
+    setRunningUI(false);
+    disableInputRow();
+  });
+
+  resetCodeButton.addEventListener("click", () => {
+    if (runner.isRunning()) return;
+    const confirmed = window.confirm("코드를 기본 예제로 되돌릴까요? 지금까지 작성한 내용이 사라집니다.");
+    if (!confirmed) return;
+    editor.setValue(STARTER_CODE);
+    refreshSubmitAvailability();
+    saveState();
+  });
+
+  terminalForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (terminalInput.disabled) return;
+    const text = terminalInput.value;
+    appendOutput(`${text}\n`, "terminal-echo");
+    terminalInput.value = "";
+    disableInputRow();
+    runner.submitInput(text);
+  });
+
+  studentNumberInput.addEventListener("input", () => {
+    saveState();
+    refreshSubmitAvailability();
+  });
+  studentNameInput.addEventListener("input", () => {
+    saveState();
+    refreshSubmitAvailability();
+  });
+  studentMotivationInput.addEventListener("input", () => {
+    saveState();
+    refreshSubmitAvailability();
+  });
+  studentUsageImprovementInput.addEventListener("input", () => {
+    saveState();
+    refreshSubmitAvailability();
+  });
+
+  // --- 최종 제출 -----------------------------------------------------------
+  // 제출 주소가 이미 설정되어 있으면 교사용 설정 안내는 더 이상 필요 없으므로 숨긴다.
+  teacherNote.hidden = Boolean(GAS_ENDPOINT);
+
+  function refreshSubmitAvailability() {
+    if (!GAS_ENDPOINT) {
+      submitConfigNotice.hidden = false;
+      submitConfigNotice.textContent =
+        "⚠️ 아직 선생님이 제출 주소를 설정하지 않았습니다. 코드 작성과 실행 연습은 그대로 할 수 있고, 설정이 끝나면 제출할 수 있습니다.";
+      openConfirmButton.disabled = true;
+      return;
+    }
+    const hasNumber = studentNumberInput.value.trim().length > 0;
+    const hasName = studentNameInput.value.trim().length > 0;
+    const hasMotivation = studentMotivationInput.value.trim().length > 0;
+    const hasUsageImprovement = studentUsageImprovementInput.value.trim().length > 0;
+    const hasCode = editor.getValue().trim().length > 0;
+
+    // 버튼이 왜 비활성화되어 있는지 학생이 바로 알 수 있도록 빠진 항목을 그대로 알려준다.
+    const missing = [];
+    if (!hasNumber) missing.push("학번");
+    if (!hasName) missing.push("이름");
+    if (!hasCode) missing.push("코드");
+    if (!hasMotivation) missing.push("만든 동기");
+    if (!hasUsageImprovement) missing.push("활용 및 개선 방안");
+
+    if (missing.length > 0) {
+      submitConfigNotice.hidden = false;
+      submitConfigNotice.textContent = `아직 제출할 수 없습니다 — 다음을 채워주세요: ${missing.join(", ")}`;
+    } else {
+      submitConfigNotice.hidden = true;
+    }
+    openConfirmButton.disabled = missing.length > 0;
+  }
+
+  function openConfirmPanel() {
+    confirmNumber.textContent = studentNumberInput.value.trim();
+    confirmName.textContent = studentNameInput.value.trim();
+    confirmMotivation.textContent = studentMotivationInput.value.trim();
+    confirmUsageImprovement.textContent = studentUsageImprovementInput.value.trim();
+    confirmCode.textContent = editor.getValue();
+    confirmPanel.hidden = false;
+    submitResult.hidden = true;
+    confirmHeading.focus();
+  }
+
+  function closeConfirmPanel() {
+    confirmPanel.hidden = true;
+    openConfirmButton.focus();
+  }
+
+  openConfirmButton.addEventListener("click", openConfirmPanel);
+  confirmCancel.addEventListener("click", closeConfirmPanel);
+
+  confirmSubmit.addEventListener("click", async () => {
+    const payload = {
+      timestamp: new Date().toISOString(),
+      student_number: studentNumberInput.value.trim(),
+      student_name: studentNameInput.value.trim(),
+      motivation: studentMotivationInput.value.trim(),
+      usage_improvement: studentUsageImprovementInput.value.trim(),
+      code: editor.getValue(),
+      version: ACTIVITY_VERSION,
+    };
+
+    confirmSubmit.disabled = true;
+    confirmCancel.disabled = true;
+    confirmSubmit.textContent = "제출 중…";
+
+    try {
+      const response = await fetch(GAS_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (data && data.success) {
+        showSubmitResult(true, payload, data.message || "제출이 완료되었습니다.");
+      } else {
+        showSubmitResult(false, payload, (data && data.message) || "제출에 실패했습니다.");
+      }
+    } catch {
+      showSubmitResult(false, payload, "인터넷 연결을 확인한 뒤 다시 제출하세요.");
+    } finally {
+      confirmSubmit.disabled = false;
+      confirmCancel.disabled = false;
+      confirmSubmit.textContent = "제출";
+    }
+  });
+
+  function showSubmitResult(success, payload, message) {
+    confirmPanel.hidden = true;
+    submitResult.hidden = false;
+    submitResult.className = `submit-result ${success ? "success" : "failure"}`;
+    if (success) {
+      const time = new Date(payload.timestamp).toLocaleString("ko-KR");
+      submitResult.innerHTML = `✅ 제출이 완료되었습니다.<br>학번: ${escapeHtml(payload.student_number)}<br>이름: ${escapeHtml(payload.student_name)}<br>제출 시각: ${escapeHtml(time)}`;
+    } else {
+      submitResult.innerHTML = `❌ 제출에 실패했습니다.<br>${escapeHtml(message)}`;
+    }
+    submitResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    openConfirmButton.focus();
+  }
+
+  // --- 프로젝터 모드(다른 활동 페이지와 동일한 동작) --------------------------
+  $("#projector-toggle").addEventListener("click", () => {
+    const enabled = document.body.classList.toggle("projector-mode");
+    $("#projector-toggle").setAttribute("aria-pressed", String(enabled));
+  });
+
+  refreshSubmitAvailability();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}

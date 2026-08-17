@@ -68,7 +68,7 @@
     },
     {
       "id": "ai-learning",
-      "order": 3,
+      "order": 4,
       "title": "AI는 어떻게 학습할까?",
       "description": "마트 과일 선별 AI를 직접 학습시키고 시험하며 입력 정보, 관계없는 정보, 편향된 데이터 같은 인공지능 기초 개념을 순서대로 체험합니다.",
       "path": "units/ai-learning/",
@@ -107,6 +107,39 @@
           "status": "published",
           "active": true,
           "objective": "치우친 학습 자료로 학습한 AI의 한계를 시험해 보고 편향된 데이터 개념을 이해한다."
+        }
+      ]
+    },
+    {
+      "id": "ai-history",
+      "order": 3,
+      "title": "인공지능의 발전 과정",
+      "description": "직선 하나로 문제를 푸는 퍼셉트론부터 시작해, 선형 분리와 규칙 기반 시스템의 한계를 만나고, 여러 경계와 오차 기반 학습으로 다시 도약하는 인공지능의 첫 번째 겨울과 발전 흐름을 직접 체험합니다.",
+      "path": "units/ai-history/",
+      "status": "published",
+      "active": true,
+      "children": [
+        {
+          "id": "ai-perceptron-wall",
+          "order": 1,
+          "title": "인공지능의 역사",
+          "path": "lessons/ai-perceptron-wall/",
+          "duration": 45,
+          "difficulty": "보통",
+          "status": "published",
+          "active": true,
+          "objective": "퍼셉트론 → 전문가 시스템(규칙 기반) → 다층 신경망과 오차 기반 학습으로 이어지는 인공지능의 발전 과정을 4단계 실습으로 체험한다."
+        },
+        {
+          "id": "eliza-python-web",
+          "order": 2,
+          "title": "나만의 ELIZA 만들기",
+          "path": "lessons/eliza-python-web/",
+          "duration": 40,
+          "difficulty": "보통",
+          "status": "published",
+          "active": true,
+          "objective": "규칙 기반(기호주의) 인공지능을 직접 만들어 보고, 활동 1에서 만난 신경망(연결주의)과 비교하며 두 접근법의 장단점을 이해한다."
         }
       ]
     }

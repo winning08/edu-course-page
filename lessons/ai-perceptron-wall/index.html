@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="직선 하나로 문제를 풀다가 선형 분리의 한계를 만나고, 규칙 기반 진단과 오차 기반 학습까지 인공지능 초기 역사를 직접 체험하는 활동">
+  <title>인공지능의 역사 | 인공지능의 발전 과정</title>
+  <link rel="stylesheet" href="../../assets/fonts.css">
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="game.js"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-history" data-guard-lesson="ai-perceptron-wall">
+  <a class="skip-link" href="#experiment">실험으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel">
+    <h1>아직 준비 중인 활동입니다</h1>
+    <p>이 활동은 현재 준비 중입니다. 곧 열릴 예정이니 잠시 후 다시 확인해 주세요.</p>
+    <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
+  </div>
+  <div id="guard-content">
+  <header class="topbar">
+    <a class="back-link" href="../../units/ai-history/">← 활동 목록</a>
+    <div class="module-title"><span>수업 01</span><strong>인공지능의 발전 과정</strong></div>
+    <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">인공지능의 첫 번째 벽</p>
+        <h1 id="page-title">인공지능의 역사</h1>
+      </div>
+      <div class="intro-copy">
+        <p>당신은 인공지능 연구자입니다. <strong>직선 하나 → 한계 → 규칙 → 한계 → 새 방법.</strong> 인공지능이 실제로 걸어온 순서 그대로 체험합니다.</p>
+        <dl><div><dt>단계</dt><dd>4단계</dd></div><div><dt>걸리는 시간</dt><dd>45분</dd></div><div><dt>난이도</dt><dd>보통</dd></div></dl>
+      </div>
+    </section>
+
+    <div class="concept-bridge">
+      <p class="concept-bridge-label">왜 갑자기 점과 선일까?</p>
+      <p>AI는 숫자 정보로 "A인지 B인지"를 구별합니다. 숫자 두 개를 가로·세로축에 놓으면 데이터는 점이 되고, 구별 기준은 그 위에 그은 선이 됩니다. 이제 그 선을 긋는 AI가 되어 보세요.</p>
+    </div>
+
+    <section id="experiment" class="experiment" aria-labelledby="experiment-title">
+      <div class="experiment-head" id="experiment-head">
+        <div><span id="stage-label">1 / 4단계 · 퍼셉트론</span><div class="progress" aria-hidden="true"><i id="progress-bar"></i></div></div>
+        <div class="accuracy" id="accuracy-block"><span>현재 정확도</span><strong id="accuracy">—</strong></div>
+      </div>
+
+      <div id="perceptron-view" class="line-stage">
+        <div class="sample-head">
+          <div><span class="sample-id" id="sample-id">1단계 · 1958년</span><h2 id="experiment-title">이 점들을 직선 하나로 나눌 수 있을까?</h2></div>
+          <p>슬라이더로 직선을 움직여 파란 점과 빨간 점을 갈라 보세요.</p>
+        </div>
+        <div class="line-lab">
+          <div class="line-canvas-wrap">
+            <svg id="perceptron-canvas" class="line-canvas" viewBox="0 0 220 220" role="img" aria-label="좌표평면 위 여러 점과 그것을 가르는 직선을 보여주는 그림"></svg>
+          </div>
+          <div class="line-controls">
+            <label>기울기(m)<input type="range" id="perceptron-slope" min="-3" max="3" step="0.1" value="0"></label>
+            <label>y절편(b)<input type="range" id="perceptron-intercept" min="-1" max="2" step="0.05" value="0.5"></label>
+            <p class="line-score" id="perceptron-score" aria-live="polite">0 / 8 정답</p>
+          </div>
+        </div>
+        <div class="stage-footer">
+          <p id="perceptron-hint" class="stage-hint" aria-live="polite">모두 갈릴 때까지 움직여 보세요.</p>
+          <button id="perceptron-next" class="stage-next" type="button" disabled>다음: 더 어려운 배치에 도전하기 <span aria-hidden="true">→</span></button>
+        </div>
+        <aside class="reveal-box" id="perceptron-reveal" hidden>
+          <span>1958년 · 퍼셉트론</span>
+          <p>방금 만든 게 <strong>퍼셉트론</strong>입니다(로젠블랫, 1958). 신경망의 최소 단위로, 이런 문제는 완벽히 풉니다.</p>
+        </aside>
+      </div>
+
+      <div id="xor-view" class="line-stage" hidden>
+        <div class="sample-head">
+          <div><span class="sample-id">2단계 · 1969년</span><h2 id="xor-title" tabindex="-1">이번엔 다른 배치입니다</h2></div>
+          <p>이번엔 점이 더 많고, 파란 점이 빨간 점 사이에 끼어 있습니다. 직선으로 갈라 보세요.</p>
+        </div>
+        <div class="line-lab">
+          <div class="line-canvas-wrap">
+            <svg id="xor-canvas" class="line-canvas" viewBox="0 0 220 220" role="img" aria-label="좌표평면 위 여러 점(파란 점들이 빨간 점들 사이에 낀 배치)과 그것을 가르는 직선을 보여주는 그림"></svg>
+          </div>
+          <div class="line-controls">
+            <label>기울기(m)<input type="range" id="xor-slope" min="-3" max="3" step="0.1" value="0"></label>
+            <label>y절편(b)<input type="range" id="xor-intercept" min="-1" max="2" step="0.05" value="0.5"></label>
+            <p class="line-score" id="xor-score" aria-live="polite">0 / 15 정답</p>
+          </div>
+        </div>
+        <p id="xor-struggle-hint" class="stage-hint" hidden>만점이 안 나온다면, 그것도 중요한 발견입니다.</p>
+        <div class="stage-footer">
+          <p class="stage-hint">충분히 시도했다면 다음으로.</p>
+          <button id="xor-next" class="stage-next" type="button" disabled>한계 확인하기 <span aria-hidden="true">→</span></button>
+        </div>
+        <aside class="reveal-box" id="xor-reveal" hidden>
+          <span>1969년 · 퍼셉트론의 한계</span>
+          <p>직선 하나로는 <strong>100% 못 풉니다</strong>(최고 <strong id="xor-best-text">0</strong>/<span id="xor-total-text">15</span>). 전형적인 XOR과 마찬가지로 <strong>직선 하나로 나눌 수 없는 문제</strong>입니다. 1969년 민스키와 페퍼트는 단층 퍼셉트론의 한계를 분석했습니다. 이러한 기술적 한계와 과도한 기대, 연구비 축소 등이 겹치며 이후 <strong>첫 번째 AI 겨울</strong>이 찾아왔습니다.</p>
+        </aside>
+      </div>
+
+      <div id="mycin-view" hidden>
+        <div id="mycin-case-view">
+          <div class="sample-head">
+            <div><span class="sample-id">3단계 · 1972년</span><h2 id="mycin-title" tabindex="-1">규칙으로 진단해 보기</h2></div>
+            <p>규칙만 보고 판단하는 진단 프로그램입니다. 환자마다 맞는 처방을 골라 보세요.</p>
+          </div>
+          <div class="mycin-rules" id="mycin-rules" aria-label="진단 규칙 목록"></div>
+          <div class="mycin-case" id="mycin-case">
+            <div class="mycin-case-head">
+              <span id="mycin-progress">1 / 6번째 환자</span>
+              <div class="progress" aria-hidden="true"><i id="mycin-progress-bar"></i></div>
+            </div>
+            <dl class="feature-grid cols-3" id="mycin-fields" aria-label="환자의 증상"></dl>
+            <div class="mycin-choices" id="mycin-choices"></div>
+            <div id="mycin-feedback" class="feedback" aria-live="polite" aria-atomic="true">
+              <p id="feedback-waiting">처방을 선택하면 결과가 바로 나옵니다.</p>
+              <div id="feedback-result" hidden>
+                <span id="feedback-mark" class="feedback-mark" aria-hidden="true"></span>
+                <div><strong id="feedback-title"></strong><p id="feedback-copy"></p></div>
+                <button id="next-button" type="button">다음 환자 <span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="mycin-review-view" class="transition" hidden aria-labelledby="mycin-review-title">
+          <p class="eyebrow">규칙 기반 진단 완료</p>
+          <h2 id="mycin-review-title" tabindex="-1">규칙에 없는 사례가 몇 번 나왔나요?</h2>
+          <p id="mycin-review-summary"></p>
+          <div class="reveal-box">
+            <span>1972년 · 마이신(MYCIN)</span>
+            <p>실제 마이신도 새 사례가 나올 때마다 사람이 규칙을 계속 추가해야 했습니다. 규칙 대신, 기계가 오차를 보고 스스로 조정하게 할 수는 없을까요? 다음 단계에서 시험해 봅니다.</p>
+          </div>
+          <button id="mycin-next-stage" type="button" class="stage-next">다음: 여러 경계와 학습으로 돌파하기 <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+
+      <div id="breakthrough-view" class="line-stage" hidden>
+        <div class="sample-head">
+          <div><span class="sample-id">4단계 · 1986년</span><h2 id="breakthrough-title" tabindex="-1">같은 배치, 다시 도전하기</h2></div>
+          <p>규칙 대신 다시 직선(신경망)으로 돌아왔습니다. 이번엔 직선 <strong>두 개</strong> — A보다 위, B보다 아래인 점만 통과입니다. 2단계 그 점들에 다시 도전해 보세요.</p>
+        </div>
+        <div class="line-lab">
+          <div class="line-canvas-wrap">
+            <svg id="breakthrough-canvas" class="line-canvas" viewBox="0 0 220 220" role="img" aria-label="좌표평면 위 여러 점과 그것을 가르는 두 직선(띠)을 보여주는 그림"></svg>
+          </div>
+          <div class="line-controls two-lines">
+            <fieldset>
+              <legend>직선 A · 아래쪽 경계(이 위에 있어야 함)</legend>
+              <label>기울기(m)<input type="range" id="breakthrough-a-slope" min="-3" max="3" step="0.1" value="0"></label>
+              <label>y절편(b)<input type="range" id="breakthrough-a-intercept" min="-1" max="2" step="0.05" value="0.3"></label>
+            </fieldset>
+            <fieldset>
+              <legend>직선 B · 위쪽 경계(이 아래에 있어야 함)</legend>
+              <label>기울기(m)<input type="range" id="breakthrough-b-slope" min="-3" max="3" step="0.1" value="0"></label>
+              <label>y절편(b)<input type="range" id="breakthrough-b-intercept" min="-1" max="2" step="0.05" value="0.7"></label>
+            </fieldset>
+            <p class="line-score" id="breakthrough-score" aria-live="polite">0 / 15 정답</p>
+          </div>
+        </div>
+        <div class="auto-find">
+          <p>기계가 오차를 보고 스스로 찾는 과정도 볼 수 있습니다.</p>
+          <button id="auto-find-button" class="stage-next" type="button">AI가 자동으로 찾기 <span aria-hidden="true">→</span></button>
+          <p id="auto-find-status" class="auto-find-status" aria-live="polite" hidden></p>
+        </div>
+        <div class="stage-footer">
+          <p class="stage-hint">가운데 띠 안에 파란 점만 들어오게 맞춰 보세요.</p>
+          <button id="breakthrough-next" class="stage-next" type="button" disabled>결과 보기 <span aria-hidden="true">→</span></button>
+        </div>
+        <aside class="reveal-box" id="breakthrough-reveal" hidden>
+          <span>1986년 · 다층 신경망과 역전파의 확산</span>
+          <p>여러 경계를 조합하면 직선 하나로 나눌 수 없던 문제도 풀 수 있습니다. 1986년 역전파를 활용한 다층 신경망 연구가 널리 알려지며 신경망 연구가 다시 활발해졌습니다.</p>
+          <p>이 활동의 "자동으로 찾기"는 오차가 줄어드는 방향으로 두 직선을 옮기는 <strong>경사하강 과정</strong>입니다. 실제 역전파는 다층 신경망에서 각 연결이 오차에 미친 영향을 효율적으로 계산하며, 이 경사하강을 가능하게 하는 방법입니다.</p>
+        </aside>
+      </div>
+
+      <div id="results-view" class="summary" hidden>
+        <p class="eyebrow">4단계 완료</p>
+        <h2 tabindex="-1">당신이 지나온 인공지능의 첫 번째 겨울과 돌파</h2>
+        <ol class="journey-list" id="journey-list"></ol>
+        <div class="discussion">
+          <span>함께 생각해 보기</span>
+          <p><strong>AI는 한계에 부딪힐 때마다 새 방법을 탐색해 왔습니다.</strong> 직선(퍼셉트론) → 선형 분리의 한계 → 규칙(마이신) → 규칙의 한계 → 여러 경계와 오차 기반 학습.</p>
+          <p>이후 2012년 알렉스넷, 2017년 트랜스포머도 같은 패턴입니다.</p>
+        </div>
+        <div class="next-step">
+          <p>1958~1986년, AI의 첫 번째 겨울과 돌파를 다뤘습니다.</p>
+          <a class="next-step-link" href="../../units/ai-history/">활동 목록으로 돌아가기 <span aria-hidden="true">→</span></a>
+        </div>
+        <button id="restart-button" type="button">처음부터 다시 하기</button>
+      </div>
+    </section>
+  </main>
+  <footer><span>정보 · 인공지능 기초</span><span>시도하기 · 막혀보기 · 다시 뚫기</span></footer>
+  </div>
+</body>
+</html>

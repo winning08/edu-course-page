@@ -1,0 +1,80 @@
+// Google Apps Script 예시 코드 (teacher setup용).
+// 사용법: Google Sheet의 확장 프로그램 → Apps Script에서 이 내용을 그대로
+// 붙여넣고, "제출"이라는 이름의 시트를 먼저 만들어 둔 뒤 웹 앱으로 배포합니다.
+// 배포 시 실행 계정은 "나", 액세스 권한은 "모든 사용자"로 설정해야 학생 브라우저에서
+// 로그인 없이 제출할 수 있습니다. 참고: 참고/eliza_python_web_practice_spec.md 12~13장.
+//
+// 이 파일은 .gs가 아니라 .gs.txt로 저장되어 있습니다 — 이 저장소는 정적 사이트
+// 빌드 대상이 아니라 "복사해서 Apps Script 편집기에 붙여넣는 참고 코드"이기 때문입니다.
+// "제출" 시트의 첫 행에는 다음 열 이름을 순서대로 만들어 두세요.
+// 제출시각 | 학번 | 이름 | 만든 동기 | 활용 및 개선 방안 | 최종 코드 | 활동 버전
+
+function doPost(e) {
+  const lock = LockService.getScriptLock();
+
+  try {
+    const sheet = SpreadsheetApp
+      .getActiveSpreadsheet()
+      .getSheetByName("제출");
+
+    if (!sheet) {
+      throw new Error('"제출" 시트를 찾을 수 없습니다.');
+    }
+
+    const data = JSON.parse(e.postData.contents);
+
+    const studentNumber = String(data.student_number || "").trim();
+    const studentName = String(data.student_name || "").trim();
+    const motivation = String(data.motivation || "").trim();
+    const usageImprovement = String(data.usage_improvement || "").trim();
+    const code = String(data.code || "");
+    const version = String(data.version || "");
+
+    if (!studentNumber || !studentName || !motivation || !usageImprovement || !code) {
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          success: false,
+          message: "학번, 이름, 만든 동기, 활용 및 개선 방안, 코드를 모두 입력하세요."
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 33명이 동시에 제출해도 행 추가가 겹치지 않도록 잠금을 사용합니다.
+    lock.waitLock(10000);
+
+    // 제출할 때마다 새 행을 추가합니다. 같은 학번이 여러 번 제출해도
+    // 모두 기록에 남으므로, 최종 평가는 같은 학번의 "가장 마지막 제출"을 사용합니다.
+    sheet.appendRow([
+      new Date(),
+      safeCell(studentNumber),
+      safeCell(studentName),
+      safeCell(motivation),
+      safeCell(usageImprovement),
+      safeCell(code),
+      safeCell(version)
+    ]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        success: true,
+        message: "제출이 완료되었습니다."
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        success: false,
+        message: "제출 중 오류가 발생했습니다."
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    if (lock.hasLock()) lock.releaseLock();
+  }
+}
+
+// =, +, -, @로 시작하는 학생 입력이 스프레드시트 수식으로 실행되지 않게 한다.
+function safeCell(value) {
+  const text = String(value || "");
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
+}

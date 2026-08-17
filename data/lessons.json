@@ -76,6 +76,28 @@
       "duration": 5,
       "difficulty": "입문",
       "status": "published"
+    },
+    {
+      "id": "ai-perceptron-wall",
+      "subject": "인공지능 기초",
+      "unit": "인공지능의 발전 과정",
+      "order": 1,
+      "title": "인공지능의 역사",
+      "path": "lessons/ai-perceptron-wall/",
+      "duration": 45,
+      "difficulty": "보통",
+      "status": "published"
+    },
+    {
+      "id": "eliza-python-web",
+      "subject": "인공지능 기초",
+      "unit": "인공지능의 발전 과정",
+      "order": 2,
+      "title": "나만의 ELIZA 만들기",
+      "path": "lessons/eliza-python-web/",
+      "duration": 40,
+      "difficulty": "보통",
+      "status": "published"
     }
   ]
 }

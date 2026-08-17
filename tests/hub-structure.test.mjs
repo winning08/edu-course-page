@@ -14,6 +14,11 @@ test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 
   assert.doesNotMatch(html, /href="lessons\//, "루트 허브는 개별 lesson으로 바로 연결하지 않아야 함");
 });
 
+test("루트 허브 제목은 작은 화면과 브라우저 글꼴 차이에도 한 줄로 유지된다", async () => {
+  const css = await readFile(new URL("assets/hub.css", repoRoot), "utf8");
+  assert.match(css, /\.hub-header h1\s*\{[^}]*font-size:clamp\([^}]*white-space:nowrap/s);
+});
+
 test("활동지 목록 페이지는 세 활동을 01/02/03 순서로 등록하고 각 lesson 폴더로 직접 연결한다", async () => {
   const html = await readFile(new URL("units/ai-learning/index.html", repoRoot), "utf8");
   const positions = LESSON_IDS.map((id) => html.indexOf(`lessons/${id}/`));

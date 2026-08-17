@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="파이썬으로 나만의 규칙 기반 대화형 AI 'ELIZA'를 직접 만들고, 브라우저 터미널에서 바로 대화하며 고쳐보는 실습">
+  <title>나만의 ELIZA 만들기 | 인공지능의 발전 과정</title>
+  <link rel="stylesheet" href="../../assets/fonts.css">
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script src="coi-bootstrap.js"></script>
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-history" data-guard-lesson="eliza-python-web">
+  <a class="skip-link" href="#editor-heading">코드 편집기로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel">
+    <h1>아직 준비 중인 활동입니다</h1>
+    <p>이 활동은 현재 준비 중입니다. 곧 열릴 예정이니 잠시 후 다시 확인해 주세요.</p>
+    <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
+  </div>
+  <div id="guard-content">
+  <header class="topbar">
+    <a class="back-link" href="../../units/ai-history/">← 활동 목록</a>
+    <div class="module-title"><span>수업 02</span><strong>인공지능의 발전 과정</strong></div>
+    <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">파이썬으로 만드는 대화형 AI</p>
+        <h1 id="page-title">🤖 나만의<br>ELIZA 만들기</h1>
+      </div>
+      <div class="intro-copy">
+        <p>규칙 기반 인공지능은 사람이 <strong>딕셔너리(dict)</strong>에 미리 정해 둔 규칙에 따라 대답합니다. 직접 파이썬으로 대화 규칙을 딕셔너리에 채워 넣어, 브라우저 안에서 바로 내 AI와 대화해 보세요.</p>
+        <dl><div><dt>오늘의 미션</dt><dd>대화형 AI 만들기</dd></div><div><dt>사용 언어</dt><dd>파이썬</dd></div><div><dt>실행 위치</dt><dd>내 브라우저</dd></div></dl>
+      </div>
+    </section>
+
+    <div class="concept-bridge">
+      <p class="concept-bridge-label">ELIZA가 뭘까?</p>
+      <p>1966년 만들어진 <strong>ELIZA</strong>는 심리상담사처럼 대화하는 프로그램입니다. 사실 문장을 이해하지 못하고, 입력에 특정 단어가 들어 있는지만 검사해 미리 정해 둔 문장으로 답합니다. 오늘은 그 원리를 그대로 코드로 만들어 봅니다.</p>
+    </div>
+
+    <section id="editor-section" class="lab" aria-labelledby="editor-heading">
+      <div class="lab-head">
+        <h2 id="editor-heading">파이썬 코드 작성 &amp; 실행</h2>
+        <p id="runtime-status" class="runtime-status" role="status" aria-live="polite">파이썬 실행 환경을 준비하고 있습니다…</p>
+      </div>
+
+      <div class="lab-grid">
+        <div class="editor-pane">
+          <div class="editor-toolbar">
+            <button id="run-button" type="button" class="run-btn">▶ 실행</button>
+            <button id="stop-button" type="button" class="stop-btn" disabled>⏹ 중지</button>
+            <button id="reset-code-button" type="button" class="ghost-btn">↺ 초기화</button>
+          </div>
+          <div class="code-editor" id="code-editor-shell">
+            <div class="code-gutter" id="code-gutter" aria-hidden="true">1</div>
+            <pre class="code-highlight" id="code-highlight" aria-hidden="true"><code id="code-highlight-code"></code></pre>
+            <textarea id="code-textarea" class="code-textarea" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="파이썬 코드 편집기"></textarea>
+          </div>
+          <p class="editor-hint">Tab으로 들여쓰기(Shift+Tab은 내어쓰기), Enter는 이전 줄 들여쓰기를 이어받습니다. 편집기 밖으로 이동하려면 Esc를 누른 뒤 Tab을 누르세요. 코드는 이 브라우저에 자동 저장됩니다.</p>
+        </div>
+
+        <div class="terminal-pane">
+          <h3 id="terminal-heading">ELIZA 실행 화면</h3>
+          <div class="terminal-log" id="terminal-log" role="log" aria-live="polite" aria-labelledby="terminal-heading"></div>
+          <form id="terminal-input-form" class="terminal-input-form">
+            <label for="terminal-input" class="sr-only">ELIZA에게 보낼 메시지</label>
+            <input id="terminal-input" type="text" autocomplete="off" placeholder="실행을 누르면 여기에 입력할 수 있어요" disabled>
+            <button id="terminal-send" type="submit" disabled>보내기</button>
+          </form>
+          <p id="input-wait-status" class="sr-only" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="submit-section" aria-labelledby="submit-heading">
+      <h2 id="submit-heading">최종 제출</h2>
+      <div class="submit-fields">
+        <label>학번<input id="student-number" type="text" inputmode="numeric" autocomplete="off"></label>
+        <label>이름<input id="student-name" type="text" autocomplete="off"></label>
+      </div>
+      <div class="submit-fields">
+        <label>만든 동기
+          <textarea id="student-motivation" rows="7" placeholder="관심 있는 진로와 연결해, 이 챗봇을 왜 만들었는지 2~3문장으로 적어주세요."></textarea>
+        </label>
+        <label>활용 및 개선 방안
+          <textarea id="student-usage-improvement" rows="7" placeholder="어디에 활용할 수 있는지, 더 나은 챗봇으로 만들려면 무엇을 고치고 싶은지 2~3문장으로 적어주세요."></textarea>
+        </label>
+      </div>
+      <p id="submit-config-notice" class="submit-notice" role="note" hidden></p>
+
+      <details id="teacher-note" class="teacher-note">
+        <summary>교사용 설정 안내 (학생은 열어보지 않아도 됩니다)</summary>
+        <ol>
+          <li>Google Sheet를 새로 만들고 "제출"이라는 이름의 시트를 추가합니다.</li>
+          <li>그 시트의 확장 프로그램 → Apps Script를 열고, 이 활동 폴더의 <code>apps-script-example.gs.txt</code> 내용을 그대로 붙여넣습니다.</li>
+          <li>배포 → 새 배포 → 유형: 웹 앱으로 배포합니다. 실행 계정은 "나", 액세스 권한은 "모든 사용자"로 설정해야 학생이 로그인 없이 제출할 수 있습니다.</li>
+          <li>배포된 웹 앱 URL(<code>.../exec</code>로 끝남)을 이 활동 폴더의 <code>config.js</code>에 있는 <code>GAS_ENDPOINT</code> 값에 붙여넣습니다.</li>
+          <li>URL을 넣기 전까지 "최종 제출" 버튼은 비활성화되어 있고, 학생은 코드 작성·실행·대화 연습만 할 수 있습니다.</li>
+        </ol>
+      </details>
+
+      <button id="open-confirm-button" type="button" class="submit-btn" disabled>최종 제출</button>
+
+      <div id="confirm-panel" class="confirm-panel" hidden>
+        <h3 id="confirm-heading" tabindex="-1">이 코드로 제출하시겠습니까?</h3>
+        <dl class="confirm-summary">
+          <div><dt>학번</dt><dd id="confirm-number"></dd></div>
+          <div><dt>이름</dt><dd id="confirm-name"></dd></div>
+        </dl>
+        <dl class="confirm-summary confirm-summary-wide">
+          <div><dt>만든 동기</dt><dd id="confirm-motivation"></dd></div>
+          <div><dt>활용 및 개선 방안</dt><dd id="confirm-usage-improvement"></dd></div>
+        </dl>
+        <pre id="confirm-code" class="confirm-code"></pre>
+        <div class="confirm-actions">
+          <button id="confirm-cancel" type="button" class="ghost-btn">취소</button>
+          <button id="confirm-submit" type="button" class="submit-btn">제출</button>
+        </div>
+      </div>
+
+      <div id="submit-result" class="submit-result" role="status" aria-live="polite" hidden></div>
+    </section>
+  </main>
+  <footer><span>정보 · 인공지능 기초</span><span>규칙을 쓰고, 대화하고, 고쳐보기</span></footer>
+  </div>
+</body>
+</html>

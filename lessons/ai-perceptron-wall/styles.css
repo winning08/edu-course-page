@@ -1,0 +1,76 @@
+/* 활동 전용 스타일. 공통 레이아웃·컴포넌트는 ../shared/lab-base.css를 사용한다. */
+
+.concept-bridge { max-width: 900px; margin: 0 auto 2.4rem; padding: 1.2rem 1.4rem; background: #eef1f6; border-left: 3px solid var(--accent); border-radius: 8px; }
+.concept-bridge-label { margin: 0; color: var(--accent); font: 750 .7rem ui-monospace, monospace; letter-spacing: .1em; }
+.concept-bridge-label + p { margin-top: .7rem; }
+.concept-bridge p:not(.concept-bridge-label) { margin: .6rem 0 0; color: var(--ink); font-size: .95rem; line-height: 1.7; }
+
+.line-stage { padding-bottom: 1rem; }
+
+.line-lab { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: clamp(1.2rem, 3vw, 2.2rem); align-items: start; margin: 0 clamp(1rem, 3vw, 1.8rem) 1.2rem; }
+.line-canvas-wrap { padding: .6rem; background: #fff; border: 1px solid var(--line); }
+.line-canvas { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; }
+.grid-line { stroke: #e6e9ef; stroke-width: 1; }
+.axis-line { stroke: #97a0b0; stroke-width: 1.5; }
+.axis-arrow { fill: none; stroke: #97a0b0; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.axis-label { fill: #7a8392; font: 700 .58rem ui-monospace, monospace; }
+.boundary-line { stroke: var(--accent); stroke-width: 3; stroke-linecap: round; }
+.point { stroke-width: 3; }
+.point.expected-true { fill: #3157d5; }
+.point.expected-false { fill: #b33e4b; }
+.point.point-ok { stroke: var(--ok); }
+.point.point-no { stroke: var(--no); }
+
+.line-controls { display: flex; flex-direction: column; gap: .9rem; padding-top: .4rem; }
+.line-controls label { display: flex; flex-direction: column; gap: .4rem; color: var(--muted); font-size: .82rem; font-weight: 650; }
+.line-controls input[type="range"] { width: 100%; accent-color: var(--accent); }
+.line-controls.two-lines { gap: 1.2rem; }
+.line-controls fieldset { display: flex; flex-direction: column; gap: .6rem; padding: .8rem .9rem; margin: 0; border: 1px solid var(--line); }
+.line-controls legend { padding: 0 .3rem; color: var(--accent); font: 700 .7rem ui-monospace, monospace; letter-spacing: .08em; }
+.line-score { margin: .2rem 0 0; padding: .6rem .8rem; color: var(--ink); background: #eef1f6; border-radius: 4px; font-weight: 750; font-variant-numeric: tabular-nums; }
+
+.stage-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin: 0 clamp(1rem, 3vw, 1.8rem) 1.2rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.stage-hint { margin: 0; color: var(--muted); font-size: .86rem; line-height: 1.6; }
+.stage-next { min-height: 48px; padding: .7rem 1.2rem; color: #fff; background: var(--accent); border: 1px solid var(--accent); border-radius: 3px; font-size: .88rem; font-weight: 720; white-space: nowrap; }
+.stage-next:hover:not(:disabled) { background: var(--accent-dark, #2444ae); }
+.stage-next:disabled { opacity: .45; cursor: not-allowed; }
+
+.reveal-box { margin: 0 clamp(1rem, 3vw, 1.8rem) 1.4rem; padding: 1rem 1.2rem; background: #f2f5ff; border-left: 3px solid var(--accent); }
+.reveal-box span { color: var(--accent); font: 750 .68rem ui-monospace, monospace; letter-spacing: .1em; }
+.reveal-box p { margin: .5rem 0 0; line-height: 1.65; }
+.reveal-box p + p { margin-top: .8rem; }
+
+.auto-find { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem; margin: 0 clamp(1rem, 3vw, 1.8rem) 1.2rem; padding: 1rem 1.2rem; background: #f7f8fb; border: 1px dashed var(--line-strong); }
+.auto-find > p:first-child { flex: 1 1 240px; margin: 0; color: var(--muted); font-size: .86rem; line-height: 1.55; }
+#auto-find-button { background: #fff; color: var(--accent-dark, #2444ae); }
+#auto-find-button:hover:not(:disabled) { background: #f4f6ff; }
+.auto-find-status { flex-basis: 100%; margin: 0; padding-top: .4rem; color: var(--accent); font: 700 .78rem ui-monospace, monospace; font-variant-numeric: tabular-nums; border-top: 1px dashed var(--line); }
+
+.mycin-rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: .8rem; margin: 0 clamp(1rem, 3vw, 1.8rem) 1.4rem; }
+.mycin-rule-card { padding: .85rem 1rem; background: #f9fafc; border: 1px solid var(--line); }
+.mycin-rule-id { color: var(--accent); font: 700 .7rem ui-monospace, monospace; letter-spacing: .08em; }
+.mycin-rule-when { margin: .4rem 0 0; font-size: .84rem; font-weight: 650; }
+.mycin-rule-result { margin: .35rem 0 0; color: var(--muted); font-size: .82rem; line-height: 1.5; }
+
+.mycin-case { margin: 0 clamp(1rem, 3vw, 1.8rem) 1rem; padding: 1.1rem clamp(1rem, 3vw, 1.4rem); background: #fff; border: 1px solid var(--line-strong); }
+.mycin-case-head { display: flex; flex-direction: column; gap: .4rem; margin-bottom: .9rem; }
+.mycin-case-head span { color: var(--accent); font: 700 .68rem ui-monospace, monospace; letter-spacing: .1em; }
+.mycin-choices { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+.mycin-choices button { min-height: 46px; padding: .55rem 1rem; color: var(--ink); background: #fff; border: 1px solid var(--line-strong); border-radius: 3px; font-weight: 700; }
+.mycin-choices button:hover:not(:disabled) { border-color: var(--accent); background: #f4f6ff; }
+.mycin-choices button:disabled { opacity: .5; cursor: not-allowed; }
+
+.journey-list { display: grid; gap: 1rem; max-width: 760px; margin: 2rem auto 0; padding: 0; list-style: none; text-align: left; }
+.journey-list li { display: grid; grid-template-columns: 90px 1fr; gap: 1rem; align-items: start; padding: 1rem 1.2rem; background: #f9fafc; border: 1px solid var(--line); }
+.journey-year { color: var(--accent); font: 750 .8rem ui-monospace, monospace; }
+.journey-list strong { display: block; margin-bottom: .3rem; font-size: 1rem; }
+.journey-list p { margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.55; }
+
+.next-step { max-width: 720px; margin: 1.5rem auto 0; padding: 1.4rem 1.5rem; text-align: left; background: #f2f5ff; border: 1px solid var(--line); }
+.next-step p { margin: 0 0 .8rem; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+.next-step-link { display: inline-flex; align-items: center; gap: .4rem; color: var(--accent-dark, #2444ae); font-weight: 720; text-decoration: none; }
+.next-step-link:hover { text-decoration: underline; }
+
+@media (max-width: 720px) {
+  .line-lab { grid-template-columns: 1fr; }
+}
