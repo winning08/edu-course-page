@@ -36,7 +36,7 @@
     {
       "id": "ai-keyword-bingo",
       "subject": "인공지능 기초",
-      "unit": "인공지능 핵심 용어 익히기",
+      "unit": "인공지능 용어 빙고",
       "order": 1,
       "title": "인공지능 핵심 용어 빙고",
       "path": "lessons/ai-keyword-bingo/",
@@ -47,7 +47,7 @@
     {
       "id": "turing-test-questions",
       "subject": "인공지능 기초",
-      "unit": "지능과 인공지능의 이해",
+      "unit": "지능의 이해",
       "order": 1,
       "title": "내가 만약 튜링 테스트에 들어간다면?",
       "path": "lessons/turing-test-questions/",
@@ -58,7 +58,7 @@
     {
       "id": "arc-puzzle-challenge",
       "subject": "인공지능 기초",
-      "unit": "지능과 인공지능의 이해",
+      "unit": "지능의 이해",
       "order": 2,
       "title": "AI도 못 푸는 퍼즐, 나는 풀 수 있을까?",
       "path": "lessons/arc-puzzle-challenge/",
@@ -69,7 +69,7 @@
     {
       "id": "turing-vs-arc-compare",
       "subject": "인공지능 기초",
-      "unit": "지능과 인공지능의 이해",
+      "unit": "지능의 이해",
       "order": 3,
       "title": "튜링 테스트와 ARC-AGI, 뭐가 다를까?",
       "path": "lessons/turing-vs-arc-compare/",
@@ -80,7 +80,7 @@
     {
       "id": "ai-perceptron-wall",
       "subject": "인공지능 기초",
-      "unit": "인공지능의 발전 과정",
+      "unit": "인공지능의 이해",
       "order": 1,
       "title": "인공지능의 역사",
       "path": "lessons/ai-perceptron-wall/",
@@ -91,7 +91,7 @@
     {
       "id": "eliza-python-web",
       "subject": "인공지능 기초",
-      "unit": "인공지능의 발전 과정",
+      "unit": "인공지능의 이해",
       "order": 2,
       "title": "나만의 ELIZA 만들기",
       "path": "lessons/eliza-python-web/",
