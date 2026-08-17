@@ -233,7 +233,7 @@ test("활동1 페이지·활동지 목록 페이지·data/lessons.json의 난이
   assert.match(html, /<dt>난이도<\/dt><dd>보통<\/dd>/);
 
   const activity1Card = groupPage.match(/<a class="lesson-card" href="\.\.\/\.\.\/lessons\/ai-inference-ripeness\/"[^>]*>[\s\S]*?<\/a>/)[0];
-  assert.match(activity1Card, /실습 · 20분 · 보통/);
+  assert.match(activity1Card, /실습 · 보통/);
 
   const lessons = JSON.parse(lessonsJson).lessons;
   const activity1 = lessons.find((lesson) => lesson.id === "ai-inference-ripeness");
