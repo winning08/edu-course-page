@@ -87,7 +87,8 @@
       <p class="submit-copy-text">활동지를 벗어나지 않고 질문과 이유를 바로 제출할 수 있습니다. 첫 번째 질문과 이유는 필수이며, 추가 질문은 선택입니다.</p>
 
       <form id="turing-form" class="turing-form" novalidate>
-        <div class="student-fields"><label>학번<input id="student-number" name="student_number" inputmode="numeric" autocomplete="off" pattern="[0-9]{5}" maxlength="5" aria-describedby="student-number-help" required><small id="student-number-help">5자리 학번을 입력하세요. 학번의 2~3번째 자리로 학급을 구분합니다.</small></label><label>이름<input id="student-name" name="student_name" autocomplete="name" required></label></div>
+        <div class="student-fields"><label>학번<input id="student-number" name="student_number" inputmode="numeric" autocomplete="off" pattern="[0-9]{5}" maxlength="5" aria-describedby="student-number-help" required></label><label>이름<input id="student-name" name="student_name" autocomplete="name" required></label></div>
+        <p id="student-number-help" class="student-number-help">5자리 학번을 입력하세요. 학번의 2~3번째 자리로 학급을 구분합니다.</p>
         <fieldset><legend>질문 1 <span>필수</span></legend><label>사람과 AI를 구별하기 위해 어떤 질문을 하겠습니까?<textarea id="question" name="question" rows="3" maxlength="300" required></textarea></label><label>이 질문이 구별에 도움이 된다고 생각한 이유는 무엇입니까?<textarea id="reason" name="reason" rows="3" maxlength="500" required></textarea></label></fieldset>
         <fieldset><legend>추가 질문 <span>선택</span></legend><label>다른 질문이 있다면 적어보세요.<textarea id="followup" name="followup" rows="3" maxlength="300"></textarea></label><label>추가 질문을 고른 이유를 적어보세요.<textarea id="followup-reason" name="followup_reason" rows="3" maxlength="500"></textarea></label></fieldset>
         <p id="form-error" class="form-error" role="alert" hidden></p>
