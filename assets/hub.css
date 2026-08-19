@@ -1,6 +1,6 @@
 :root { --ink:#15171d; --muted:#626a78; --line:#c7ced9; --line-strong:#a9b3c4; --paper:#ffffff; --accent:#3157d5; }
 * { box-sizing:border-box; }
-body { margin:0; min-width:320px; color:var(--ink); background:var(--paper); font-family:var(--font-sans); }
+body { margin:0; min-width:320px; color:var(--ink); background:var(--paper); font-family:var(--font-sans); word-break:keep-all; overflow-wrap:break-word; }
 .hub-header, .group-page-header, main, footer { width:min(1040px,calc(100% - 2rem)); margin-inline:auto; }
 .hub-header { padding:clamp(4rem,10vw,8rem) 0 3rem; border-bottom:1px solid var(--line); }
 .eyebrow,.lesson-meta { margin:0 0 .8rem; color:var(--accent); font-size:.76rem; font-weight:800; letter-spacing:.14em; }

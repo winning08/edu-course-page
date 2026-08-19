@@ -5,7 +5,7 @@
 }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { margin:0; min-width:320px; color:var(--ink); background:var(--paper); font-family:var(--font-sans); }
+body { margin:0; min-width:320px; color:var(--ink); background:var(--paper); font-family:var(--font-sans); word-break:keep-all; overflow-wrap:break-word; }
 button,a { font:inherit; }
 button { cursor:pointer; }
 button:focus-visible,a:focus-visible,[tabindex="0"]:focus-visible { outline:3px solid var(--focus); outline-offset:3px; }
