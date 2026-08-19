@@ -1,7 +1,7 @@
 /* 활동 전용 스타일. 공통 레이아웃·컴포넌트는 ../shared/lab-base.css를 사용한다. */
 
 .concept-bridge { max-width: 900px; margin: 0 auto 2.4rem; padding: 1.2rem 1.4rem; background: #eef1f6; border-left: 3px solid var(--accent); border-radius: 8px; }
-.concept-bridge-label { margin: 0; color: var(--accent); font: 750 .7rem ui-monospace, monospace; letter-spacing: .1em; }
+.concept-bridge-label { margin: 0; color: var(--accent); font: 750 .7rem var(--font-sans); letter-spacing: .1em; }
 .concept-bridge p:not(.concept-bridge-label) { margin: .6rem 0 0; color: var(--ink); font-size: .95rem; line-height: 1.7; }
 
 .lab { padding: 0 clamp(1rem, 3vw, 1.8rem) 1.6rem; }

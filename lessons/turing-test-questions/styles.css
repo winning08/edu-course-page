@@ -3,10 +3,10 @@ main { width: min(880px, calc(100% - 2rem)); margin-inline: auto; padding: clamp
 
 section + section { margin-top: clamp(2.2rem, 5vw, 3.4rem); padding-top: clamp(2.2rem, 5vw, 3.4rem); border-top: 1px solid var(--line); }
 
-.eyebrow { margin: 0 0 .7rem; color: var(--accent); font: 750 .7rem ui-monospace, monospace; letter-spacing: .14em; }
+.eyebrow { margin: 0 0 .7rem; color: var(--accent); font: 750 .7rem var(--font-sans); letter-spacing: .14em; }
 #intro-title, #question-title, #submit-title { margin: 0 0 1rem; font-size: clamp(1.5rem, 3.6vw, 2.2rem); letter-spacing: -.03em; }
 
-.intro-copy-text { max-width: 700px; margin: 0 0 1rem; color: var(--muted); font-size: 1rem; line-height: 1.75; }
+.intro-copy-text { margin: 0 0 1rem; color: var(--muted); font-size: 1rem; line-height: 1.75; }
 .intro-note { display: inline-block; margin: .4rem 0 0; padding: .5rem .9rem; color: var(--ink); background: #eef1f6; border-radius: 8px; font-size: .88rem; }
 
 .example-block { margin: 0 0 1rem; padding: 1.3rem 1.4rem; background: #eef1f6; border-radius: 12px; }
@@ -15,7 +15,7 @@ section + section { margin-top: clamp(2.2rem, 5vw, 3.4rem); padding-top: clamp(2
 .example-dialogue { margin: 0 0 1rem; padding: 1rem 1.1rem; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
 .example-turn { display: flex; gap: .6rem; align-items: baseline; }
 .example-turn + .example-turn { margin-top: .5rem; }
-.example-turn dt { flex: none; min-width: 2.6rem; color: var(--accent); font: 700 .72rem ui-monospace, monospace; letter-spacing: .04em; }
+.example-turn dt { flex: none; min-width: 2.6rem; color: var(--accent); font: 700 .72rem var(--font-sans); letter-spacing: .04em; }
 .example-turn dd { margin: 0; color: var(--ink); font-size: .92rem; line-height: 1.55; }
 
 .example-analysis { margin: 0 0 1.1rem; color: var(--ink); font-size: .9rem; line-height: 1.65; }
@@ -32,7 +32,7 @@ section + section { margin-top: clamp(2.2rem, 5vw, 3.4rem); padding-top: clamp(2
 
 .example-next { margin: 0; color: var(--ink); font-weight: 650; font-size: .94rem; }
 
-.submit-copy-text { max-width: 700px; margin: 0 0 1.2rem; color: var(--muted); font-size: 1rem; line-height: 1.75; }
+.submit-copy-text { margin: 0 0 1.2rem; color: var(--muted); font-size: 1rem; line-height: 1.75; }
 
 .submit-embed { padding: .75rem; background: #eef1f6; border: 1px solid var(--line-strong); border-radius: 12px; }
 .submit-embed iframe { display: block; width: 100%; min-height: 1150px; border: 0; border-radius: 8px; }

@@ -1,7 +1,7 @@
 /* 활동 · 인공지능 핵심 용어 빙고. 공통 레이아웃/토큰은 ../shared/lab-base.css를 사용한다. */
 main { width: min(1120px, calc(100% - 2rem)); margin-inline: auto; padding: clamp(1.6rem, 4vw, 3rem) 0 4rem; }
 
-.eyebrow { margin: 0 0 .7rem; color: var(--accent); font: 750 .7rem ui-monospace, monospace; letter-spacing: .14em; }
+.eyebrow { margin: 0 0 .7rem; color: var(--accent); font: 750 .7rem var(--font-sans); letter-spacing: .14em; }
 #prep-title { margin: 0 0 1rem; font-size: clamp(1.7rem, 4vw, 2.5rem); letter-spacing: -.03em; }
 .prep-instructions { max-width: 760px; margin: 0 0 1.4rem; color: var(--muted); font-size: 1rem; line-height: 1.75; }
 .prep-progress { display: inline-flex; align-items: baseline; gap: .4rem; margin: 0 0 1.2rem; padding: .55rem 1rem; color: var(--ink); background: #eef1f6; border-radius: 99px; font-size: .9rem; font-weight: 650; }

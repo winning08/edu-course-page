@@ -3,9 +3,9 @@ main { width: min(920px, calc(100% - 2rem)); margin-inline: auto; padding: clamp
 
 section + section { margin-top: clamp(2.2rem, 5vw, 3.4rem); padding-top: clamp(2.2rem, 5vw, 3.4rem); border-top: 1px solid var(--line); }
 
-.eyebrow { margin: 0 0 .7rem; color: var(--accent); font: 750 .7rem ui-monospace, monospace; letter-spacing: .14em; }
+.eyebrow { margin: 0 0 .7rem; color: var(--accent); font: 750 .7rem var(--font-sans); letter-spacing: .14em; }
 #intro-title, #my-results-title, #compare-table-title { margin: 0 0 1rem; font-size: clamp(1.5rem, 3.6vw, 2.2rem); letter-spacing: -.03em; }
-.intro-copy-text { max-width: 760px; margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.75; }
+.intro-copy-text { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.75; }
 
 .my-results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
 .my-result-card { padding: 1.2rem 1.3rem; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
