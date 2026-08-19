@@ -19,7 +19,7 @@ h2 { margin:.25rem 0 0; font-size:clamp(1.5rem,4vw,2.2rem); letter-spacing:-.04e
 .lesson-card h3 { margin:0; font-size:clamp(1.3rem,3vw,1.8rem); letter-spacing:-.035em; }
 .lesson-card p:last-child { margin:.65rem 0 0; color:var(--muted); line-height:1.65; }
 .lesson-objective { margin:.7rem 0 0; padding-top:.7rem; color:var(--ink); font-size:.86rem; font-weight:650; line-height:1.5; border-top:1px dashed var(--line); }
-.lesson-objective span { margin-right:.4rem; color:var(--accent); font:700 .68rem ui-monospace,monospace; letter-spacing:.08em; }
+.lesson-objective span { margin-right:.4rem; color:var(--accent); font:700 .68rem var(--font-sans); letter-spacing:.08em; }
 .arrow { font-size:1.8rem; }
 footer { padding:1.5rem 0 3rem; color:var(--muted); border-top:1px solid var(--line); font-size:.8rem; }
 a:focus-visible,button:focus-visible { outline:3px solid #5d7be1; outline-offset:3px; }
@@ -39,9 +39,9 @@ a:focus-visible,button:focus-visible { outline:3px solid #5d7be1; outline-offset
 .group-cta { color:var(--accent); font-weight:750; white-space:nowrap; }
 .group-page-header { padding:clamp(3rem,8vw,5rem) 0 2rem; border-bottom:1px solid var(--line); }
 .group-page-header h1 { font-size:clamp(2.3rem,6vw,4rem); }
-.group-intro { max-width:720px; margin:1.4rem 0 0; color:var(--muted); font-size:1.05rem; line-height:1.75; }
-.warmup-box { max-width:720px; margin:1.2rem 0 0; padding:.9rem 1.1rem; background:#eef1f6; border-left:3px solid var(--accent); border-radius:8px; }
-.warmup-label { margin:0 0 .35rem; color:var(--accent); font:750 .7rem ui-monospace,monospace; letter-spacing:.1em; }
+.group-intro { margin:1.4rem 0 0; color:var(--muted); font-size:1.05rem; line-height:1.75; }
+.warmup-box { margin:1.2rem 0 0; padding:.9rem 1.1rem; background:#eef1f6; border-left:3px solid var(--accent); border-radius:8px; }
+.warmup-label { margin:0 0 .35rem; color:var(--accent); font:750 .7rem var(--font-sans); letter-spacing:.1em; }
 .warmup-question { margin:0; color:var(--ink); font-size:.95rem; line-height:1.6; }
 .concept-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.9rem; margin:1.6rem 0 0; padding:0; list-style:none; }
 .concept-list li { padding:.9rem 1rem; background:#fff; border:1px solid var(--line); font-size:.85rem; color:var(--muted); }
