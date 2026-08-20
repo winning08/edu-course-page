@@ -46,7 +46,7 @@
 #auto-find-button:hover:not(:disabled) { background: #f4f6ff; }
 .auto-find-status { flex-basis: 100%; margin: 0; padding-top: .4rem; color: var(--accent); font: 700 .78rem var(--font-sans); font-variant-numeric: tabular-nums; border-top: 1px dashed var(--line); }
 
-.mycin-rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: .8rem; margin: 0 clamp(1rem, 3vw, 1.8rem) 1.4rem; }
+.mycin-rules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; margin: 0 clamp(1rem, 3vw, 1.8rem) 1.4rem; }
 .mycin-rule-card { padding: .85rem 1rem; background: #f9fafc; border: 1px solid var(--line); }
 .mycin-rule-id { color: var(--accent); font: 700 .7rem var(--font-sans); letter-spacing: .08em; }
 .mycin-rule-when { margin: .4rem 0 0; font-size: .84rem; font-weight: 650; }
@@ -73,4 +73,9 @@
 
 @media (max-width: 720px) {
   .line-lab { grid-template-columns: 1fr; }
+  .mycin-rules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .mycin-rules { grid-template-columns: 1fr; }
 }
