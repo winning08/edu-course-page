@@ -1,8 +1,6 @@
 import { loadPuzzles } from "./puzzles.js";
 import { createBlankGrid, setCell, gridsEqual, usedColors, requiredPuzzles, bonusPuzzles, summarizeRequiredResults } from "./game-core.js";
 
-const STORAGE_KEY = "arc-puzzle-challenge:v3";
-
 const PUZZLES = await loadPuzzles();
 
 const REQUIRED_PUZZLES = requiredPuzzles(PUZZLES);
@@ -54,29 +52,6 @@ const state = {
   attemptedCurrent: false,
   locked: false,
 };
-
-function loadProgress() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    if (!Array.isArray(data.results)) return null;
-    return {
-      results: data.results,
-      bonusResult: typeof data.bonusResult === "string" ? data.bonusResult : null,
-    };
-  } catch {
-    return null;
-  }
-}
-
-function saveProgress() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ results: state.results, bonusResult: state.bonusResult }));
-  } catch {
-    // localStorage를 쓸 수 없는 환경에서는 진행 상황 저장을 건너뛴다.
-  }
-}
 
 function buildGridElement(grid, { editable, onCellClick } = {}) {
   const el2 = document.createElement("div");
@@ -219,7 +194,6 @@ function loadRequiredPuzzle(index) {
   const puzzle = REQUIRED_PUZZLES[index];
   el.progressLabel.textContent = `문제 ${index + 1} / ${REQUIRED_PUZZLES.length} · 수업용 난이도 ${puzzle.difficulty} · 공식 ID ${puzzle.sourceId}`;
   renderPuzzleCommon(puzzle);
-  saveProgress();
 }
 
 function loadBonusPuzzle() {
@@ -255,7 +229,6 @@ function handleCheck() {
     }
     setFeedback("정답입니다! 규칙을 정확히 찾았어요.", "is-success");
     lockPuzzle();
-    saveProgress();
   } else {
     state.attemptedCurrent = true;
     setFeedback("아직 규칙과 다릅니다. 예시를 다시 살펴보고 도전해 보세요.", "is-retry");
@@ -286,7 +259,6 @@ function handleSkip() {
 
 function advance() {
   if (state.mode === "bonus") {
-    saveProgress();
     showResults();
     return;
   }
@@ -309,7 +281,6 @@ function renderBonusSection() {
 }
 
 function showResults() {
-  saveProgress();
   el.puzzleView.hidden = true;
   el.resultsView.hidden = false;
   const summary = summarizeRequiredResults(state.results, REQUIRED_PUZZLES.length);
@@ -334,16 +305,7 @@ function init() {
   el.nextButton.addEventListener("click", advance);
   el.bonusButton.addEventListener("click", handleBonusStart);
 
-  const saved = loadProgress();
-  if (saved) {
-    state.results = saved.results.slice(0, REQUIRED_PUZZLES.length);
-    state.bonusResult = saved.bonusResult;
-  }
-  if (state.results.length >= REQUIRED_PUZZLES.length) {
-    showResults();
-    return;
-  }
-  loadRequiredPuzzle(state.results.length);
+  loadRequiredPuzzle(0);
 }
 
 init();

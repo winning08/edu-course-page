@@ -123,9 +123,9 @@ test("시험의 문제 입력과 출력도 전체 열 수에 맞춰 한 줄로 �
   assert.match(css, /\.test-area \{ display: flex; flex-wrap: nowrap;/);
 });
 
-test("progress 저장은 v3 스키마를 쓰고, 힌트·건너뛰기·다시 채점 관련 함수가 남아있다", async () => {
+test("진행 상황은 localStorage에 저장하지 않고(새로고침하면 처음부터 다시 시작), 힌트·건너뛰기·다시 채점 관련 함수는 남아있다", async () => {
   const js = await readFile(new URL("game.js", lessonRoot), "utf8");
-  assert.match(js, /arc-puzzle-challenge:v3/);
+  assert.doesNotMatch(js, /localStorage/);
   assert.match(js, /handleHint/);
   assert.match(js, /handleSkip/);
   assert.match(js, /handleClear/);
@@ -140,18 +140,11 @@ test("units/ai-evaluation 허브 페이지는 1분 이내 워밍업 질문을 �
   assert.match(html, /ARC 그림 퍼즐 4개\(\+선택 도전 1개\)/);
 });
 
-test("turing-vs-arc-compare는 필수 4문제 기준으로 요약하고 선택 도전 결과를 별도로 표시한다", async () => {
-  const js = await readFile(new URL("game.js", compareRoot), "utf8");
-  assert.match(js, /ARC_PUZZLE_TOTAL = 4/);
-  assert.match(js, /arc-puzzle-challenge:v3/);
-  assert.match(js, /선택 도전\(Expert\)/);
-});
-
 test("PPT의 잘못된 점수·오탈자·비공식 이미지 표현이 어디에도 반영되지 않았다", async () => {
   const files = [
     ["index.html", lessonRoot], ["styles.css", lessonRoot], ["game.js", lessonRoot], ["puzzles.js", lessonRoot],
     ["index.html", unitRoot],
-    ["index.html", compareRoot], ["game.js", compareRoot],
+    ["index.html", compareRoot],
   ];
   for (const [name, root] of files) {
     const text = await readFile(new URL(name, root), "utf8");
