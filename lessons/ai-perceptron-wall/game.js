@@ -170,21 +170,17 @@ function goToMycin() {
 const MYCIN_FIELDS = ["열", "기침", "콧물"];
 
 function renderMycinRules() {
-  const header = RULES.map((rule) => `<th scope="col">${rule.label}</th>`).join("");
-  const conditions = MYCIN_FIELDS.map((field) => {
-    const cells = RULES.map((rule) => {
+  $("#mycin-rules").innerHTML = RULES.map((rule, index) => {
+    const conditions = MYCIN_FIELDS.map((field) => {
       const value = rule.when[field];
-      return `<td class="${value ? "" : "is-any"}">${value ?? "무관"}</td>`;
+      return `<tr><th scope="row">${field}</th><td class="${value ? "" : "is-any"}">${value ?? "무관"}</td></tr>`;
     }).join("");
-    return `<tr><th scope="row">${field}</th>${cells}</tr>`;
+    return `<article class="mycin-rule-card rule-color-${index + 1}">
+      <h3>${rule.label}</h3>
+      <table><caption>${rule.label}의 증상 조건</caption><tbody>${conditions}</tbody></table>
+      <div class="mycin-rule-treatment"><span>처방</span><strong>${rule.treatment}</strong></div>
+    </article>`;
   }).join("");
-  const treatments = RULES.map((rule) => `<td><strong>${rule.treatment}</strong></td>`).join("");
-
-  $("#mycin-rules").innerHTML = `<table class="mycin-rule-table">
-    <caption>증상 조건과 처방 비교표</caption>
-    <thead><tr><th scope="col">조건</th>${header}</tr></thead>
-    <tbody>${conditions}<tr class="treatment-row"><th scope="row">처방</th>${treatments}</tr></tbody>
-  </table>`;
 }
 
 function renderMycinCase() {
