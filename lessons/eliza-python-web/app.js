@@ -2,7 +2,7 @@ import { setupEditor } from "./editor.js";
 import { createPythonRunner } from "./python-runner.js";
 import { GAS_ENDPOINT, ACTIVITY_VERSION } from "./config.js";
 
-const STORAGE_KEY = "eliza-python-web:v1";
+const STORAGE_KEY = "eliza-python-web:v2";
 
 // 이전 버전의 영구 저장값은 한 번 정리하고, 이제부터는 현재 탭에서만 보관한다.
 try { localStorage.removeItem(STORAGE_KEY); } catch { /* 저장소 접근 불가 환경 */ }
@@ -20,8 +20,8 @@ while True:
     message = input("나: ")
 
     # ELIZA의 대화 규칙 만들기
-
-
+\t
+\t
     print("ELIZA:", response)
 `;
 
