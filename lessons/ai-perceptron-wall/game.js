@@ -166,13 +166,23 @@ function goToMycin() {
 }
 
 // --- 3단계: 마이신 규칙 진단 --------------------------------------------------
+// 환자 증상(#mycin-fields)과 항상 같은 순서로 보여줘야 규칙-환자 대조가 쉬워진다.
+const MYCIN_FIELDS = ["열", "기침", "콧물"];
+
 function renderMycinRules() {
   $("#mycin-rules").innerHTML = RULES.map((rule) => {
-    const conditions = Object.entries(rule.when).map(([key, value]) => `${key} ${value}`).join(" · ");
+    const rows = MYCIN_FIELDS.map((field) => {
+      const value = rule.when[field];
+      const rowClass = value ? "mycin-rule-row" : "mycin-rule-row mycin-rule-row--any";
+      return `<div class="${rowClass}"><dt>${field}</dt><dd>${value ?? "무관"}</dd></div>`;
+    }).join("");
     return `<div class="mycin-rule-card">
       <span class="mycin-rule-id">${rule.label}</span>
-      <p class="mycin-rule-when">${conditions}</p>
-      <p class="mycin-rule-result">→ ${rule.result}</p>
+      <dl class="mycin-rule-when">${rows}</dl>
+      <div class="mycin-rule-result">
+        <span>처방</span>
+        <strong>${rule.treatment}</strong>
+      </div>
     </div>`;
   }).join("");
 }
