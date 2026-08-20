@@ -58,7 +58,10 @@
 .mycin-rule-card tr:last-child > * { border-bottom: 0; }
 .mycin-rule-card th { width: 44%; color: var(--muted); text-align: left; font-weight: 700; }
 .mycin-rule-card td { color: var(--ink); text-align: right; font-weight: 800; }
-.mycin-rule-card td.is-any { color: var(--muted); font-weight: 600; }
+.condition-chip { display: inline-block; padding: .2rem .38rem; border-radius: 4px; font-size: .75rem; font-weight: 800; line-height: 1.3; }
+.condition-positive { color: #8c3037; background: #ffeaec; }
+.condition-negative { color: #465064; background: #eef0f3; }
+.condition-any { color: #616977; background: #fff; border: 1px dashed #9ca4b1; }
 .mycin-rule-treatment { display: grid; gap: .4rem; min-height: 76px; padding: .65rem .8rem; color: var(--ink); background: #f7f8fb; border-top: 1px solid var(--line-strong); }
 .mycin-rule-treatment .treatment-label { color: var(--muted); font-size: .66rem; font-weight: 800; letter-spacing: .08em; }
 .medicine-badges { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }

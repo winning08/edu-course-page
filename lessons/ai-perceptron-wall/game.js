@@ -181,11 +181,25 @@ function renderMedicineBadges(treatment) {
   ).join("");
 }
 
+function formatCondition(field, value) {
+  if (!value) return { text: "상관없음", className: "condition-any" };
+  if (field === "열") return value === "높음"
+    ? { text: "열이 남", className: "condition-positive" }
+    : { text: "열이 나지 않음", className: "condition-negative" };
+  if (field === "기침") return value === "있음"
+    ? { text: "기침함", className: "condition-positive" }
+    : { text: "기침하지 않음", className: "condition-negative" };
+  return value === "있음"
+    ? { text: "콧물 있음", className: "condition-positive" }
+    : { text: "콧물 없음", className: "condition-negative" };
+}
+
 function renderMycinRules() {
   $("#mycin-rules").innerHTML = RULES.map((rule, index) => {
     const conditions = MYCIN_FIELDS.map((field) => {
       const value = rule.when[field];
-      return `<tr><th scope="row">${field}</th><td class="${value ? "" : "is-any"}">${value ?? "무관"}</td></tr>`;
+      const condition = formatCondition(field, value);
+      return `<tr><th scope="row">${field}</th><td><span class="condition-chip ${condition.className}">${condition.text}</span></td></tr>`;
     }).join("");
     return `<article class="mycin-rule-card rule-color-${index + 1}">
       <h3>${rule.label}</h3>
