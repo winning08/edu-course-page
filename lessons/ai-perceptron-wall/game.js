@@ -168,6 +168,18 @@ function goToMycin() {
 // --- 3단계: 마이신 규칙 진단 --------------------------------------------------
 // 환자 증상(#mycin-fields)과 항상 같은 순서로 보여줘야 규칙-환자 대조가 쉬워진다.
 const MYCIN_FIELDS = ["열", "기침", "콧물"];
+const MEDICINE_CLASSES = {
+  "해열제": "medicine-fever",
+  "기침약": "medicine-cough",
+  "콧물약": "medicine-runny-nose",
+  "처방 없음": "medicine-none",
+};
+
+function renderMedicineBadges(treatment) {
+  return treatment.split(" + ").map((medicine) =>
+    `<span class="medicine-chip ${MEDICINE_CLASSES[medicine] ?? "medicine-none"}">${medicine}</span>`
+  ).join("");
+}
 
 function renderMycinRules() {
   $("#mycin-rules").innerHTML = RULES.map((rule, index) => {
@@ -178,7 +190,7 @@ function renderMycinRules() {
     return `<article class="mycin-rule-card rule-color-${index + 1}">
       <h3>${rule.label}</h3>
       <table><caption>${rule.label}의 증상 조건</caption><tbody>${conditions}</tbody></table>
-      <div class="mycin-rule-treatment"><span>처방</span><strong>${rule.treatment}</strong></div>
+      <div class="mycin-rule-treatment"><span class="treatment-label">처방</span><div class="medicine-badges">${renderMedicineBadges(rule.treatment)}</div></div>
     </article>`;
   }).join("");
 }
@@ -197,7 +209,7 @@ function renderMycinCase() {
     .map(([key, value], index) => `<div><dt><span>${String(index + 1).padStart(2, "0")}</span>${key}</dt><dd>${value}</dd></div>`)
     .join("");
 
-  $("#mycin-choices").innerHTML = [...RULES.map((rule) => `<button type="button" data-choice="${rule.id}">${rule.treatment}</button>`),
+  $("#mycin-choices").innerHTML = [...RULES.map((rule) => `<button type="button" data-choice="${rule.id}" aria-label="${rule.treatment}"><span class="medicine-badges">${renderMedicineBadges(rule.treatment)}</span></button>`),
     `<button type="button" data-choice="NONE">처방할 수 없음(규칙에 없음)</button>`].join("");
 
   $("#feedback-waiting").hidden = false;
