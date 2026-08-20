@@ -126,6 +126,8 @@ test("시험의 문제 입력과 출력도 전체 열 수에 맞춰 한 줄로 �
 test("progress 저장은 v3 스키마를 쓰고, 힌트·건너뛰기·다시 채점 관련 함수가 남아있다", async () => {
   const js = await readFile(new URL("game.js", lessonRoot), "utf8");
   assert.match(js, /arc-puzzle-challenge:v3/);
+  assert.match(js, /sessionStorage\.setItem\(STORAGE_KEY/);
+  assert.doesNotMatch(js, /localStorage\.setItem\(STORAGE_KEY/);
   assert.match(js, /handleHint/);
   assert.match(js, /handleSkip/);
   assert.match(js, /handleClear/);
@@ -144,6 +146,7 @@ test("turing-vs-arc-compare는 필수 4문제 기준으로 요약하고 선택 �
   const js = await readFile(new URL("game.js", compareRoot), "utf8");
   assert.match(js, /ARC_PUZZLE_TOTAL = 4/);
   assert.match(js, /arc-puzzle-challenge:v3/);
+  assert.match(js, /sessionStorage\.getItem\(key\)/);
   assert.match(js, /선택 도전\(Expert\)/);
 });
 

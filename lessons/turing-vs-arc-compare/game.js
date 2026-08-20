@@ -19,7 +19,7 @@ const el = {
 
 function readJSON(key) {
   try {
-    const raw = localStorage.getItem(key);
+    const raw = sessionStorage.getItem(key);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -27,7 +27,7 @@ function readJSON(key) {
 }
 
 // 활동 01의 질문은 이제 이 사이트가 아니라 구글 설문에 바로 적어 제출하므로
-// (localStorage에 남지 않음) 여기서는 완료 여부를 알 수 없다. 대신 무엇을 했는지만 안내한다.
+// 브라우저에 영구 저장하지 않으므로 여기서는 완료 여부를 알 수 없다. 대신 무엇을 했는지만 안내한다.
 function renderTuringSummary() {
   el.turingSummary.innerHTML = `
     <p class="my-result-title">활동 01 · 튜링 테스트 질문</p>

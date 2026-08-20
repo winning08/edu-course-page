@@ -79,9 +79,10 @@ test("python-runner.js는 Worker.terminate()로 무한 루프를 안전하게 �
   assert.match(runner, /typeof SharedArrayBuffer !== "undefined"/);
 });
 
-test("app.js는 코드·학번·이름을 localStorage에 저장하고, GAS_ENDPOINT가 비어 있으면 제출 버튼을 비활성화한다", async () => {
+test("app.js는 코드·학번·이름을 탭 단위 sessionStorage에 저장하고, GAS_ENDPOINT가 비어 있으면 제출 버튼을 비활성화한다", async () => {
   const app = await read("app.js");
-  assert.match(app, /localStorage\.setItem\(\s*STORAGE_KEY/);
+  assert.match(app, /sessionStorage\.setItem\(\s*STORAGE_KEY/);
+  assert.doesNotMatch(app, /localStorage\.setItem\(\s*STORAGE_KEY/);
   assert.match(app, /studentNumber: studentNumberInput\.value/);
   assert.match(app, /studentName: studentNameInput\.value/);
   assert.match(app, /if \(!GAS_ENDPOINT\)/);

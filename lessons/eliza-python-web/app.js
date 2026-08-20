@@ -4,6 +4,9 @@ import { GAS_ENDPOINT, ACTIVITY_VERSION } from "./config.js";
 
 const STORAGE_KEY = "eliza-python-web:v1";
 
+// 이전 버전의 영구 저장값은 한 번 정리하고, 이제부터는 현재 탭에서만 보관한다.
+try { localStorage.removeItem(STORAGE_KEY); } catch { /* 저장소 접근 불가 환경 */ }
+
 const STARTER_CODE = `print("ELIZA와 대화를 시작합니다.")
 
 # 키워드: 응답 형태로 대화 규칙을 채워 넣으세요.
@@ -30,7 +33,7 @@ function escapeHtml(text) {
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -87,7 +90,7 @@ function initApp() {
 
   function saveState() {
     try {
-      localStorage.setItem(
+      sessionStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
           code: editor.getValue(),
@@ -98,7 +101,7 @@ function initApp() {
         })
       );
     } catch {
-      // localStorage를 쓸 수 없는 환경(사생활 보호 모드 등)에서는 저장을 건너뛴다.
+      // sessionStorage를 쓸 수 없는 환경(사생활 보호 모드 등)에서는 저장을 건너뛴다.
     }
   }
 

@@ -3,6 +3,9 @@ import { createBlankGrid, setCell, gridsEqual, usedColors, requiredPuzzles, bonu
 
 const STORAGE_KEY = "arc-puzzle-challenge:v3";
 
+// 이전 버전의 영구 저장값은 제거하고, 연계 활동에 필요한 동안 같은 탭에서만 보관한다.
+try { localStorage.removeItem(STORAGE_KEY); } catch { /* 저장소 접근 불가 환경 */ }
+
 const PUZZLES = await loadPuzzles();
 
 const REQUIRED_PUZZLES = requiredPuzzles(PUZZLES);
@@ -57,7 +60,7 @@ const state = {
 
 function loadProgress() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const data = JSON.parse(raw);
     if (!Array.isArray(data.results)) return null;
@@ -72,9 +75,9 @@ function loadProgress() {
 
 function saveProgress() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ results: state.results, bonusResult: state.bonusResult }));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ results: state.results, bonusResult: state.bonusResult }));
   } catch {
-    // localStorage를 쓸 수 없는 환경에서는 진행 상황 저장을 건너뛴다.
+    // sessionStorage를 쓸 수 없는 환경에서는 진행 상황 저장을 건너뛴다.
   }
 }
 
