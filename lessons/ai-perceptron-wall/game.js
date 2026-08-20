@@ -183,15 +183,10 @@ function renderMedicineBadges(treatment) {
 
 function formatCondition(field, value) {
   if (!value) return { text: "상관없음", className: "condition-any" };
-  if (field === "열") return value === "높음"
-    ? { text: "열이 남", className: "condition-positive" }
-    : { text: "열이 나지 않음", className: "condition-negative" };
-  if (field === "기침") return value === "있음"
-    ? { text: "기침함", className: "condition-positive" }
-    : { text: "기침하지 않음", className: "condition-negative" };
-  return value === "있음"
-    ? { text: "콧물 있음", className: "condition-positive" }
-    : { text: "콧물 없음", className: "condition-negative" };
+  const isPresent = field === "열" ? value === "높음" : value === "있음";
+  return isPresent
+    ? { text: "있음", className: "condition-positive" }
+    : { text: "없음", className: "condition-negative" };
 }
 
 function renderMycinRules() {
