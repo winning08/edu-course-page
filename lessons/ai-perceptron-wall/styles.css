@@ -52,7 +52,7 @@
 .mycin-rule-card.rule-color-3 { --rule-color: #9a5b12; --rule-soft: #fff6e9; }
 .mycin-rule-card.rule-color-4 { --rule-color: #7151a5; --rule-soft: #f6f0fc; }
 .mycin-rule-card h3 { margin: 0; padding: .65rem .8rem; color: var(--rule-color); background: var(--rule-soft); font-size: .86rem; font-weight: 850; }
-.mycin-rule-card table { width: calc(100% - 1rem); margin: .5rem; border-collapse: collapse; }
+.mycin-rule-card table { width: calc(100% - 1rem); min-width: 0; margin: .5rem; border-collapse: collapse; table-layout: fixed; }
 .mycin-rule-card caption { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .mycin-rule-card th, .mycin-rule-card td { padding: .5rem .48rem; border-bottom: 1px solid var(--line); font-size: .84rem; }
 .mycin-rule-card tr:last-child > * { border-bottom: 0; }
