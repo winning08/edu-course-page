@@ -63,9 +63,10 @@
 .condition-positive { color: #8c3037; background: #ffeaec; }
 .condition-negative { color: #465064; background: #eef0f3; }
 .condition-any { color: #515966; background: #fff; border-style: dashed; }
-.mycin-rule-treatment { display: grid; gap: .4rem; min-height: 76px; padding: .65rem .8rem; color: var(--ink); background: #f7f8fb; border-top: 1px solid var(--line-strong); }
+.mycin-rule-treatment { display: grid; justify-items: center; gap: .4rem; min-height: 76px; padding: .65rem .8rem; color: var(--ink); background: #f7f8fb; border-top: 1px solid var(--line-strong); text-align: center; }
 .mycin-rule-treatment .treatment-label { color: var(--muted); font-size: .66rem; font-weight: 800; letter-spacing: .08em; }
 .medicine-badges { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }
+.mycin-rule-treatment .medicine-badges { justify-content: center; }
 .medicine-chip { display: inline-flex; align-items: center; min-height: 28px; padding: .25rem .5rem; border: 1px solid currentColor; border-radius: 999px; font-size: .78rem; font-weight: 850; line-height: 1.2; white-space: nowrap; }
 .medicine-fever { color: #96343b; background: #ffeaec; }
 .medicine-cough { color: #285a9e; background: #e8f1ff; }
@@ -80,6 +81,8 @@
 .mycin-choices button:hover:not(:disabled) { border-color: var(--accent); background: #e8edff; }
 .mycin-choices button .medicine-badges { justify-content: center; }
 .mycin-choices button[data-choice="NONE"] { color: var(--ink); background: #fff; border-color: var(--line-strong); }
+.mycin-choices .no-prescription-choice { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; color: #7f3037; background: #fff5f5; border: 2px solid #cf8d93; }
+.no-prescription-icon { display: inline-grid; place-items: center; width: 25px; height: 25px; flex: none; color: #fff; background: #a63e47; border-radius: 50%; font-size: 1.1rem; font-weight: 900; line-height: 1; }
 .mycin-choices button:disabled { opacity: .5; cursor: not-allowed; }
 .mycin-choices + .feedback { margin-top: clamp(.9rem, 2vw, 1.25rem); }
 

@@ -219,7 +219,7 @@ function renderMycinCase() {
     .join("");
 
   $("#mycin-choices").innerHTML = [...RULES.map((rule) => `<button type="button" data-choice="${rule.id}" aria-label="${rule.treatment}"><span class="medicine-badges">${renderMedicineBadges(rule.treatment)}</span></button>`),
-    `<button type="button" data-choice="NONE">처방할 수 없음(규칙에 없음)</button>`].join("");
+    `<button type="button" data-choice="NONE" class="no-prescription-choice"><span class="no-prescription-icon" aria-hidden="true">×</span><span>처방할 수 없음</span></button>`].join("");
 
   $("#feedback-waiting").hidden = false;
   $("#feedback-result").hidden = true;
