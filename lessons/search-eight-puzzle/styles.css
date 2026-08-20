@@ -1,0 +1,107 @@
+.puzzle-card { overflow:hidden; border-radius:7px; }
+.puzzle-card .experiment-head { background:#174a3d; }
+.puzzle-endpoints { display:flex; align-items:center; justify-content:center; gap:1.3rem; margin:0 clamp(1rem,3vw,1.8rem) 1.5rem; }
+.puzzle-endpoints>div { display:flex; flex-direction:column; align-items:center; gap:.45rem; }
+.puzzle-endpoints p { margin:0; color:var(--muted); font-size:.72rem; font-weight:750; }
+.puzzle-endpoints>span { color:var(--accent); font-size:.8rem; font-weight:750; }
+.puzzle-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; padding:3px; background:#9ea8b7; border-radius:5px; }
+.puzzle-grid--medium { width:132px; height:132px; }
+.puzzle-grid--small { width:82px; height:82px; }
+.puzzle-tile { display:grid; place-items:center; color:var(--ink); background:#fff; font:750 1rem ui-monospace,monospace; }
+.puzzle-grid--small .puzzle-tile { font-size:.75rem; }
+.puzzle-tile.is-blank { background:repeating-linear-gradient(45deg,#e9edf3,#e9edf3 5px,#f7f8fa 5px,#f7f8fa 10px); }
+.trace-panel { padding:0 clamp(1rem,3vw,1.8rem) 1.5rem; }
+.round-heading { padding:1rem; background:#f6f8fb; border-left:4px solid var(--accent); }
+.round-heading span { color:var(--accent); font:750 .68rem var(--font-sans); }
+.round-heading h3 { margin:.35rem 0; font-size:1.15rem; }
+.round-heading p { margin:0; color:var(--muted); font-size:.84rem; }
+.search-levels { display:grid; gap:.8rem; margin-top:1.2rem; }
+.search-level { display:grid; grid-template-columns:90px minmax(0,1fr); gap:.7rem; padding:.75rem; background:#f8f9fb; border:1px solid var(--line); border-left:4px solid #9aa5b6; }
+.search-level.is-current { border-left-color:var(--accent); box-shadow:0 0 0 2px rgba(49,88,215,.08); }
+.search-level.is-revealed { border-left-color:var(--ok); }
+.level-label { display:flex; flex-direction:column; justify-content:center; gap:.25rem; }
+.level-label strong { color:var(--accent-dark); font-size:.8rem; }
+.level-label span { color:var(--muted); font-size:.64rem; line-height:1.4; }
+.level-states { display:flex; flex-wrap:nowrap; gap:.65rem; min-width:0; padding:.15rem .15rem .45rem; overflow-x:auto; overscroll-behavior-inline:contain; scrollbar-gutter:stable; }
+.level-states .puzzle-candidate { flex:0 0 112px; }
+.puzzle-candidate { display:flex; flex-direction:column; align-items:center; gap:.5rem; min-height:138px; margin:0; padding:.75rem; background:#fff; border:1px solid var(--line-strong); border-radius:5px; }
+.puzzle-candidate p { margin:0; color:var(--muted); font-size:.7rem; font-weight:700; }
+.puzzle-candidate.state-expander { cursor:pointer; border:2px solid var(--accent); box-shadow:0 3px 10px rgba(49,88,215,.12); }
+.puzzle-candidate.state-expander:hover { background:#edf2ff; }
+.puzzle-candidate.state-expander:focus-visible { outline:4px solid var(--focus); outline-offset:3px; }
+.puzzle-candidate.state-expander.is-expanded { cursor:default; border-color:var(--ok); box-shadow:none; }
+.puzzle-candidate[data-kind="new"] { background:#f0faf5; border:2px solid var(--ok); }
+.puzzle-candidate[data-kind="duplicate"] { opacity:.72; background:#f0f2f5; border:2px dashed #7d8795; }
+.state-chip { margin-top:auto; color:var(--ink); font-size:.66rem; text-align:center; }
+/* 목표 상태 카드는 색만 강조하고, 테두리 두께·모서리·패딩·가로세로 크기는 일반 카드와 동일하게 둔다
+   (border-width/style은 그대로 두고 border-color만 덮어써서 박스 크기가 바뀌지 않도록 한다). */
+.puzzle-candidate.is-goal { border-color:#c9880c; background:#fffaf0; box-shadow:0 0 0 2px rgba(224,163,21,.32); }
+.puzzle-grid--goal { background:#e0a315; }
+.puzzle-grid--goal .puzzle-tile { background:#fff8e6; }
+.puzzle-grid--goal .puzzle-tile.is-blank { background:repeating-linear-gradient(45deg,#ffe9b3,#ffe9b3 5px,#fff8e6 5px,#fff8e6 10px); }
+.trace-actions { display:flex; justify-content:flex-end; margin-top:1rem; }
+.trace-actions button { min-height:48px; padding:.65rem 1rem; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:4px; font-weight:750; }
+.trace-actions button:hover { background:var(--accent-dark); }
+.path-list { display:flex; flex-wrap:wrap; justify-content:center; gap:.7rem; list-style:none; margin:1.4rem 0; padding:0; }
+.path-list li { display:flex; flex-direction:column; align-items:center; gap:.45rem; padding:.65rem; border:1px solid var(--line); border-radius:5px; }
+.path-list li>span,.path-list li>strong { font-size:.68rem; }
+/* 02-3의 설명 카드 3종(알고리즘 비교·생각해 보기·다음 활동)은 크기·폭·패딩·테두리·모서리·최소높이를
+   모두 이 규칙 하나로 통일하고, 역할별로는 왼쪽 테두리 색과 배경만 다르게 둔다(#puzzle-results로
+   범위를 한정해 다른 활동에서 공유하는 .discussion 기본 스타일에는 영향을 주지 않는다). */
+#puzzle-results .result-block { max-width:720px; margin:1.5rem auto 0; padding:1.3rem 1.4rem; text-align:left; background:#f7f8fb; border:1px solid var(--line); border-left:4px solid var(--line-strong); border-radius:6px; min-height:128px; }
+#puzzle-results .compare-box.result-block { border-left-color:#174a3d; }
+#puzzle-results .discussion.result-block { border-left-color:var(--accent); }
+#puzzle-results .next-step.result-block { border-left-color:var(--accent); background:#eef2ff; }
+.compare-box-eyebrow { margin:0 0 .4rem; color:#174a3d; font:750 .68rem var(--font-sans); letter-spacing:.12em; }
+.compare-box h3 { margin:0 0 .5rem; font-size:1rem; }
+#dfs-summary { margin:0; color:var(--muted); line-height:1.65; }
+.result-card .experiment-head { background:#174a3d; }
+.preview-badge { position:fixed; top:10px; right:10px; z-index:90; margin:0; padding:.4rem .8rem; color:#fff; background:#6d28d9; border-radius:999px; font:750 .68rem var(--font-sans); letter-spacing:.02em; box-shadow:0 4px 14px rgba(0,0,0,.28); }
+@media(max-width:600px){ .preview-badge { top:6px; right:6px; padding:.35rem .65rem; font-size:.62rem; } }
+.reference-box { max-width:640px; margin:1.5rem auto; padding:1rem 1.2rem; text-align:left; background:#f7f8fb; border:1px solid var(--line); border-radius:4px; }
+.reference-eyebrow { margin:0; color:var(--accent); font:750 .68rem var(--font-sans); letter-spacing:.12em; }
+.reference-title { margin:.35rem 0 0; font-weight:720; font-size:.94rem; }
+.reference-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem; margin-top:.9rem; }
+.reference-button { display:inline-flex; align-items:center; gap:.4rem; min-height:44px; padding:.55rem 1rem; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:4px; font-weight:750; text-decoration:none; }
+.reference-button:hover { background:var(--accent-dark); }
+.next-step-eyebrow { margin:0; color:var(--accent); font:750 .68rem var(--font-sans); letter-spacing:.12em; }
+.next-step-title { margin:.4rem 0 0; font-size:1.15rem; letter-spacing:-.02em; }
+.next-step-desc { margin:.5rem 0 0; color:var(--muted); font-size:.86rem; line-height:1.6; }
+.next-step-button { display:inline-flex; align-items:center; gap:.5rem; min-height:48px; margin-top:1.1rem; padding:.65rem 1.2rem; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:4px; font-weight:750; text-decoration:none; }
+.next-step-button:hover { background:var(--accent-dark); }
+.step-tabs { margin:0 0 1.3rem; }
+.step-tabs ol { display:flex; flex-wrap:wrap; gap:.6rem; list-style:none; margin:0; padding:0; }
+.step-tabs li { flex:1 1 200px; min-width:0; }
+.step-tab { display:flex; align-items:center; gap:.6rem; width:100%; min-height:56px; padding:.55rem .9rem; text-align:left; color:var(--ink); background:#f6f8fb; border:1px solid var(--line); border-radius:6px; }
+.step-tab-index { display:grid; place-items:center; flex:none; width:28px; height:28px; border-radius:50%; color:#fff; background:var(--line-strong); font:750 .82rem ui-monospace,monospace; }
+.step-tab-body { display:flex; flex-direction:column; gap:.1rem; min-width:0; }
+.step-tab-body strong { font-size:.85rem; }
+.step-tab-body small { color:var(--muted); font-size:.66rem; }
+.step-tab[aria-current="step"] { border-color:var(--accent); background:#eef2ff; box-shadow:0 0 0 2px rgba(49,88,215,.1); }
+.step-tab[aria-current="step"] .step-tab-index { background:var(--accent); }
+.step-tab:not(:disabled):hover { border-color:var(--accent); }
+.step-tab:disabled { color:var(--muted); cursor:not-allowed; opacity:.62; }
+.step-tab:disabled .step-tab-index { background:#c3cad6; }
+.step-bottom-nav { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.8rem; margin:1.6rem 0 .4rem; padding:.9rem 1rem; background:#f6f8fb; border:1px solid var(--line); border-radius:6px; }
+.step-nav-button { min-height:48px; padding:.6rem 1.1rem; color:var(--ink); background:#fff; border:1px solid var(--line-strong); border-radius:4px; font-weight:720; }
+.step-nav-button:hover:not(:disabled) { border-color:var(--accent); }
+.step-nav-button:disabled { opacity:.45; cursor:not-allowed; }
+.step-nav-button.is-primary { color:#fff; background:var(--accent); border-color:var(--accent); }
+.step-nav-button.is-primary:hover:not(:disabled) { background:var(--accent-dark); }
+.step-nav-status { order:3; flex-basis:100%; margin:0; text-align:center; color:var(--muted); font-size:.78rem; font-weight:700; }
+.step-nav-hint { margin:.5rem 0 1.5rem; color:var(--muted); font-size:.8rem; text-align:center; }
+@media(min-width:560px){ .step-nav-status { order:0; flex-basis:auto; } }
+@media(max-width:600px){
+  .puzzle-endpoints { gap:.7rem; }
+  .puzzle-grid--medium { width:100px; height:100px; }
+  .puzzle-candidate { min-height:126px; padding:.55rem; }
+  .search-level { grid-template-columns:1fr; gap:.45rem; }
+  .level-label { flex-direction:row; align-items:baseline; justify-content:flex-start; }
+  .step-tabs li { flex:1 1 100%; }
+  .step-bottom-nav { flex-direction:column; align-items:stretch; }
+  .step-nav-button { width:100%; }
+  .reference-button { width:100%; justify-content:center; }
+  #puzzle-results .result-block { padding:1.1rem 1.2rem; }
+  .next-step-button { width:100%; justify-content:center; }
+}
+@media(max-width:380px){.puzzle-grid--medium{width:88px;height:88px}.puzzle-grid--small{width:70px;height:70px}}

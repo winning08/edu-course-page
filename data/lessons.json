@@ -98,6 +98,50 @@
       "duration": 40,
       "difficulty": "보통",
       "status": "published"
+    },
+    {
+      "id": "search-bfs-delivery",
+      "subject": "인공지능 기초",
+      "unit": "인공지능과 탐색",
+      "order": 1,
+      "title": "강 건너기로 만나는 탐색",
+      "path": "lessons/search-bfs-delivery/",
+      "duration": 12,
+      "difficulty": "입문",
+      "status": "published"
+    },
+    {
+      "id": "search-eight-puzzle",
+      "subject": "인공지능 기초",
+      "unit": "인공지능과 탐색",
+      "order": 2,
+      "title": "8-퍼즐로 보는 맹목적 탐색",
+      "path": "lessons/search-eight-puzzle/",
+      "duration": 24,
+      "difficulty": "입문",
+      "status": "published"
+    },
+    {
+      "id": "search-cost-delivery",
+      "subject": "인공지능 기초",
+      "unit": "인공지능과 탐색",
+      "order": 3,
+      "title": "눈이 내리면? 가장 싼 길 찾기",
+      "path": "lessons/search-cost-delivery/",
+      "duration": 20,
+      "difficulty": "보통",
+      "status": "published"
+    },
+    {
+      "id": "search-astar-delivery",
+      "subject": "인공지능 기초",
+      "unit": "인공지능과 탐색",
+      "order": 4,
+      "title": "목표를 어림짐작하기: A* 탐색",
+      "path": "lessons/search-astar-delivery/",
+      "duration": 22,
+      "difficulty": "보통",
+      "status": "published"
     }
   ]
 }

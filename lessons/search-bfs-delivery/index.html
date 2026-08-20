@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="늑대·양·양배추 강 건너기를 직접 조작하며 상태·행동·초기 상태·목표 상태를 체험하는 맹목적 탐색 입문 활동">
+  <title>강 건너기로 만나는 탐색 | 인공지능과 탐색</title>
+  <link rel="stylesheet" href="../../assets/fonts.css">
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="../shared/search-grid.css">
+  <link rel="stylesheet" href="styles.css?v=2026081908">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="game.js?v=2026081908"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-bfs-delivery">
+  <a class="skip-link" href="#river-game">체험으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel">
+    <h1>아직 준비 중인 활동입니다</h1>
+    <p>이 활동은 현재 준비 중입니다.</p>
+    <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
+  </div>
+  <div id="guard-content">
+    <header class="topbar">
+      <a class="back-link" href="../../units/ai-search/">← 활동 목록</a>
+      <div class="module-title"><span>수업 04</span><strong>인공지능과 탐색</strong></div>
+      <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">문제 해결과 탐색 · 활동 01</p>
+          <h1 id="page-title">강 건너기로 만나는 탐색</h1>
+        </div>
+        <div class="intro-copy">
+          <p>농부가 되어 늑대·양·양배추를 모두 안전하게 옮겨 보세요. 정답을 미리 보지 않고 여러 상태를 직접 시도하는 과정이 탐색의 시작입니다.</p>
+          <dl><div><dt>활동</dt><dd>직접 조작</dd></div><div><dt>시간</dt><dd>12분</dd></div><div><dt>난이도</dt><dd>입문</dd></div></dl>
+        </div>
+      </section>
+
+      <section id="river-game" class="experiment river-card" aria-labelledby="river-title">
+        <div class="experiment-head"><div><span>활동 01 · 늑대·양·양배추 강 건너기</span></div><div class="accuracy"><span>이동</span><strong id="river-move-count">0회</strong></div></div>
+        <div id="river-play">
+          <div class="sample-head">
+            <div><span class="sample-id">직접 체험</span><h2 id="river-title">캐릭터를 배에 태워 모두 옮겨 보세요</h2></div>
+            <p>캐릭터를 누르면 배에 탑니다. 그다음 가운데 배를 누르면 반대편으로 이동합니다.</p>
+          </div>
+
+          <dl class="state-goal-strip">
+            <div><dt>현재 상태</dt><dd id="river-current-state">농부, 늑대, 양, 양배추 모두 강을 건너지 않은 상태</dd></div>
+            <div><dt>목표 상태</dt><dd>농부, 늑대, 양, 양배추 모두 강을 건넌 상태</dd></div>
+          </dl>
+
+          <div class="river-rules" aria-label="게임 규칙">
+            <p><strong>배 정원</strong> 농부와 대상 하나</p>
+            <p><strong>주의</strong> 농부 없이 늑대와 양, 양과 양배추를 함께 두면 안 됩니다.</p>
+          </div>
+
+          <div class="river-scene" id="river-scene"></div>
+          <p id="river-state-announcement" class="sr-only" aria-live="polite"></p>
+          <p class="river-instruction" id="river-instruction">함께 데려갈 캐릭터를 고르거나, 농부만 이동하려면 바로 배를 누르세요.</p>
+          <div id="river-feedback" class="step-feedback" aria-live="polite" hidden></div>
+
+          <details class="river-history-panel">
+            <summary>지금까지의 이동 기록 보기</summary>
+            <div class="record-table-wrap">
+              <table class="record-table">
+                <caption class="sr-only">강 건너기 이동 기록</caption>
+                <thead><tr><th scope="col">순서</th><th scope="col">행동</th><th scope="col">결과</th></tr></thead>
+                <tbody id="river-history"><tr class="empty-row"><td colspan="3">아직 이동한 기록이 없습니다.</td></tr></tbody>
+              </table>
+            </div>
+          </details>
+          <button id="river-reset-play" class="text-action" type="button">처음 상태로 되돌리기</button>
+        </div>
+
+        <div id="river-results" class="summary" hidden>
+          <p class="eyebrow">강 건너기 완료</p>
+          <h2 tabindex="-1">모두 안전하게 강을 건넜습니다</h2>
+          <p id="river-summary"></p>
+          <div id="river-cost-result" class="river-cost-result" aria-live="polite"></div>
+          <div class="state-space-reveal">
+            <p class="compare-mini-label">상태와 행동으로 다시 보기</p>
+            <p>각 순간의 모습을 <strong>상태</strong>, 배를 한 번 움직인 것을 <strong>행동</strong>이라고 합니다. 처음 상태에서 목표 상태까지 이어진 이동이 하나의 <strong>탐색 경로</strong>입니다.</p>
+            <div class="solution-table-wrap">
+              <table class="solution-table">
+                <caption class="sr-only">최소비용으로 강을 건너는 상태와 행동</caption>
+                <thead><tr><th scope="col">단계</th><th scope="col">현재 상태</th><th scope="col">행동</th><th scope="col">다음 상태</th></tr></thead>
+                <tbody id="river-solution-body"></tbody>
+              </table>
+            </div>
+            <a class="tree-solution-link" href="solution-tree.html">모든 경우를 상태 공간 트리로 보기 <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="discussion"><span>함께 생각해 보기</span><p>실패했던 이동도 탐색에 도움이 되었을까요? 왜 같은 상태로 되돌아가는 이동은 줄이는 것이 좋을까요?</p></div>
+          <button id="river-restart" class="primary-action" type="button">다시 도전하기 <span aria-hidden="true">↻</span></button>
+        </div>
+      </section>
+    </main>
+    <footer><span>정보 · 인공지능 기초</span><span>선택하기 · 시도하기 · 되돌아보기</span></footer>
+  </div>
+</body>
+</html>
