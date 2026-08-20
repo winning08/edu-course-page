@@ -34,17 +34,6 @@
       "status": "published"
     },
     {
-      "id": "ai-keyword-bingo",
-      "subject": "인공지능 기초",
-      "unit": "인공지능 용어 빙고",
-      "order": 1,
-      "title": "인공지능 핵심 용어 빙고",
-      "path": "lessons/ai-keyword-bingo/",
-      "duration": 20,
-      "difficulty": "입문",
-      "status": "published"
-    },
-    {
       "id": "turing-test-questions",
       "subject": "인공지능 기초",
       "unit": "지능의 이해",

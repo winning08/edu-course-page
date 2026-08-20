@@ -11,7 +11,6 @@ async function loadGroups() {
 
 const GROUP_PAGES = {
   "ai-learning": ["units/ai-learning/index.html", "lessons/ai-inference-ripeness/index.html", "lessons/ai-signal-noise/index.html", "lessons/ai-biased-data/index.html"],
-  "ai-vocabulary": ["units/ai-vocabulary/index.html", "lessons/ai-keyword-bingo/index.html"],
   "ai-evaluation": ["units/ai-evaluation/index.html", "lessons/turing-test-questions/index.html", "lessons/arc-puzzle-challenge/index.html", "lessons/turing-vs-arc-compare/index.html"],
 };
 
@@ -21,15 +20,6 @@ test("모든 group은 명시적인 active boolean 필드를 갖는다", async ()
   for (const group of data.groups) {
     assert.equal(typeof group.active, "boolean", `${group.id}의 active가 boolean이 아님`);
   }
-});
-
-test("새 그룹 ai-vocabulary는 초기 active=true다", async () => {
-  const data = await loadGroups();
-  const group = data.groups.find((candidate) => candidate.id === "ai-vocabulary");
-  assert.ok(group, "ai-vocabulary group을 찾을 수 없음");
-  assert.equal(group.active, true);
-  assert.equal(group.children.length, 1);
-  assert.equal(group.children[0].id, "ai-keyword-bingo");
 });
 
 test("ai-learning 그룹은 일단 숨김 처리되어 active=false다(다른 그룹은 영향받지 않음)", async () => {
@@ -122,7 +112,6 @@ test("ai-evaluation 그룹의 활동 3개는 모두 active=true다(개별 활동
 
 test("모든 활동 페이지(<body>)는 data-guard-lesson으로 자기 자신의 child id를 선언한다", async () => {
   const LESSON_PAGE_TO_ID = {
-    "lessons/ai-keyword-bingo/index.html": "ai-keyword-bingo",
     "lessons/ai-inference-ripeness/index.html": "ai-inference-ripeness",
     "lessons/ai-signal-noise/index.html": "ai-signal-noise",
     "lessons/ai-biased-data/index.html": "ai-biased-data",

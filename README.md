@@ -32,7 +32,7 @@
 
 ### 새 활동지를 추가하려면
 
-1. `units/<새-group-id>/index.html`을 만들고, 기존 `units/ai-vocabulary/index.html`을 참고해 헤더(뒤로가기·활동지 제목·소개)와 하위 활동 카드 목록을 작성합니다. `<head>`에 `data-guard` pending 인라인 스크립트, `../../assets/guard.css`, `../../assets/group-guard.js` 모듈 스크립트를 포함하고, `<body data-guard-scope="page" data-guard-group="<새-group-id>">`로 시작해 실제 콘텐츠를 `<div id="guard-content">…</div>`로 감싸고, `#guard-loading`/`#guard-blocked` 안내 블록을 skip-link 다음에 둡니다.
+1. `units/<새-group-id>/index.html`을 만들고, 기존 `units/ai-evaluation/index.html`을 참고해 헤더(뒤로가기·활동지 제목·소개)와 하위 활동 카드 목록을 작성합니다. `<head>`에 `data-guard` pending 인라인 스크립트, `../../assets/guard.css`, `../../assets/group-guard.js` 모듈 스크립트를 포함하고, `<body data-guard-scope="page" data-guard-group="<새-group-id>">`로 시작해 실제 콘텐츠를 `<div id="guard-content">…</div>`로 감싸고, `#guard-loading`/`#guard-blocked` 안내 블록을 skip-link 다음에 둡니다.
 2. `data/activity-groups.json`의 `groups` 배열에 새 group 객체(id/order/title/description/path/status/active/children)를 추가합니다. 새 그룹은 보통 `active: true`로 시작합니다.
 3. 루트 `index.html`의 `.group-grid` 안에 새 `.group-card`를 추가하고 `units/<새-group-id>/`로 연결하며 `data-group-card="<새-group-id>"`를 붙입니다. 아직 활동이 없는 빈 활동지 카드는 만들지 않습니다.
 4. `npm test`로 스키마·링크·가드 검증 테스트가 통과하는지 확인합니다.
@@ -54,12 +54,6 @@
 | `active`(그룹 활성/비활성, child 활성/비활성 모두) | `data/activity-groups.json`이 **유일한 원본**. HTML에는 이 값을 별도로 적어 두지 않음 | 배포된 JSON을 fetch하는 즉시(HTML을 다시 배포하지 않아도 반영) | 해당 없음(HTML에 중복이 없으므로 어긋날 수 없음) |
 
 즉 "무엇을 보여줄지(제목·설명 등)"는 HTML이 그대로 원본이라 JSON과 함께 손으로 맞추고 테스트로 검증하지만, "지금 열 수 있는지(active)"는 오직 JSON 하나만 보고 런타임에 판단합니다. 이 둘을 섞어서 HTML에 활성 상태를 하드코딩하면 배포 없이 그룹을 껐다 켤 수 있는 목적 자체가 사라지므로 하지 마세요.
-
-## OT · 인공지능 용어 빙고 (종이 빙고)
-
-루트 허브에서 가장 먼저 오는 활동지(OT)이며, 활동지 목록 페이지는 `units/ai-vocabulary/`이고 활동은 `lessons/ai-keyword-bingo/`에 있습니다. 활동지 목록 페이지에는 이 활동에서 다루는 용어 25개를 `keywords.js`와 동일한 철자·순서로 미리보기하는 목록(`.term-preview`)이 있습니다(`tests/ai-keyword-bingo.test.mjs`가 동기화를 검증).
-
-- **`lessons/ai-keyword-bingo/`(인공지능 핵심 용어 빙고)** — 학생은 5×5 종이 빙고판에 인공지능·데이터 핵심 용어 25개를 순서와 상관없이 옮겨 적습니다(디지털 빙고판은 만들지 않습니다). 준비 화면의 "학생용 빈 빙고판 인쇄하기" 버튼을 누르면 이름 칸과 빈 25칸짜리 5×5 격자만 담은 인쇄용 화면(`#printable-board`, `window.print()`)이 열려 학생 수만큼 인쇄해 나눠줄 수 있고, 그 아래 25개 용어를 고대비 카드 목록으로 모두 보여주고, 선택 사항인 확인 체크(0/25)를 제공합니다. 교사가 "추첨 시작"을 누르기 전 확인 절차를 거친 뒤 추첨 화면으로 넘어가면, 25개 용어를 격자 칸 없이 겹치지 않는 무작위 위치에 흩뿌려(`#term-board`) 처음부터 전부 화면에 띄워 놓고 "다음 뽑기"를 누를 때마다 그중 하나를 무작위로 뽑아 그 칩을 강조 표시합니다(이미 뽑힌 칩은 파란색, 방금 막 뽑힌 칩은 초록색 + 몇 번째로 뽑혔는지 모서리 배지). 위치 계산(`game.js`의 `placeTermBoardTiles`)은 각 칩을 실제로 렌더링해 측정한 크기 기준으로 무작위 좌표를 시도하다 겹치면 다시 시도하고, 그래도 자리를 못 찾으면 중심에서 바깥으로 나선형으로 훑어 안전하게 자리를 찾습니다. 컨테이너가 아직 화면에 보이지 않을 때(활성화 가드 대기 중이거나 아직 준비 화면일 때)는 크기가 0으로 측정되어 전부 한 점에 겹쳐 버리므로, `ResizeObserver`로 실제로 폭이 생기는 시점까지 기다렸다가 딱 한 번만 배치를 계산합니다(이후 뽑을 때마다는 이미 정해진 위치를 그대로 두고 강조 색상·배지만 갱신). 준비 화면의 용어 목록과 달리 이 배치는 페이지를 새로 열 때마다 다시 계산되므로 고정된 순서를 외워 자기 종이 빙고판에 그대로 옮겨 적을 수 없습니다. 교실 앞에서 화면을 띄워 놓고 진행하는 용도라 움직이는 장식 애니메이션은 두지 않고, 정적인 배치와 색상 강조만으로 진행 상황을 보여줍니다. `N/25` 진행 상황과 방금 뽑힌 용어 이름은 화면 위 안내 문구(`#draw-current`, `aria-live`)로도 함께 전달됩니다. 추첨은 중복 없이 진행되며, 바로 직전 추첨만 취소해 되돌릴 수 있고, 확인을 거친 뒤 전체 초기화도 가능합니다. 전체화면 전환과 키보드 Enter/Space로 다음 뽑기를 지원하고, 새로고침해도 `localStorage`에 저장된 진행 상태(단계·체크·추첨 기록)를 그대로 복원합니다 — 수업 중 실수로 새로고침해도 이어서 진행할 수 있게 하기 위함이며, 완전히 새로 시작하려면 준비 화면으로 돌아갈 방법이 없으므로 추첨 화면의 "전체 초기화" 버튼으로 추첨 기록을 지우세요. 이 화면은 교사 전용이라 학생 의견을 묻는 마무리 입력 영역은 두지 않습니다. 용어 25개의 철자·띄어쓰기·순서는 참고 원본 `bingo.html`의 `keywords` 배열과 완전히 동일하게 `lessons/ai-keyword-bingo/keywords.js`에 고정되어 있습니다(`tests/ai-keyword-bingo.test.mjs`가 검증).
 
 ## 활동지 03 · AI는 어떻게 학습할까? (마트 AI 실습실)
 
@@ -85,4 +79,4 @@
 python3 -m http.server 8000
 ```
 
-브라우저에서 `http://localhost:8000`을 열어 루트 허브(`/`)에서 활동지 카드를 고르고, `units/ai-learning/`에서 세 활동으로 이동하거나, 각 활동 폴더를 바로 엽니다(`/lessons/ai-inference-ripeness/`, `/lessons/ai-signal-noise/`, `/lessons/ai-biased-data/`, `/lessons/ai-keyword-bingo/`, `/lessons/ai-perceptron-wall/`, `/lessons/eliza-python-web/`). `units/ai-vocabulary/`에서 용어 빙고 활동으로, `units/ai-history/`에서 인공지능의 역사·나만의 ELIZA 만들기 두 활동으로도 이동할 수 있습니다. 활성화 가드는 fetch를 쓰므로 정확한 active 상태를 확인하려면 `file://`로 직접 열지 말고 반드시 로컬 서버를 통해 확인하세요. `file://`로 열면 fetch가 실패해 허브 카드는 열려 있지만(fail-open) 그룹·활동 페이지는 "준비 중" 화면으로 막힙니다(fail-closed) — 로컬 서버 없이는 실제 콘텐츠를 볼 수 없다는 뜻이니 참고하세요. `lessons/eliza-python-web/`은 `input()` 동기 대기를 위해 서비스워커가 세션당 한 번 자동으로 새로고침하니, 처음 열었을 때 화면이 한 번 깜빡여도 정상입니다. 파이오다이드 약 13MB를 처음 한 번 내려받으므로 첫 로딩은 네트워크 상태에 따라 몇 초 걸릴 수 있습니다. 테스트는 `npm test`로 실행합니다.
+브라우저에서 `http://localhost:8000`을 열어 루트 허브(`/`)에서 활동지 카드를 고르고, `units/ai-learning/`에서 세 활동으로 이동하거나, 각 활동 폴더를 바로 엽니다(`/lessons/ai-inference-ripeness/`, `/lessons/ai-signal-noise/`, `/lessons/ai-biased-data/`, `/lessons/ai-perceptron-wall/`, `/lessons/eliza-python-web/`). `units/ai-history/`에서 인공지능의 역사·나만의 ELIZA 만들기 두 활동으로도 이동할 수 있습니다. 활성화 가드는 fetch를 쓰므로 정확한 active 상태를 확인하려면 `file://`로 직접 열지 말고 반드시 로컬 서버를 통해 확인하세요. `file://`로 열면 fetch가 실패해 허브 카드는 열려 있지만(fail-open) 그룹·활동 페이지는 "준비 중" 화면으로 막힙니다(fail-closed) — 로컬 서버 없이는 실제 콘텐츠를 볼 수 없다는 뜻이니 참고하세요. `lessons/eliza-python-web/`은 `input()` 동기 대기를 위해 서비스워커가 세션당 한 번 자동으로 새로고침하니, 처음 열었을 때 화면이 한 번 깜빡여도 정상입니다. 파이오다이드 약 13MB를 처음 한 번 내려받으므로 첫 로딩은 네트워크 상태에 따라 몇 초 걸릴 수 있습니다. 테스트는 `npm test`로 실행합니다.
