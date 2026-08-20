@@ -198,7 +198,7 @@ function renderMycinRules() {
     }).join("");
     return `<article class="mycin-rule-card rule-color-${index + 1}">
       <h3>${rule.label}</h3>
-      <table><caption>${rule.label}의 증상 조건</caption><tbody>${conditions}</tbody></table>
+      <table><caption>${rule.label}의 증상 조건</caption><thead><tr><th scope="col">증상</th><th scope="col">조건</th></tr></thead><tbody>${conditions}</tbody></table>
       <div class="mycin-rule-treatment"><span class="treatment-label">처방</span><div class="medicine-badges">${renderMedicineBadges(rule.treatment)}</div></div>
     </article>`;
   }).join("");

@@ -54,14 +54,15 @@
 .mycin-rule-card h3 { margin: 0; padding: .65rem .8rem; color: var(--rule-color); background: var(--rule-soft); font-size: .86rem; font-weight: 850; }
 .mycin-rule-card table { width: calc(100% - 1rem); margin: .5rem; border-collapse: collapse; }
 .mycin-rule-card caption { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-.mycin-rule-card th, .mycin-rule-card td { padding: .42rem .48rem; border-bottom: 1px solid var(--line); font-size: .8rem; }
+.mycin-rule-card th, .mycin-rule-card td { padding: .5rem .48rem; border-bottom: 1px solid var(--line); font-size: .84rem; }
 .mycin-rule-card tr:last-child > * { border-bottom: 0; }
-.mycin-rule-card th { width: 44%; color: var(--muted); text-align: left; font-weight: 700; }
-.mycin-rule-card td { color: var(--ink); text-align: right; font-weight: 800; }
-.condition-chip { display: inline-block; padding: .2rem .38rem; border-radius: 4px; font-size: .75rem; font-weight: 800; line-height: 1.3; }
+.mycin-rule-card thead th { padding: .35rem .48rem; color: #fff; background: #465064; font-size: .7rem; font-weight: 800; text-align: center; }
+.mycin-rule-card tbody th { width: 40%; color: #303744; background: #f3f5f9; text-align: center; font-weight: 850; }
+.mycin-rule-card td { color: var(--ink); text-align: center; font-weight: 850; }
+.condition-chip { display: inline-block; min-width: 68px; padding: .3rem .45rem; border: 1px solid currentColor; border-radius: 4px; font-size: .82rem; font-weight: 900; line-height: 1.3; }
 .condition-positive { color: #8c3037; background: #ffeaec; }
 .condition-negative { color: #465064; background: #eef0f3; }
-.condition-any { color: #616977; background: #fff; border: 1px dashed #9ca4b1; }
+.condition-any { color: #515966; background: #fff; border-style: dashed; }
 .mycin-rule-treatment { display: grid; gap: .4rem; min-height: 76px; padding: .65rem .8rem; color: var(--ink); background: #f7f8fb; border-top: 1px solid var(--line-strong); }
 .mycin-rule-treatment .treatment-label { color: var(--muted); font-size: .66rem; font-weight: 800; letter-spacing: .08em; }
 .medicine-badges { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }
