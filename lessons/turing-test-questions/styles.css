@@ -37,9 +37,11 @@ section + section { margin-top: clamp(2.2rem, 5vw, 3.4rem); padding-top: clamp(2
 .turing-form{display:grid;gap:1rem}.student-fields{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.turing-form label{display:grid;gap:.4rem;color:var(--ink);font-size:.86rem;font-weight:700}.turing-form input,.turing-form textarea{width:100%;padding:.75rem .8rem;color:var(--ink);background:#fff;border:1px solid var(--line-strong);border-radius:6px;font:500 .92rem var(--font-sans);line-height:1.55}.turing-form textarea{resize:vertical}.turing-form input:focus,.turing-form textarea:focus{outline:3px solid var(--focus);outline-offset:2px;border-color:var(--accent)}.turing-form fieldset{display:grid;gap:.9rem;margin:0;padding:1rem 1.1rem;background:#eef1f6;border:1px solid var(--line);border-radius:10px}.turing-form legend{padding:0 .4rem;color:var(--ink);font-weight:800}.turing-form legend span{margin-left:.3rem;color:var(--accent);font-size:.7rem}.form-error{margin:0;padding:.75rem;color:#8d2525;background:#fff0f0;border-left:4px solid #b43b42}.submit-button{min-height:50px;padding:.75rem 1.2rem;color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:5px;font-weight:800}.submit-button:disabled{opacity:.6}.submit-success{padding:1.3rem;background:#eef9f3;border:1px solid #8bc9ae;border-left:5px solid #23825b;border-radius:8px}.submit-success strong{font-size:1.05rem}.submit-success p{color:var(--muted)}
 .student-number-help{margin:-.45rem 0 0;color:var(--muted);font-size:.75rem;font-weight:500;line-height:1.45}
 
-.submit-fallback { margin: .9rem 0 0; }
-.submit-fallback-link { color: var(--accent); font-weight: 700; text-decoration: none; }
-.submit-fallback-link:hover { text-decoration: underline; }
+.summary-label { margin: .9rem 0 .5rem; color: var(--muted); font-weight: 750; font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; }
+.submit-summary { display: grid; gap: .6rem; margin: 0; padding: 1rem 1.1rem; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.submit-summary + .submit-summary { margin-top: .6rem; }
+.submit-summary dt { color: var(--accent); font: 700 .72rem var(--font-sans); letter-spacing: .04em; }
+.submit-summary dd { margin: .2rem 0 0; color: var(--ink); font-size: .92rem; line-height: 1.55; white-space: pre-wrap; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; }

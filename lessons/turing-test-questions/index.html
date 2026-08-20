@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="../../assets/guard.css">
   <script type="module" src="../../assets/group-guard.js"></script>
-  <script type="module" src="form.js?v=2026082001"></script>
+  <script type="module" src="form.js?v=2026082002"></script>
 </head>
 <body data-guard-scope="page" data-guard-group="ai-evaluation" data-guard-lesson="turing-test-questions">
   <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -97,8 +97,15 @@
 
       <div id="submit-success" class="submit-success" tabindex="-1" hidden>
         <strong>제출이 완료되었습니다.</strong>
-        <p>다른 친구들이 만든 질문도 확인해 보세요.</p>
-        <a class="submit-fallback-link" href="https://docs.google.com/spreadsheets/d/1Qt4IjBuwMr2PgacQ1cyyeXjJjwJxph1YjBJ9ffskQHE/edit?gid=0#gid=0" target="_blank" rel="noreferrer">우리 학교 결과 보기 →</a>
+        <p class="summary-label">내가 제출한 내용</p>
+        <dl class="submit-summary">
+          <div><dt>질문 1</dt><dd id="summary-question"></dd></div>
+          <div><dt>이유</dt><dd id="summary-reason"></dd></div>
+        </dl>
+        <dl id="summary-followup-group" class="submit-summary" hidden>
+          <div><dt>추가 질문</dt><dd id="summary-followup"></dd></div>
+          <div><dt>추가 질문 이유</dt><dd id="summary-followup-reason"></dd></div>
+        </dl>
       </div>
     </section>
   </main>
