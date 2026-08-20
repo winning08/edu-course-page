@@ -184,6 +184,18 @@ test("styles.css는 focus-visible과 prefers-reduced-motion을 챙긴다", async
   assert.match(css, /prefers-reduced-motion/);
 });
 
+test("코드 작성과 실행 결과를 독립된 두 작업 카드로 구분하고 프로젝터 모드는 제거한다", async () => {
+  const [html, css, app] = await Promise.all([read("index.html"), read("styles.css"), read("app.js")]);
+  assert.match(html, /workspace-card editor-workspace/);
+  assert.match(html, /workspace-card terminal-workspace/);
+  assert.match(html, />1\. 코드 작성</);
+  assert.match(html, />2\. 실행 결과</);
+  assert.match(css, /\.editor-workspace/);
+  assert.match(css, /\.terminal-workspace/);
+  assert.doesNotMatch(html, /projector-toggle/);
+  assert.doesNotMatch(app, /projector-mode|projector-toggle/);
+});
+
 test("editor.js는 Tab/Shift+Tab 들여쓰기, Enter 자동 들여쓰기, Esc 키보드 탈출구를 제공한다", async () => {
   const editor = await read("editor.js");
   assert.match(editor, /event\.key === "Tab"/);

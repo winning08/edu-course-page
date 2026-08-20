@@ -8,11 +8,11 @@
   <title>나만의 ELIZA 만들기 | 인공지능의 이해</title>
   <link rel="stylesheet" href="../../assets/fonts.css">
   <link rel="stylesheet" href="../shared/lab-base.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2026082002">
   <link rel="stylesheet" href="../../assets/guard.css">
   <script src="coi-bootstrap.js"></script>
   <script type="module" src="../../assets/group-guard.js"></script>
-  <script type="module" src="app.js?v=2026082001"></script>
+  <script type="module" src="app.js?v=2026082002"></script>
 </head>
 <body data-guard-scope="page" data-guard-group="ai-history" data-guard-lesson="eliza-python-web">
   <a class="skip-link" href="#editor-heading">코드 편집기로 바로가기</a>
@@ -26,7 +26,7 @@
   <header class="topbar">
     <a class="back-link" href="../../units/ai-history/">← 활동 목록</a>
     <div class="module-title"><span>수업 02</span><strong>인공지능의 이해</strong></div>
-    <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
+    <span class="topbar-spacer" aria-hidden="true"></span>
   </header>
 
   <main>
@@ -42,18 +42,20 @@
     </section>
 
     <div class="concept-bridge">
-      <p class="concept-bridge-label">ELIZA가 뭘까?</p>
+      <h2 class="concept-bridge-label">ELIZA가 뭘까?</h2>
       <p>1966년 만들어진 <strong>ELIZA</strong>는 심리상담사처럼 대화하는 프로그램입니다. 사실 문장을 이해하지 못하고, 입력에 특정 단어가 들어 있는지만 검사해 미리 정해 둔 문장으로 답합니다. 오늘은 그 원리를 그대로 코드로 만들어 봅니다.</p>
     </div>
 
     <section id="editor-section" class="lab" aria-labelledby="editor-heading">
       <div class="lab-head">
-        <h2 id="editor-heading">파이썬 코드 작성 &amp; 실행</h2>
+        <h2 id="editor-heading">코드를 만들고 실행해 보기</h2>
         <p id="runtime-status" class="runtime-status" role="status" aria-live="polite">파이썬 실행 환경을 준비하고 있습니다…</p>
       </div>
+      <p class="workflow-note"><strong>1. 코드 작성</strong>한 뒤 실행하면 <strong>2. 실행 결과</strong>에서 ELIZA와 대화할 수 있습니다.</p>
 
       <div class="lab-grid">
-        <div class="editor-pane">
+        <div class="editor-pane workspace-card editor-workspace">
+          <div class="workspace-head"><span class="workspace-step">1</span><div><p>작성</p><h3>내 파이썬 코드</h3></div></div>
           <div class="editor-toolbar">
             <button id="run-button" type="button" class="run-btn">▶ 실행</button>
             <button id="stop-button" type="button" class="stop-btn" disabled>⏹ 중지</button>
@@ -64,18 +66,19 @@
             <pre class="code-highlight" id="code-highlight" aria-hidden="true"><code id="code-highlight-code"></code></pre>
             <textarea id="code-textarea" class="code-textarea" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="파이썬 코드 편집기"></textarea>
           </div>
-          <p class="editor-hint">Tab으로 들여쓰기(Shift+Tab은 내어쓰기), Enter는 이전 줄 들여쓰기를 이어받습니다. 편집기 밖으로 이동하려면 Esc를 누른 뒤 Tab을 누르세요. 코드는 이 브라우저에 자동 저장됩니다.</p>
+          <p class="editor-hint">Tab으로 들여쓰기(Shift+Tab은 내어쓰기), Enter는 이전 줄 들여쓰기를 이어받습니다. 편집기 밖으로 이동하려면 Esc를 누른 뒤 Tab을 누르세요. 코드는 현재 탭에 임시 저장됩니다.</p>
         </div>
 
-        <div class="terminal-pane">
-          <h3 id="terminal-heading">ELIZA 실행 화면</h3>
+        <div class="terminal-pane workspace-card terminal-workspace">
+          <div class="workspace-head"><span class="workspace-step">2</span><div><p>확인</p><h3 id="terminal-heading">ELIZA 실행 결과</h3></div></div>
           <div class="terminal-log" id="terminal-log" role="log" aria-live="polite" aria-labelledby="terminal-heading"></div>
+          <label for="terminal-input" class="terminal-input-label">ELIZA에게 답하기</label>
           <form id="terminal-input-form" class="terminal-input-form">
             <label for="terminal-input" class="sr-only">ELIZA에게 보낼 메시지</label>
-            <input id="terminal-input" type="text" autocomplete="off" placeholder="실행을 누르면 여기에 입력할 수 있어요" disabled>
+            <input id="terminal-input" type="text" autocomplete="off" placeholder="실행 후 여기에 답을 입력하세요" disabled>
             <button id="terminal-send" type="submit" disabled>보내기</button>
           </form>
-          <p id="input-wait-status" class="sr-only" aria-live="polite"></p>
+          <p id="input-wait-status" class="terminal-input-status" aria-live="polite">코드를 실행하면 대화 입력이 활성화됩니다.</p>
         </div>
       </div>
     </section>

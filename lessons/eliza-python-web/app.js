@@ -167,14 +167,16 @@ function initApp() {
   function enableInputRow() {
     terminalInput.disabled = false;
     terminalSend.disabled = false;
+    terminalForm.classList.add("is-waiting");
     terminalInput.focus();
-    inputWaitStatus.textContent = "ELIZA가 입력을 기다리고 있습니다.";
+    inputWaitStatus.textContent = "ELIZA가 답을 기다리고 있습니다. 위 입력칸에 적어 보내세요.";
   }
 
   function disableInputRow() {
     terminalInput.disabled = true;
     terminalSend.disabled = true;
-    inputWaitStatus.textContent = "";
+    terminalForm.classList.remove("is-waiting");
+    inputWaitStatus.textContent = "코드를 실행하면 대화 입력이 활성화됩니다.";
   }
 
   // --- 실행 상태 UI --------------------------------------------------------
@@ -374,12 +376,6 @@ function initApp() {
     submitResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
     openConfirmButton.focus();
   }
-
-  // --- 프로젝터 모드(다른 활동 페이지와 동일한 동작) --------------------------
-  $("#projector-toggle").addEventListener("click", () => {
-    const enabled = document.body.classList.toggle("projector-mode");
-    $("#projector-toggle").setAttribute("aria-pressed", String(enabled));
-  });
 
   refreshSubmitAvailability();
 }
