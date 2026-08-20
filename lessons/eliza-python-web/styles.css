@@ -22,9 +22,12 @@
 .terminal-workspace .workspace-step { background: #147a70; }
 .workspace-head p { margin: 0 0 .08rem; color: var(--muted); font-size: .66rem; font-weight: 800; letter-spacing: .08em; }
 .workspace-head h3 { margin: 0; color: var(--ink); font-size: 1rem; }
+.workspace-title { min-width: 0; }
 
 /* --- 코드 편집기 --- */
-.editor-toolbar { display: flex; flex-wrap: wrap; gap: .6rem; padding: .75rem; background: #fafbfc; border-bottom: 1px solid var(--line); }
+.editor-workspace-head { flex-wrap: wrap; }
+.editor-toolbar { display: flex; flex-wrap: wrap; gap: .45rem; margin-left: auto; }
+.editor-toolbar button { min-height: 38px; padding: .42rem .78rem; }
 .run-btn, .stop-btn, .ghost-btn, .submit-btn { min-height: 46px; padding: .55rem 1.1rem; border-radius: 3px; font-size: .88rem; font-weight: 720; }
 .run-btn { color: #fff; background: var(--ok); border: 1px solid var(--ok); }
 .run-btn:hover:not(:disabled) { background: #0f6047; }
@@ -113,8 +116,9 @@
 }
 
 @media (max-width: 600px) {
-  .editor-toolbar { flex-direction: column; }
-  .editor-toolbar button { width: 100%; }
+  .editor-workspace-head { align-items: flex-start; }
+  .editor-toolbar { width: 100%; margin-left: 0; padding-left: 2.65rem; }
+  .editor-toolbar button { flex: 1 1 5.2rem; }
   .confirm-summary { flex-direction: column; gap: .6rem; }
 }
 

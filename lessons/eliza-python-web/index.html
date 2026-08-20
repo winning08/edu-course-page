@@ -8,7 +8,7 @@
   <title>나만의 ELIZA 만들기 | 인공지능의 이해</title>
   <link rel="stylesheet" href="../../assets/fonts.css">
   <link rel="stylesheet" href="../shared/lab-base.css">
-  <link rel="stylesheet" href="styles.css?v=2026082002">
+  <link rel="stylesheet" href="styles.css?v=2026082003">
   <link rel="stylesheet" href="../../assets/guard.css">
   <script src="coi-bootstrap.js"></script>
   <script type="module" src="../../assets/group-guard.js"></script>
@@ -55,11 +55,14 @@
 
       <div class="lab-grid">
         <div class="editor-pane workspace-card editor-workspace">
-          <div class="workspace-head"><span class="workspace-step">1</span><div><p>작성</p><h3>내 파이썬 코드</h3></div></div>
-          <div class="editor-toolbar">
-            <button id="run-button" type="button" class="run-btn">▶ 실행</button>
-            <button id="stop-button" type="button" class="stop-btn" disabled>⏹ 중지</button>
-            <button id="reset-code-button" type="button" class="ghost-btn">↺ 초기화</button>
+          <div class="workspace-head editor-workspace-head">
+            <span class="workspace-step">1</span>
+            <div class="workspace-title"><p>작성</p><h3>내 파이썬 코드</h3></div>
+            <div class="editor-toolbar" aria-label="코드 실행 도구">
+              <button id="run-button" type="button" class="run-btn">▶ 실행</button>
+              <button id="stop-button" type="button" class="stop-btn" disabled>⏹ 중지</button>
+              <button id="reset-code-button" type="button" class="ghost-btn">↺ 초기화</button>
+            </div>
           </div>
           <div class="code-editor" id="code-editor-shell">
             <div class="code-gutter" id="code-gutter" aria-hidden="true">1</div>
