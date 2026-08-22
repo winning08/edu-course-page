@@ -24,6 +24,7 @@ main,footer { width:min(1120px,calc(100% - 2rem)); margin-inline:auto; }
 .eyebrow { margin:0 0 .8rem; color:var(--accent); font:750 .7rem var(--font-sans); letter-spacing:.14em; }
 h1 { margin:0; font-size:clamp(2.8rem,7vw,5.8rem); font-weight:760; line-height:.98; letter-spacing:-.065em; }
 .intro-copy>p { margin:0; color:var(--muted); font-size:clamp(1rem,1.6vw,1.12rem); line-height:1.75; }
+.intro-copy>p strong, .intro-copy-text strong, .example-analysis strong, .example-note strong, .checkpoint p strong, .discussion p strong, .specimen-caption strong { color:var(--accent); text-decoration:underline; text-decoration-thickness:.08em; text-underline-offset:.16em; }
 .intro-copy dl { display:grid; grid-template-columns:repeat(3,1fr); margin:1.5rem 0 0; border-top:1px solid var(--line); }
 .intro-copy dl div { padding:.9rem 0; }
 .intro-copy dt { color:var(--muted); font-size:.72rem; }

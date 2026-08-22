@@ -7,8 +7,8 @@ const LESSON_IDS = ["ai-inference-ripeness", "ai-signal-noise", "ai-biased-data"
 
 test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 목록 페이지로 연결한다", async () => {
   const html = await readFile(new URL("index.html", repoRoot), "utf8");
-  assert.match(html, /<title>인공지능 기초 활동지 모음<\/title>/);
-  assert.match(html, /<h1>인공지능 기초 활동지 모음<\/h1>/);
+  assert.match(html, /<title>양지고 인공지능 기초 활동지 모음<\/title>/);
+  assert.match(html, /<h1>양지고 인공지능 기초 활동지 모음<\/h1>/);
   assert.match(html, /class="group-card" href="units\/ai-learning\/"/);
   assert.match(html, />AI는 어떻게 학습할까\?</);
   assert.doesNotMatch(html, /href="lessons\//, "루트 허브는 개별 lesson으로 바로 연결하지 않아야 함");
