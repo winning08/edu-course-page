@@ -237,7 +237,7 @@ test("활동 안내는 현재 상태와 목표 상태만 보여주고 현재 상
   assert.match(html, /농부, 늑대, 양, 양배추 모두 강을 건넌 상태/);
   assert.match(js, /function describeCrossingState/);
   assert.match(js, /el\.currentState\.textContent/);
-  assert.match(html, /각 순간의 모습을 <strong>상태<\/strong>/);
+  assert.match(html, /각 순간의 모습을 <span class="key-term">상태<\/span>/);
 });
 
 test("강 건너기는 별도 이동 버튼 없이 캐릭터를 태우고 배 자체를 눌러 이동한다", async () => {

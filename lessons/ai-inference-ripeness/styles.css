@@ -4,6 +4,8 @@
   --ok:#147a59; --no:#b33e4b; --focus:#193eb8;
 }
 * { box-sizing:border-box; }
+.key-term { color:var(--accent); font-weight:750; text-decoration:underline; text-decoration-thickness:.08em; text-underline-offset:.16em; }
+.caution-term { color:var(--no); font-weight:750; }
 html { scroll-behavior:smooth; }
 body { margin:0; min-width:320px; color:var(--ink); background:var(--paper); font-family:var(--font-sans); word-break:keep-all; overflow-wrap:break-word; }
 button,a { font:inherit; }
