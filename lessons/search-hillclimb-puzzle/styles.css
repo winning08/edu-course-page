@@ -1,0 +1,37 @@
+.puzzle-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; padding:3px; background:#9ea8b7; border-radius:5px; }
+.puzzle-grid--medium { width:120px; height:120px; }
+.puzzle-grid--small { width:78px; height:78px; }
+.puzzle-tile { display:grid; place-items:center; color:var(--ink); background:#fff; font:750 1rem ui-monospace,monospace; }
+.puzzle-grid--small .puzzle-tile { font-size:.72rem; }
+.puzzle-tile.is-blank { background:repeating-linear-gradient(45deg,#e9edf3,#e9edf3 5px,#f7f8fa 5px,#f7f8fa 10px); }
+
+.state-preview { display:flex; flex-wrap:wrap; gap:1.4rem; align-items:center; margin:1rem 0 0; }
+.state-preview-item { display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+.state-preview-item span { color:var(--muted); font-size:.78rem; font-weight:700; }
+
+.worksheet-candidate { display:flex; flex-direction:column; align-items:center; gap:.55rem; min-height:220px; padding:.85rem; text-align:center; color:var(--ink); background:#fff; border:1px solid var(--line-strong); border-radius:5px; }
+.worksheet-candidate.is-correct { border-color:var(--ok); background:#f3faf7; }
+.worksheet-candidate.is-incorrect { border-color:var(--no); background:#fff6f7; }
+.worksheet-candidate-label { margin:0; color:var(--muted); font-size:.72rem; font-weight:700; }
+.worksheet-score-row { display:flex; align-items:center; gap:.4rem; font-size:.8rem; font-weight:650; }
+.worksheet-score-row input { width:56px; padding:.3rem .4rem; text-align:center; border:1px solid var(--line-strong); border-radius:4px; font:700 .9rem ui-monospace,monospace; }
+.worksheet-score-row input:focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
+.worksheet-pick-row { display:flex; align-items:center; gap:.4rem; font-size:.8rem; font-weight:650; cursor:pointer; }
+.worksheet-pick-row input { width:16px; height:16px; accent-color:var(--accent); }
+.worksheet-score-note { margin:0; font-size:.76rem; font-weight:700; color:var(--muted); }
+.worksheet-candidate.is-correct .worksheet-score-note { color:var(--ok); }
+.worksheet-candidate.is-incorrect .worksheet-score-note { color:var(--no); }
+
+#check-step { display:block; min-height:46px; margin:1rem auto 0; padding:.65rem 1.6rem; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:4px; font-weight:720; }
+#check-step:hover:not(:disabled) { background:var(--accent-dark); }
+#check-step:disabled { opacity:.5; }
+
+.depth-box { max-width:760px; margin:1.4rem auto 0; padding:.9rem 1.1rem; text-align:left; background:#f7f8fb; border:1px solid var(--line); border-radius:4px; }
+.depth-box summary { cursor:pointer; font-weight:700; }
+.depth-box p { margin:.8rem 0 0; color:var(--muted); font-size:.88rem; line-height:1.65; }
+
+.next-step { display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; }
+
+@media(max-width:600px){
+  .puzzle-grid--medium { width:100px; height:100px; }
+}
