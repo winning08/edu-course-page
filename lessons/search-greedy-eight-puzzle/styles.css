@@ -1,0 +1,35 @@
+.puzzle-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; padding:3px; background:#9ea8b7; border-radius:5px; }
+.puzzle-grid--medium { width:120px; height:120px; }
+.puzzle-grid--small { width:78px; height:78px; }
+.puzzle-tile { display:grid; place-items:center; color:var(--ink); background:#fff; font:750 1rem ui-monospace,monospace; }
+.puzzle-grid--small .puzzle-tile { font-size:.72rem; }
+.puzzle-tile.is-blank { background:repeating-linear-gradient(45deg,#e9edf3,#e9edf3 5px,#f7f8fa 5px,#f7f8fa 10px); }
+
+.state-preview { display:flex; flex-wrap:wrap; gap:1.4rem; align-items:center; margin:1rem 0 0; }
+.state-preview-item { display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+.state-preview-item span { color:var(--muted); font-size:.78rem; font-weight:700; }
+
+.priority-card { display:flex; flex-direction:column; align-items:center; gap:.5rem; min-height:150px; padding:.75rem; text-align:center; color:var(--ink); background:#fff; border:1px solid var(--line-strong); border-radius:5px; }
+.priority-card:hover:not(:disabled) { border-color:var(--accent); background:#f4f6ff; }
+.priority-card[aria-pressed="true"] { border-color:var(--accent); background:#eaf0ff; }
+.priority-card:disabled { opacity:.6; }
+.priority-card.is-correct { border-color:var(--ok); background:#f3faf7; }
+.priority-card.is-incorrect { border-color:var(--no); background:#fff6f7; }
+.priority-card-label { color:var(--muted); font-size:.7rem; font-weight:700; }
+.priority-card-metric { font:700 .78rem ui-monospace,monospace; color:var(--muted); }
+.priority-card-metric strong { color:var(--accent); font-size:.92rem; }
+
+.final-compare-wrap { overflow-x:auto; margin:1.4rem 0; text-align:left; border:1px solid var(--line); }
+.compare-table.final-compare-table { width:100%; min-width:520px; border-collapse:collapse; background:#fff; font-size:.85rem; }
+.final-compare-table th, .final-compare-table td { padding:.75rem .8rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+.final-compare-table thead th { color:var(--ink); background:#eef1f6; font-weight:750; text-align:center; }
+.final-compare-table tbody th { width:260px; color:var(--muted); font-weight:700; }
+.final-compare-table tbody td { text-align:center; }
+.final-compare-table tbody tr:last-child td, .final-compare-table tbody tr:last-child th { border-bottom:0; }
+
+.next-step { display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; }
+
+@media(max-width:600px){
+  .final-compare-table tbody th { width:auto; }
+  .puzzle-grid--medium { width:100px; height:100px; }
+}

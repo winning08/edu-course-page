@@ -52,7 +52,7 @@ test("8-퍼즐은 새 상태와 중복 상태를 색상 외 텍스트로 구분�
 test("활동 데이터에는 강 건너기와 8-퍼즐이 별도 항목으로 등록된다", async () => {
   const data = JSON.parse(await readFile(new URL("../../data/activity-groups.json", lessonRoot), "utf8"));
   const group = data.groups.find((item) => item.id === "ai-search");
-  assert.equal(group.children.length, 4);
+  assert.equal(group.children.length, 5);
   assert.equal(group.children[0].id, "search-bfs-delivery");
   assert.equal(group.children[1].id, "search-eight-puzzle");
   assert.equal(group.children[1].path, "lessons/search-eight-puzzle/");

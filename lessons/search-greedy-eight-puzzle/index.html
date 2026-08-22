@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="목표까지 남은 거리(h(n))만 보고 다음 상태를 고르는 최상 우선 탐색을 8-퍼즐로 체험하고, 너비 우선 탐색과 열어보는 상태 수를 비교하는 활동">
+  <title>목표만 보고 판단하면? 최상 우선 탐색 | 인공지능과 탐색</title>
+  <link rel="stylesheet" href="../../assets/fonts.css">
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="../shared/search-grid.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="game.js"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-greedy-eight-puzzle">
+  <a class="skip-link" href="#experiment">실험으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel">
+    <h1>아직 준비 중인 활동입니다</h1>
+    <p>이 활동은 현재 준비 중입니다. 곧 열릴 예정이니 잠시 후 다시 확인해 주세요.</p>
+    <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
+  </div>
+  <div id="guard-content">
+  <header class="topbar">
+    <a class="back-link" href="../../units/ai-search/">← 활동 목록</a>
+    <div class="module-title"><span>수업 04</span><strong>인공지능과 탐색</strong></div>
+    <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">최상 우선 탐색 · 활동 05</p>
+        <h1 id="page-title">목표만 보고 판단하면? 최상 우선 탐색</h1>
+      </div>
+      <div class="intro-copy">
+        <p>같은 8-퍼즐이지만 이번엔 새로운 문제입니다. 목표까지 남은 거리(h)만 보고, 그 값이 가장 작은 상태부터 확인하는 <span class="key-term">최상 우선 탐색(Greedy Best-First Search)</span>을 직접 진행해 봅니다.</p>
+        <dl><div><dt>단계</dt><dd>예측 → 최상 우선 탐색 → 비교</dd></div><div><dt>난이도</dt><dd>보통</dd></div></dl>
+      </div>
+      <div class="state-preview">
+        <div class="state-preview-item"><span>초기 상태</span><div id="start-preview"></div></div>
+        <div class="state-preview-item"><span>목표 상태</span><div id="goal-preview"></div></div>
+      </div>
+    </section>
+
+    <div class="concept-bridge">
+      <p class="concept-bridge-label">최상 우선 탐색이란</p>
+      <p>활동 02의 너비 우선 탐색(BFS)은 상태를 <strong>먼저 발견된 순서(층)</strong>로 확인했습니다. 이번엔 각 상태에서 목표까지 남은 거리를 어림짐작한 <b>휴리스틱값 h(n)</b>을 씁니다 — 숫자가 몇 칸이나 잘못된 자리에 있는지가 아니라, 각 숫자가 제자리까지 가로+세로로 몇 칸 떨어져 있는지를 모두 더한 <b>맨해튼 거리</b>로 계산합니다.</p>
+      <p><b>최상 우선 탐색</b>은 이 h(n)이 가장 작은 상태, 즉 "목표와 가장 비슷해 보이는" 상태부터 확인합니다. 지금까지 몇 번 움직였는지(g(n))는 아예 보지 않고 h(n)만 봅니다 — 그래서 "최상(best)"처럼 보이는 것부터 <span class="key-term">욕심 내어(greedy)</span> 먼저 확인한다고 해서 그리디 탐색이라고도 부릅니다.</p>
+    </div>
+
+    <section id="predict-view" class="transition" aria-labelledby="predict-title">
+      <p class="eyebrow">먼저 예측하기</p>
+      <h2 id="predict-title" tabindex="-1">활동 02의 너비 우선 탐색이라면 이 퍼즐에서 상태를 몇 개나 열어봐야 할까요?</h2>
+      <p>목표까지 남은 거리(h)를 힌트로 쓰면 열어보는 상태 수가 어떻게 달라질지 예상해 보세요.</p>
+      <div class="predict-buttons" id="predict-buttons-1">
+        <button type="button" data-answer="similar">너비 우선 탐색과 비슷하게 많이 열어볼 것이다</button>
+        <button type="button" data-answer="far">너비 우선 탐색보다 훨씬 적게 열어볼 것이다</button>
+      </div>
+      <div id="predict-result" class="step-feedback" aria-live="polite" hidden></div>
+      <button id="start-greedy-button" type="button" class="stage-next" hidden>최상 우선 탐색으로 직접 확인하기 <span aria-hidden="true">→</span></button>
+    </section>
+
+    <section id="experiment" class="experiment" aria-labelledby="experiment-title" hidden>
+      <div class="experiment-head" id="experiment-head">
+        <div><span id="stage-label">단계 1 · 최상 우선 탐색</span><div class="progress" aria-hidden="true"><i id="progress-bar"></i></div></div>
+      </div>
+
+      <div id="trace-view">
+        <div class="sample-head">
+          <div><span class="sample-id" id="step-badge">단계 1</span><h2 id="experiment-title">다음에 열릴 상태는 어디일까요?</h2></div>
+          <p>후보들 중 <strong>h(n)이 가장 작은 상태</strong>를 하나 고르세요.</p>
+        </div>
+        <p class="candidate-prompt" id="candidate-prompt">h(n)이 가장 작은 후보를 하나 고르세요.</p>
+        <div id="candidate-cards" class="candidate-cards" role="group" aria-label="다음에 열릴 후보 상태"></div>
+        <div id="step-feedback" class="step-feedback" aria-live="polite" hidden></div>
+        <div class="candidate-actions">
+          <button id="next-step" type="button" hidden>다음 단계 <span aria-hidden="true">→</span></button>
+        </div>
+        <div class="record-table-wrap">
+          <table class="record-table">
+            <caption class="sr-only">최상 우선 탐색 기록표: 순서·상태·이전 상태·h(n)</caption>
+            <thead><tr><th scope="col">순서</th><th scope="col">상태</th><th scope="col">이전 상태</th><th scope="col">h(n)</th></tr></thead>
+            <tbody id="record-body"><tr class="empty-row"><td colspan="4">아직 확정된 상태가 없습니다.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="results-view" class="summary" hidden>
+        <p class="eyebrow">최상 우선 탐색 완료</p>
+        <h2 tabindex="-1">너비 우선 탐색과 한눈에 비교하기</h2>
+        <p id="results-summary"></p>
+
+        <div class="table-wrap final-compare-wrap">
+          <table class="compare-table final-compare-table">
+            <thead>
+              <tr><th scope="col"></th><th scope="col">너비 우선 탐색(BFS)</th><th scope="col">최상 우선 탐색</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">무엇을 기준으로 다음 상태를 고르는가</th>
+                <td>먼저 발견된 순서(층)</td>
+                <td>h(n)이 최소(목표까지 남은 거리가 가장 짧아 보이는 상태)</td>
+              </tr>
+              <tr>
+                <th scope="row">목표까지 남은 거리를 어림짐작하는가(h 사용)</th>
+                <td>아니오</td>
+                <td>예</td>
+              </tr>
+              <tr>
+                <th scope="row">지금까지 이동한 횟수를 보는가(g 사용)</th>
+                <td>예(층 = 이동 횟수)</td>
+                <td>아니오 — g(n)은 아예 보지 않습니다</td>
+              </tr>
+              <tr>
+                <th scope="row">완전성 — 목표가 있으면 언젠가는 찾는가</th>
+                <td>예</td>
+                <td>예(이 퍼즐처럼 상태가 유한하면)</td>
+              </tr>
+              <tr>
+                <th scope="row">최적성 — 항상 최소 이동을 보장하는가</th>
+                <td>예</td>
+                <td>아니오 — g(n)을 보지 않아서 이번처럼 우연히 맞을 수도, 더 돌아갈 수도 있습니다</td>
+              </tr>
+              <tr>
+                <th scope="row">효율 — 이 퍼즐에서 열어본 상태 수</th>
+                <td id="bfs-opened-cell"></td>
+                <td id="greedy-opened-cell"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <details class="depth-box">
+          <summary>더 알아보기 — 최상 우선 탐색은 왜 최적성을 보장하지 못할까?</summary>
+          <p>최상 우선 탐색은 h(n)만 보고 "지금 당장 목표와 가장 비슷해 보이는" 상태를 고릅니다. 그런데 그 상태까지 오는 데 이미 이동을 많이 했을 수도 있다는 사실(g(n))은 전혀 고려하지 않습니다. 그래서 목표에 더 가까워 보이지만 실제로는 훨씬 돌아가는 길로 안내할 수도 있습니다. 이번 퍼즐에서는 h(n)이 매 단계 꾸준히 줄어들어 우연히 가장 빠른 길과 일치했지만, 다른 퍼즐에서는 그렇지 않을 수 있습니다.</p>
+        </details>
+
+        <aside class="reveal-box">
+          <span>이 퍼즐에서 확인한 것</span>
+          <p>최상 우선 탐색은 h(n)만 보고도 너비 우선 탐색보다 <strong>훨씬 적은 상태만 열어보고</strong> 목표에 도착했습니다(효율). 이번엔 그 경로가 최소 이동 경로와 같았지만, g(n)을 아예 보지 않기 때문에 이는 보장된 결과가 아니라 우연에 가깝습니다.</p>
+        </aside>
+
+        <div class="discussion">
+          <span>함께 생각해 보기</span>
+          <p>최상 우선 탐색이 g(n)을 완전히 무시하는 대신, g(n)과 h(n)을 함께 본다면 어떻게 될까요? (힌트: f(n) = g(n) + h(n))</p>
+          <p>목표에 가까워 보이지만 실제로는 이미 많이 돌아온 상태를, g(n) 없이 h(n)만으로 알아챌 수 있을까요?</p>
+        </div>
+        <div class="next-step">
+          <a class="next-step-link" href="../../units/ai-search/">활동 목록으로 돌아가기 <span aria-hidden="true">→</span></a>
+          <a class="next-step-link" href="../../">전체 활동지 홈으로 <span aria-hidden="true">→</span></a>
+        </div>
+        <button id="restart-button" type="button">처음부터 다시 하기</button>
+      </div>
+    </section>
+  </main>
+  <footer><span>정보 · 인공지능 기초</span><span>예측하기 · 실행하기 · 비교하기</span></footer>
+  </div>
+</body>
+</html>

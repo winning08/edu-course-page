@@ -62,7 +62,7 @@ test("f(n)=g(n)+h(n)과 완전성·최적성·효율 비교표, 함정 문항 �
   assert.match(html, /id="astar-opened-cell"/);
 });
 
-test("결과 화면은 units/ai-search와 루트 홈으로 각각 돌아가는 링크를 함께 제공한다(마지막 활동)", async () => {
+test("결과 화면은 units/ai-search와 루트 홈으로 각각 돌아가는 링크를 함께 제공한다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
   assert.match(html, /href="\.\.\/\.\.\/units\/ai-search\/"/);
   assert.match(html, /href="\.\.\/\.\.\/">전체 활동지 홈으로/);
