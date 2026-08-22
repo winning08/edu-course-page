@@ -2,16 +2,28 @@ import { setupEditor } from "./editor.js";
 import { createPythonRunner } from "./python-runner.js";
 import { GAS_ENDPOINT, ACTIVITY_VERSION } from "./config.js";
 
-const STORAGE_KEY = "eliza-python-web:v1";
+const STORAGE_KEY = "eliza-python-web:v2";
+
+// 이전 버전의 영구 저장값은 한 번 정리하고, 이제부터는 현재 탭에서만 보관한다.
+try { localStorage.removeItem(STORAGE_KEY); } catch { /* 저장소 접근 불가 환경 */ }
 
 const STARTER_CODE = `print("ELIZA와 대화를 시작합니다.")
+
+# 키워드: 응답 형태로 대화 규칙을 채워 넣으세요.
+# (예시처럼 계속 추가해 보세요)
+ans = {
+    "안녕": "안녕하세요! 오늘 기분이 어떠세요?",
+}
 
 while True:
     # message : 사용자의 입력
     message = input("나: ")
 
     # ELIZA의 대화 규칙 만들기
-    `;
+\t
+\t
+    print("ELIZA:", response)
+`;
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -21,7 +33,7 @@ function escapeHtml(text) {
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -78,7 +90,7 @@ function initApp() {
 
   function saveState() {
     try {
-      localStorage.setItem(
+      sessionStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
           code: editor.getValue(),
@@ -89,7 +101,7 @@ function initApp() {
         })
       );
     } catch {
-      // localStorage를 쓸 수 없는 환경(사생활 보호 모드 등)에서는 저장을 건너뛴다.
+      // sessionStorage를 쓸 수 없는 환경(사생활 보호 모드 등)에서는 저장을 건너뛴다.
     }
   }
 
@@ -155,14 +167,16 @@ function initApp() {
   function enableInputRow() {
     terminalInput.disabled = false;
     terminalSend.disabled = false;
+    terminalForm.classList.add("is-waiting");
     terminalInput.focus();
-    inputWaitStatus.textContent = "ELIZA가 입력을 기다리고 있습니다.";
+    inputWaitStatus.textContent = "ELIZA가 답을 기다리고 있습니다. 위 입력칸에 적어 보내세요.";
   }
 
   function disableInputRow() {
     terminalInput.disabled = true;
     terminalSend.disabled = true;
-    inputWaitStatus.textContent = "";
+    terminalForm.classList.remove("is-waiting");
+    inputWaitStatus.textContent = "코드를 실행하면 대화 입력이 활성화됩니다.";
   }
 
   // --- 실행 상태 UI --------------------------------------------------------
@@ -362,12 +376,6 @@ function initApp() {
     submitResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
     openConfirmButton.focus();
   }
-
-  // --- 프로젝터 모드(다른 활동 페이지와 동일한 동작) --------------------------
-  $("#projector-toggle").addEventListener("click", () => {
-    const enabled = document.body.classList.toggle("projector-mode");
-    $("#projector-toggle").setAttribute("aria-pressed", String(enabled));
-  });
 
   refreshSubmitAvailability();
 }

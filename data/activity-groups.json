@@ -46,7 +46,7 @@
     },
     {
       "id": "ai-learning",
-      "order": 3,
+      "order": 4,
       "title": "AI는 어떻게 학습할까?",
       "description": "마트 과일 선별 AI를 직접 학습시키고 시험하며 입력 정보, 관계없는 정보, 편향된 데이터 같은 인공지능 기초 개념을 순서대로 체험합니다.",
       "path": "units/ai-learning/",
@@ -118,6 +118,61 @@
           "status": "published",
           "active": true,
           "objective": "규칙 기반(기호주의) 인공지능을 직접 만들어 보고, 활동 1에서 만난 신경망(연결주의)과 비교하며 두 접근법의 장단점을 이해한다."
+        }
+      ]
+    },
+    {
+      "id": "ai-search",
+      "order": 3,
+      "title": "인공지능과 탐색",
+      "description": "늑대·양·양배추 강 건너기와 8-퍼즐로 상태·간선 개념과 맹목적 탐색을 익히고, 학교 배달 로봇 지도에서 균일 비용 탐색·A* 탐색을 실행하며 완전성·최적성·효율로 알고리즘을 비교합니다.",
+      "path": "units/ai-search/",
+      "status": "published",
+      "active": false,
+      "children": [
+        {
+          "id": "search-bfs-delivery",
+          "order": 1,
+          "title": "강 건너기로 만나는 탐색",
+          "path": "lessons/search-bfs-delivery/",
+          "duration": 12,
+          "difficulty": "입문",
+          "status": "published",
+          "active": true,
+          "objective": "늑대·양·양배추 강 건너기를 직접 조작하며 상태·행동·초기 상태·목표 상태 개념을 익힌다."
+        },
+        {
+          "id": "search-eight-puzzle",
+          "order": 2,
+          "title": "8-퍼즐로 보는 맹목적 탐색",
+          "path": "lessons/search-eight-puzzle/",
+          "duration": 24,
+          "difficulty": "입문",
+          "status": "published",
+          "active": true,
+          "objective": "8-퍼즐을 직접 맞춘 뒤 너비 우선 탐색이 가까운 상태부터 층별로 넓히고 중복 상태를 제외하며 최소 이동 경로를 찾는 과정을 관찰한다."
+        },
+        {
+          "id": "search-cost-delivery",
+          "order": 3,
+          "title": "눈이 내리면? 가장 싼 길 찾기",
+          "path": "lessons/search-cost-delivery/",
+          "duration": 20,
+          "difficulty": "보통",
+          "status": "published",
+          "active": false,
+          "objective": "칸마다 이동 비용이 다를 때, 균일 비용 탐색이 지금까지 든 비용 g(n)이 가장 작은 곳부터 넓혀가며 실제로 가장 싼 경로를 찾는다는 것을 체험한다."
+        },
+        {
+          "id": "search-astar-delivery",
+          "order": 4,
+          "title": "목표를 어림짐작하기: A* 탐색",
+          "path": "lessons/search-astar-delivery/",
+          "duration": 22,
+          "difficulty": "보통",
+          "status": "published",
+          "active": false,
+          "objective": "목표까지 남은 거리를 어림짐작한 휴리스틱 h(n)을 더한 f(n)=g(n)+h(n) 기준으로 A*가 더 적은 칸을 열어보고도 최적 경로를 찾는 것을 확인하고, 세 알고리즘의 완전성·최적성·효율을 비교한다."
         }
       ]
     }

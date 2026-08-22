@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="숫자 타일을 직접 움직여 8-퍼즐의 초기 상태와 목표 상태, 행동을 체험하는 활동">
+  <title>8-퍼즐 직접 맞추기 | 인공지능과 탐색</title>
+  <link rel="stylesheet" href="../../assets/fonts.css">
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="styles.css?v=2026081902">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="game.js?v=2026081902"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-eight-puzzle-play">
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel"><h1>아직 준비 중인 활동입니다</h1><a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a></div>
+  <div id="guard-content">
+    <header class="topbar"><a class="back-link" href="../../units/ai-search/">← 활동 목록</a><div class="module-title"><span>수업 04</span><strong>인공지능과 탐색</strong></div><button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button></header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">문제 해결과 탐색 · 활동 02</p><h1 id="page-title">8-퍼즐을 직접 맞춰 보기</h1></div>
+        <div class="intro-copy"><p>빈칸 옆의 숫자 타일을 눌러 목표 상태와 똑같이 만들어 보세요. 어떤 상태에서 어떤 행동을 선택해야 하는지 먼저 몸으로 경험합니다.</p><dl><div><dt>방법</dt><dd>직접 조작</dd></div><div><dt>시간</dt><dd>8분</dd></div><div><dt>난이도</dt><dd>입문</dd></div></dl></div>
+      </section>
+      <section class="experiment play-card" aria-labelledby="game-title">
+        <div class="experiment-head"><div><span>활동 02 · 8-퍼즐 체험</span></div><div class="accuracy"><span>이동</span><strong id="move-count">0회</strong></div></div>
+        <div id="play-area">
+          <div class="sample-head"><div><span class="sample-id">직접 체험</span><h2 id="game-title">숫자를 순서대로 놓아 보세요</h2></div><p>빈칸과 맞닿은 숫자만 움직일 수 있습니다. 움직일 숫자를 직접 누르세요.</p></div>
+          <div class="boards">
+            <section><h3>현재 상태</h3><div id="play-board" class="play-board" aria-label="조작할 8-퍼즐"></div></section>
+            <span aria-hidden="true">→</span>
+            <section><h3>목표 상태</h3><div id="goal-board" class="goal-board" role="img"></div></section>
+          </div>
+          <p id="feedback" class="play-feedback" aria-live="polite">빈칸 옆의 숫자를 선택하세요.</p>
+          <div class="play-tools"><button id="hint" type="button">도움 받기</button><button id="reset-game" type="button">처음 상태로 되돌리기</button></div>
+        </div>
+        <div id="results" class="summary" hidden><p class="eyebrow">8-퍼즐 완성</p><h2 tabindex="-1">목표 상태를 만들었습니다</h2><p id="result-message"></p><div class="discussion"><span>다음 활동에서 확인할 것</span><p>인공지능은 여러 상태 중에서 어떤 상태부터 확인해야 가장 짧은 해결 방법을 찾을 수 있을까요?</p></div><div class="result-actions"><button id="restart" type="button">다시 도전하기</button><a href="../search-eight-puzzle/">BFS 탐색 과정 보기 →</a></div></div>
+      </section>
+      <nav class="lesson-pager"><a href="../search-bfs-delivery/"><em>이전 활동</em><strong>강 건너기로 만나는 탐색</strong></a><a class="next" href="../search-eight-puzzle/"><em>다음 활동</em><strong>8-퍼즐 BFS 관찰</strong></a></nav>
+    </main>
+    <footer><span>정보 · 인공지능 기초</span><span>움직이기 · 시도하기 · 비교하기</span></footer>
+  </div>
+</body>
+</html>

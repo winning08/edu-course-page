@@ -12,6 +12,11 @@
 // 각 활동 카드에 data-lesson-card="<child-id>"를 붙이면, 허브의 그룹 카드와 동일하게
 // 비활성 활동 카드만 잠기고(fail-open, 목록 fetch 실패 시에는 전부 열어 둠) 클릭이 막힌다.
 const GROUPS_URL = new URL("../data/activity-groups.json", import.meta.url);
+const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1"]);
+
+function isLocalEnvironment() {
+  return LOCAL_HOSTNAMES.has(globalThis.location?.hostname ?? "");
+}
 
 async function fetchGroups() {
   const response = await fetch(GROUPS_URL, { cache: "no-store" });
@@ -53,7 +58,7 @@ async function guardHub() {
     const byId = new Map(groups.map((group) => [group.id, group]));
     cards.forEach((card) => {
       const group = byId.get(card.dataset.groupCard);
-      if (isActiveGroup(group)) {
+      if (isLocalEnvironment() || isActiveGroup(group)) {
         status.set(card, "active");
       } else {
         status.set(card, "inactive");
@@ -87,8 +92,9 @@ async function guardPage() {
   try {
     const groups = await fetchGroups();
     const group = groups.find((candidate) => candidate.id === groupId);
-    let active = isActiveGroup(group);
-    if (active && lessonId) {
+    const local = isLocalEnvironment();
+    let active = local || isActiveGroup(group);
+    if (!local && active && lessonId) {
       const child = group.children.find((candidate) => candidate.id === lessonId);
       active = isActiveChild(child);
     }
@@ -98,7 +104,7 @@ async function guardPage() {
       const byId = new Map((group?.children ?? []).map((child) => [child.id, child]));
       lessonCards.forEach((card) => {
         const child = byId.get(card.dataset.lessonCard);
-        if (isActiveChild(child)) {
+        if (local || isActiveChild(child)) {
           cardStatus.set(card, "active");
         } else {
           cardStatus.set(card, "inactive");

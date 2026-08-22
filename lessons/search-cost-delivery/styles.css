@@ -1,0 +1,7 @@
+.numeric-predict { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:.7rem; margin:1.4rem 0 0; }
+.numeric-predict label { font-size:.88rem; color:var(--muted); }
+.numeric-predict input { width:110px; min-height:44px; padding:.5rem .7rem; font-size:1rem; text-align:center; border:1px solid var(--line-strong); border-radius:3px; }
+.numeric-predict button { min-height:44px; padding:.55rem 1rem; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:3px; font-weight:720; }
+.numeric-predict button:hover { background:var(--accent-dark); }
+#predict-view .step-feedback { max-width:640px; margin:1rem auto 0; text-align:left; }
+#predict-view .stage-next { margin:1.4rem auto 0; display:block; }

@@ -1,0 +1,74 @@
+/* '인공지능과 탐색' 세 활동(BFS·균일 비용 탐색·A*)이 공유하는 학교 지도·후보 카드·기록표 스타일 */
+.concept-bridge { width:min(1120px,calc(100% - 2rem)); margin:0 auto 1.4rem; padding:1.2rem clamp(1rem,3vw,1.8rem); background:#f7f8fb; border:1px solid var(--line); border-left:3px solid var(--accent); }
+.concept-bridge-label { margin:0 0 .8rem; color:var(--accent); font:750 .72rem ui-monospace,monospace; letter-spacing:.1em; }
+.concept-bridge p { margin:.5rem 0; color:var(--muted); font-size:.9rem; line-height:1.6; }
+.concept-bridge p strong, .concept-bridge p b { color:var(--ink); }
+
+.map-shell { display:grid; grid-template-columns:minmax(0,320px) 1fr; gap:1.4rem; align-items:start; padding:1.2rem clamp(1rem,3vw,1.8rem); }
+.map-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:4px; aspect-ratio:1; }
+.map-cell { position:relative; display:flex; align-items:center; justify-content:center; min-height:0; background:#fff; border:1px solid var(--line-strong); border-radius:3px; font:700 .78rem ui-monospace,monospace; color:var(--ink); }
+.map-cell[data-wall="true"] { background:repeating-linear-gradient(45deg,#dde2ea,#dde2ea 4px,#eef1f6 4px,#eef1f6 8px); border-color:var(--line); color:transparent; }
+.map-cell[data-state="start"] { background:#eaf0ff; border-color:var(--accent); color:var(--accent-dark); }
+.map-cell[data-state="goal"] { background:#fff3de; border-color:#b8811b; color:#7a5610; }
+.map-cell[data-state="visited"] { background:#eef1f6; color:#57616f; }
+.map-cell[data-state="frontier"] { background:#fff3cd; border-color:#b8811b; color:#7a5610; }
+.map-cell[data-state="current"] { background:var(--accent); border-color:var(--accent-dark); color:#fff; }
+.map-cell[data-state="path"] { background:#dff3e8; border-color:var(--ok); color:#0d5a41; }
+.map-cell .cell-cost { position:absolute; top:2px; right:3px; font-size:.58rem; font-weight:700; color:inherit; opacity:.75; }
+.map-cell .cell-icon { font-size:1rem; }
+.map-cell .cell-id { position:absolute; left:3px; bottom:2px; font-size:.58rem; font-weight:750; color:inherit; opacity:.82; }
+.map-legend { display:flex; flex-direction:column; gap:.5rem; margin-top:1rem; font-size:.78rem; color:var(--muted); }
+.map-legend li { display:flex; align-items:center; gap:.5rem; list-style:none; }
+.map-legend .swatch { width:16px; height:16px; border-radius:3px; border:1px solid var(--line-strong); flex:none; }
+.map-side { min-width:0; }
+.map-rule { margin:0 0 1rem; padding:.7rem .9rem; color:#465165; background:#eef1f6; border-left:3px solid var(--accent); font-size:.82rem; line-height:1.6; }
+.map-rule strong { color:var(--accent); }
+
+.candidate-prompt { margin:0 0 .8rem; font-weight:650; }
+.candidate-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.65rem; }
+.candidate-card { display:flex; flex-direction:column; gap:.35rem; min-height:64px; padding:.65rem .8rem; text-align:left; color:var(--ink); background:#fff; border:1px solid var(--line-strong); border-radius:4px; }
+.candidate-card:hover:not(:disabled) { border-color:var(--accent); background:#f4f6ff; }
+.candidate-card[aria-pressed="true"] { border-color:var(--accent); background:#eaf0ff; }
+.candidate-card:disabled { opacity:.55; }
+.candidate-card.is-correct { border-color:var(--ok); background:#f3faf7; }
+.candidate-card.is-incorrect { border-color:var(--no); background:#fff6f7; }
+.candidate-card .cc-key { color:#798397; font:700 .68rem ui-monospace,monospace; }
+.candidate-card .cc-name { font-weight:750; font-size:.98rem; }
+.candidate-card .cc-metrics { display:flex; flex-wrap:wrap; gap:.5rem; font:700 .7rem ui-monospace,monospace; color:var(--muted); }
+.candidate-card .cc-metrics span strong { color:var(--ink); }
+.candidate-actions { display:flex; justify-content:flex-end; gap:.6rem; margin-top:.8rem; }
+
+.step-feedback { min-height:56px; margin-top:.9rem; padding:.8rem 1rem; border-left:4px solid var(--line-strong); background:#f8f9fb; border-radius:3px; }
+.step-feedback.correct { border-color:var(--ok); background:#f3faf7; }
+.step-feedback.incorrect { border-color:var(--no); background:#fff6f7; }
+.step-feedback p { margin:0; font-size:.86rem; line-height:1.6; }
+.step-feedback strong { display:block; margin-bottom:.2rem; font-size:.9rem; }
+
+.fast-forward { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-top:1rem; padding:.8rem 1rem; background:#f2f5ff; border:1px dashed var(--accent); border-radius:4px; font-size:.85rem; }
+.fast-forward button { flex:none; }
+
+.record-table-wrap { overflow-x:auto; margin-top:1.2rem; border:1px solid var(--line); }
+table.record-table { width:100%; min-width:420px; border-collapse:collapse; font-size:.82rem; }
+.record-table th, .record-table td { padding:.55rem .6rem; text-align:center; border-bottom:1px solid var(--line); }
+.record-table thead th { color:#5b6575; background:#f2f4f7; font-size:.68rem; letter-spacing:.03em; }
+.record-table tbody th { color:var(--accent); font-family:ui-monospace,monospace; }
+.record-table .empty-row td { padding:1.4rem; color:var(--muted); }
+
+.stat-compare { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin:1.2rem 0; background:var(--line); border:1px solid var(--line); }
+.stat-compare .stat-block { padding:1rem .9rem; background:#fff; text-align:center; }
+.stat-compare .stat-block > span { display:block; color:var(--muted); font:700 .68rem ui-monospace,monospace; letter-spacing:.04em; }
+.stat-compare .stat-block strong { display:block; margin-top:.4rem; font-size:clamp(1.5rem,4vw,2rem); color:var(--accent); letter-spacing:-.03em; }
+
+.final-compare-table th, .final-compare-table td { padding:.75rem .8rem; }
+
+@media(max-width:760px){
+  .map-shell { grid-template-columns:1fr; }
+  .map-legend { flex-direction:row; flex-wrap:wrap; }
+  .candidate-cards { grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); }
+  .stat-compare { grid-template-columns:1fr; }
+}
+@media(max-width:460px){
+  .map-shell { padding:.8rem; }
+  .candidate-actions { flex-direction:column-reverse; }
+  .candidate-actions button { width:100%; }
+}

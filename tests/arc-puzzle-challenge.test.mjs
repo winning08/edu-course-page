@@ -126,6 +126,7 @@ test("시험의 문제 입력과 출력도 전체 열 수에 맞춰 한 줄로 �
 test("진행 상황은 localStorage에 저장하지 않고(새로고침하면 처음부터 다시 시작), 힌트·건너뛰기·다시 채점 관련 함수는 남아있다", async () => {
   const js = await readFile(new URL("game.js", lessonRoot), "utf8");
   assert.doesNotMatch(js, /localStorage/);
+  assert.doesNotMatch(js, /sessionStorage/);
   assert.match(js, /handleHint/);
   assert.match(js, /handleSkip/);
   assert.match(js, /handleClear/);

@@ -79,9 +79,10 @@ test("python-runner.js는 Worker.terminate()로 무한 루프를 안전하게 �
   assert.match(runner, /typeof SharedArrayBuffer !== "undefined"/);
 });
 
-test("app.js는 코드·학번·이름을 localStorage에 저장하고, GAS_ENDPOINT가 비어 있으면 제출 버튼을 비활성화한다", async () => {
+test("app.js는 코드·학번·이름을 탭 단위 sessionStorage에 저장하고, GAS_ENDPOINT가 비어 있으면 제출 버튼을 비활성화한다", async () => {
   const app = await read("app.js");
-  assert.match(app, /localStorage\.setItem\(\s*STORAGE_KEY/);
+  assert.match(app, /sessionStorage\.setItem\(\s*STORAGE_KEY/);
+  assert.doesNotMatch(app, /localStorage\.setItem\(\s*STORAGE_KEY/);
   assert.match(app, /studentNumber: studentNumberInput\.value/);
   assert.match(app, /studentName: studentNameInput\.value/);
   assert.match(app, /if \(!GAS_ENDPOINT\)/);
@@ -181,6 +182,18 @@ test("styles.css는 focus-visible과 prefers-reduced-motion을 챙긴다", async
   const css = await read("styles.css");
   assert.match(css, /:focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
+});
+
+test("코드 작성과 실행 결과를 독립된 두 작업 카드로 구분하고 프로젝터 모드는 제거한다", async () => {
+  const [html, css, app] = await Promise.all([read("index.html"), read("styles.css"), read("app.js")]);
+  assert.match(html, /workspace-card editor-workspace/);
+  assert.match(html, /workspace-card terminal-workspace/);
+  assert.match(html, />1\. 코드 작성</);
+  assert.match(html, />2\. 실행 결과</);
+  assert.match(css, /\.editor-workspace/);
+  assert.match(css, /\.terminal-workspace/);
+  assert.doesNotMatch(html, /projector-toggle/);
+  assert.doesNotMatch(app, /projector-mode|projector-toggle/);
 });
 
 test("editor.js는 Tab/Shift+Tab 들여쓰기, Enter 자동 들여쓰기, Esc 키보드 탈출구를 제공한다", async () => {

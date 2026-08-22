@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="8-퍼즐에서 너비 우선 탐색이 상태를 층별로 넓히고 중복 상태를 제외하는 과정을 관찰하는 활동">
+  <title>8-퍼즐로 보는 맹목적 탐색 | 인공지능과 탐색</title>
+  <link rel="stylesheet" href="../../assets/fonts.css">
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="../shared/search-grid.css">
+  <link rel="stylesheet" href="styles.css?v=2026081905">
+  <link rel="stylesheet" href="../search-eight-puzzle-play/styles.css?v=2026081903">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="game.js?v=2026081905"></script>
+  <script type="module" src="../search-eight-puzzle-play/game.js?v=2026081902"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-eight-puzzle">
+  <a class="skip-link" href="#game-title">활동으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel"><h1>아직 준비 중인 활동입니다</h1><p>이 활동은 현재 준비 중입니다.</p><a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a></div>
+  <div id="guard-content">
+    <p id="preview-badge" class="preview-badge" hidden role="status">로컬 미리보기 · <span id="preview-badge-step"></span>단계 (세션에 저장 안 됨)</p>
+    <header class="topbar">
+      <a class="back-link" href="../../units/ai-search/">← 활동 목록</a>
+      <div class="module-title"><span>수업 04</span><strong>인공지능과 탐색</strong></div>
+      <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">문제 해결과 탐색 · 활동 02</p><h1 id="page-title">8-퍼즐로 보는 맹목적 탐색</h1></div>
+        <div class="intro-copy">
+          <p>강 건너기에서 경험한 상태와 행동을 8-퍼즐에 적용합니다. BFS가 가까운 상태부터 층별로 살펴보고, 이미 본 상태는 제외하는 과정을 눈으로 확인하세요.</p>
+          <dl><div><dt>방법</dt><dd>단계 관찰</dd></div><div><dt>시간</dt><dd>16분</dd></div><div><dt>난이도</dt><dd>입문</dd></div></dl>
+        </div>
+      </section>
+      <div class="concept-bridge">
+        <p class="concept-bridge-label">강 건너기와 같은 구조</p>
+        <p><strong>상태</strong>는 숫자판의 현재 모습, <strong>행동</strong>은 빈칸을 한 번 옮기는 것, <strong>목표 상태</strong>는 숫자가 순서대로 놓인 모습입니다.</p>
+      </div>
+      <nav class="step-tabs" aria-label="8-퍼즐 활동 단계">
+        <ol>
+          <li><button type="button" class="step-tab" data-step-tab="1" aria-current="step" aria-label="1단계 직접 맞추기"><span class="step-tab-index">1</span><span class="step-tab-body"><strong>직접 맞추기</strong><small>02-1</small></span></button></li>
+          <li><button type="button" class="step-tab" data-step-tab="2" disabled aria-current="false" aria-label="2단계 BFS 층별 관찰, 아직 잠겨 있음"><span class="step-tab-index">2</span><span class="step-tab-body"><strong>BFS 층별 관찰</strong><small>02-2 · 잠김</small></span></button></li>
+          <li><button type="button" class="step-tab" data-step-tab="3" disabled aria-current="false" aria-label="3단계 결과 정리, 아직 잠겨 있음"><span class="step-tab-index">3</span><span class="step-tab-body"><strong>결과 정리</strong><small>02-3 · 잠김</small></span></button></li>
+        </ol>
+      </nav>
+      <section class="experiment play-card" data-step-panel="1" aria-labelledby="game-title">
+        <div class="experiment-head"><div><span>활동 02-1 · 8-퍼즐 체험</span></div><div class="accuracy"><span>이동</span><strong id="move-count">0회</strong></div></div>
+        <div id="play-area"><div class="sample-head"><div><span class="sample-id">먼저 직접 체험</span><h2 id="game-title">숫자를 순서대로 놓아 보세요</h2></div><p>빈칸과 맞닿은 숫자만 움직일 수 있습니다. 움직일 숫자를 직접 누르세요.</p></div><div class="boards"><section><h3>현재 상태</h3><div id="play-board" class="play-board" aria-label="조작할 8-퍼즐"></div></section><span aria-hidden="true">→</span><section><h3>목표 상태</h3><div id="goal-board" class="goal-board" role="img"></div></section></div><p id="feedback" class="play-feedback" aria-live="polite">빈칸 옆의 숫자를 선택하세요.</p><div class="play-tools"><button id="hint" type="button">도움 받기</button><button id="reset-game" type="button">처음 상태로 되돌리기</button></div></div>
+        <div id="results" class="summary" hidden><p class="eyebrow">8-퍼즐 완성</p><h2 tabindex="-1">목표 상태를 만들었습니다</h2><p id="result-message"></p><div class="discussion"><span>이어서 확인할 것</span><p>아래에서 인공지능이 여러 상태를 어떤 순서로 확인하는지 살펴보세요.</p></div><div class="result-actions"><button id="restart" type="button">다시 도전하기</button><button id="goto-step-2" type="button" class="step-cta">BFS 탐색 과정 보기 →</button></div></div>
+      </section>
+      <section id="puzzle-game" class="experiment puzzle-card" data-step-panel="2" hidden aria-labelledby="puzzle-title">
+        <div class="experiment-head"><div><span id="round-label">활동 02-2 · BFS 탐색 준비</span><div class="progress" aria-hidden="true"><i id="progress-bar"></i></div></div></div>
+        <div class="sample-head">
+          <div><span class="sample-id">이론 시각화</span><h2 id="puzzle-title">가까운 상태부터 한 층씩 확인하기</h2></div>
+          <p><strong>각 상태를 눌러서 다음 상태를 확인하세요.</strong> 같은 상태가 여러 번 나오더라도 먼저 모두 확인한 뒤 새 상태와 중복 상태를 구분합니다.</p>
+        </div>
+        <div class="puzzle-endpoints">
+          <div><p>초기 상태</p><div id="start-grid"></div></div><span aria-hidden="true">→ BFS →</span><div><p>목표 상태</p><div id="goal-grid"></div></div>
+        </div>
+        <div id="trace-panel" class="trace-panel">
+          <div class="round-heading"><span id="round-badge">1층</span><h3 id="round-title">초기 상태부터 층별로 넓혀 보기</h3><p id="round-note"></p></div>
+          <div id="search-levels" class="search-levels" aria-label="초기 상태부터 누적되는 BFS 탐색 상태"></div>
+          <div class="trace-actions"><button id="reveal-round" type="button">새 상태와 중복 상태 구분하기</button><button id="next-round" type="button" hidden>다음 층 보기 →</button></div>
+          <div id="round-feedback" class="step-feedback" aria-live="polite" hidden></div>
+        </div>
+      </section>
+      <section class="experiment result-card" data-step-panel="3" hidden aria-labelledby="results-heading">
+        <div class="experiment-head"><div><span id="results-heading">활동 02-3 · 결과 정리</span></div></div>
+        <div id="puzzle-results" class="summary" hidden>
+          <p class="eyebrow">BFS 탐색 완료</p><h2 tabindex="-1">목표까지 가장 짧은 경로를 찾았습니다</h2><p id="puzzle-summary"></p>
+          <ol id="path-list" class="path-list"></ol>
+          <div class="reference-box">
+            <p class="reference-eyebrow">참고자료</p>
+            <p class="reference-title">8-퍼즐 BFS·DFS 시뮬레이터(외부 사이트)</p>
+            <div class="reference-actions">
+              <a class="reference-button" href="https://kankanssam.github.io/Uninformed_Search/" target="_blank" rel="noopener noreferrer">실행 사이트 열기 <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="compare-box result-block">
+            <p class="compare-box-eyebrow">알고리즘 비교</p>
+            <h3>BFS와 DFS는 무엇이 다를까요?</h3>
+            <p id="dfs-summary"></p>
+          </div>
+          <div class="discussion result-block"><span>함께 생각해 보기</span><p>BFS가 이미 본 상태를 다시 펼치지 않는 이유는 무엇일까요? 층별로 탐색하면 왜 가장 적은 이동 횟수를 찾을 수 있을까요?</p></div>
+          <div class="next-step result-block">
+            <p class="next-step-eyebrow">다음 활동</p>
+            <h3 class="next-step-title">이동 비용이 다르면?</h3>
+            <p class="next-step-desc">같은 지도에 눈이 쌓여 칸마다 이동 비용이 달라집니다. 균일 비용 탐색이 실제로 가장 싼 길을 찾는 과정을 확인해요.</p>
+            <a class="next-step-button" href="../search-cost-delivery/">다음 활동으로 이동 <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+      <div class="step-bottom-nav">
+        <button type="button" id="step-prev" class="step-nav-button" disabled>← 이전 단계</button>
+        <p id="step-nav-status" class="step-nav-status">1 / 3단계 · 직접 맞추기</p>
+        <button type="button" id="step-next" class="step-nav-button is-primary" disabled>다음 단계로 →</button>
+      </div>
+      <p id="step-nav-hint" class="step-nav-hint" aria-live="polite">먼저 8-퍼즐을 완성하면 다음 단계로 이동할 수 있어요.</p>
+      <nav class="lesson-pager"><a href="../search-bfs-delivery/"><em>이전 활동</em><strong>강 건너기로 만나는 탐색</strong></a></nav>
+    </main>
+    <footer><span>정보 · 인공지능 기초</span><span>관찰하기 · 구분하기 · 비교하기</span></footer>
+  </div>
+</body>
+</html>

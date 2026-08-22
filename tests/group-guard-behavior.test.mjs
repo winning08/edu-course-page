@@ -55,7 +55,7 @@ class FakeElement {
   }
 }
 
-function setupDom({ scope, guardGroup, guardLesson, cardIds = [], lessonCardIds = [] } = {}) {
+function setupDom({ scope, guardGroup, guardLesson, cardIds = [], lessonCardIds = [], hostname = "ivymso13.github.io" } = {}) {
   const cards = cardIds.map((id) => new FakeElement({ dataset: { groupCard: id } }));
   const lessonCards = lessonCardIds.map((id) => new FakeElement({ dataset: { lessonCard: id } }));
   const errorBox = new FakeElement();
@@ -71,6 +71,7 @@ function setupDom({ scope, guardGroup, guardLesson, cardIds = [], lessonCardIds 
     getElementById: (id) => (id === "groups-load-error" ? errorBox : null),
     createElement: () => new FakeElement(),
   };
+  globalThis.location = { hostname };
   return { cards, lessonCards, errorBox, documentElementAttrs };
 }
 
@@ -116,6 +117,20 @@ test("허브: JSON fetch가 성공하면 active=false인 그룹 카드만 잠기
   assert.ok(inactiveCard.children.some((child) => child.className === "group-status-badge"));
 });
 
+test("로컬 허브: active=false인 그룹도 개발 중에는 클릭할 수 있다", async () => {
+  const { cards } = setupDom({ scope: "hub", cardIds: ["ai-search"], hostname: "127.0.0.1" });
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({ groups: [{ id: "ai-search", active: false }] }),
+  });
+
+  await loadGuardModule();
+  await flushMicrotasks();
+
+  assert.equal(cards[0].classNames.has("group-card--locked"), false);
+  assert.equal(cards[0].dispatchClick().defaultPrevented, false);
+});
+
 test("그룹·활동 페이지: JSON fetch가 실패하면 여전히 보수적으로 접근을 차단한다(fail-closed, 보안 경계는 그대로 유지)", async () => {
   const { documentElementAttrs } = setupDom({ scope: "page", guardGroup: "ai-learning" });
   globalThis.fetch = async () => {
@@ -139,6 +154,26 @@ test("그룹·활동 페이지: 배포 환경에서 active=false인 그룹은 �
   await flushMicrotasks();
 
   assert.equal(documentElementAttrs.get("data-guard"), "blocked");
+});
+
+test("로컬 그룹·활동 페이지: active=false여도 localhost에서는 콘텐츠가 열린다", async () => {
+  const { documentElementAttrs } = setupDom({
+    scope: "page", guardGroup: "ai-search", guardLesson: "search-cost-delivery", hostname: "localhost",
+  });
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      groups: [{
+        id: "ai-search", active: false,
+        children: [{ id: "search-cost-delivery", active: false }],
+      }],
+    }),
+  });
+
+  await loadGuardModule();
+  await flushMicrotasks();
+
+  assert.equal(documentElementAttrs.get("data-guard"), "active");
 });
 
 test("그룹·활동 페이지: active=true인 그룹은 정상적으로 콘텐츠가 열린다", async () => {

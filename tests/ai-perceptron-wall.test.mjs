@@ -307,6 +307,12 @@ test("마이신 단계 버튼은 규칙 번호가 아니라 처방으로 표시�
   assert.doesNotMatch(js, /\$\{rule\.label\}<\/button>/, "버튼에 규칙 번호(label)를 쓰면 안 됨");
 });
 
+test("규칙 카드의 작은 표는 공통 720px 최소 너비를 해제해 증상과 있음·없음을 함께 보여준다", async () => {
+  const css = await readFile(new URL("styles.css", lessonRoot), "utf8");
+  assert.match(css, /\.mycin-rule-card table\s*\{[^}]*min-width:\s*0/);
+  assert.match(css, /table-layout:\s*fixed/);
+});
+
 test("data/activity-groups.json에 ai-history 그룹과 ai-perceptron-wall 활동이 등록되어 있다", async () => {
   const raw = await readFile(new URL("../../data/activity-groups.json", lessonRoot), "utf8");
   const data = JSON.parse(raw);
