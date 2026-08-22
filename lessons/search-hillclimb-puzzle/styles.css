@@ -26,6 +26,17 @@
 #check-step:hover:not(:disabled) { background:var(--accent-dark); }
 #check-step:disabled { opacity:.5; }
 
+.record-state-cell { min-width:86px; color:var(--muted); font:700 1.1rem ui-monospace,monospace; }
+.record-table select[data-role="record-dir"] { padding:.3rem .4rem; border:1px solid var(--line-strong); border-radius:4px; font:650 .82rem var(--font-sans); }
+.record-table input[data-role="record-score"] { width:56px; padding:.3rem .4rem; text-align:center; border:1px solid var(--line-strong); border-radius:4px; font:700 .88rem ui-monospace,monospace; }
+.record-table select:disabled, .record-table input:disabled { opacity:.7; }
+.record-confirm-button { min-height:36px; padding:.4rem .8rem; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:4px; font-size:.78rem; font-weight:700; }
+.record-confirm-button:hover:not(:disabled) { background:var(--accent-dark); }
+.record-confirm-button:disabled { opacity:.5; }
+.record-table tbody tr.is-correct { background:#f3faf7; }
+.record-table tbody tr.is-incorrect { background:#fff6f7; }
+.record-table .worksheet-score-note { margin:.35rem 0 0; font-size:.72rem; }
+
 .depth-box { max-width:760px; margin:1.4rem auto 0; padding:.9rem 1.1rem; text-align:left; background:#f7f8fb; border:1px solid var(--line); border-radius:4px; }
 .depth-box summary { cursor:pointer; font-weight:700; }
 .depth-box p { margin:.8rem 0 0; color:var(--muted); font-size:.88rem; line-height:1.65; }

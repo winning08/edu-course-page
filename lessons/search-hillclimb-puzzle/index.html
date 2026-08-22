@@ -59,7 +59,7 @@
       <div id="trace-view">
         <div class="sample-head">
           <div><span class="sample-id" id="step-badge">단계 1</span><h2 id="experiment-title">다음 상태 후보의 평가 함수값을 계산하세요</h2></div>
-          <p>각 후보의 <strong>평가 함수값(목표와 같은 위치의 숫자 타일 개수)</strong>을 입력하고, 그중 다음 상태로 선택할 하나를 고르세요.</p>
+          <p>각 후보의 <strong>평가 함수값(목표와 같은 위치의 숫자 타일 개수)</strong>을 입력하고, 그중 다음 상태로 선택할 하나를 고르세요. 확인 후에는 아래 기록표에도 이동 방향과 평가 함수값을 직접 적어야 다음 단계로 넘어갈 수 있습니다.</p>
         </div>
         <form id="step-form">
           <div id="candidate-cards" class="candidate-cards" role="group" aria-label="다음 상태 후보"></div>
@@ -71,9 +71,9 @@
         </div>
         <div class="record-table-wrap">
           <table class="record-table">
-            <caption class="sr-only">언덕 오르기 기록표: 단계·선택한 상태·이동 방향·평가 함수값</caption>
-            <thead><tr><th scope="col">단계</th><th scope="col">선택한 상태</th><th scope="col">이동 방향</th><th scope="col">평가 함수값</th></tr></thead>
-            <tbody id="record-body"><tr class="empty-row"><td colspan="4">아직 확정된 상태가 없습니다.</td></tr></tbody>
+            <caption class="sr-only">언덕 오르기 기록표: 단계·선택한 상태·이동 방향·평가 함수값을 직접 입력하고 확인한다</caption>
+            <thead><tr><th scope="col">단계</th><th scope="col">선택한 상태</th><th scope="col">이동 방향</th><th scope="col">평가 함수값</th><th scope="col">확인</th></tr></thead>
+            <tbody id="record-body"><tr class="empty-row"><td colspan="5">아직 확정된 상태가 없습니다.</td></tr></tbody>
           </table>
         </div>
       </div>
