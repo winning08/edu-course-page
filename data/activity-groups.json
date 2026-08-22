@@ -128,7 +128,7 @@
       "description": "늑대·양·양배추 강 건너기와 8-퍼즐로 상태·간선 개념과 맹목적 탐색을 익히고, 학교 배달 로봇 지도에서 균일 비용 탐색·A* 탐색을 실행하며 완전성·최적성·효율로 알고리즘을 비교합니다.",
       "path": "units/ai-search/",
       "status": "published",
-      "active": false,
+      "active": true,
       "children": [
         {
           "id": "search-bfs-delivery",
