@@ -89,9 +89,14 @@ export function createPythonRunner(callbacks) {
   }
 
   function run(code) {
+    if (!supportsSyncInput()) {
+      callbacks.onInputUnavailable?.();
+      return false;
+    }
     ensureWorker();
     running = true;
     worker.postMessage({ type: "run", code });
+    return true;
   }
 
   // input() 대기 중인 워커에 사용자가 입력한 한 줄을 전달한다.

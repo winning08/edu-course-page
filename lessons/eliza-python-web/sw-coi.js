@@ -6,6 +6,8 @@
 // 대신 같은 오리진 응답에 COOP/COEP 헤더를 덧붙이는 이 서비스워커를 등록해
 // 우회한다. 이 활동 폴더 바깥의 리소스는 모두 같은 출처(same-origin)라 COEP
 // require-corp의 영향을 받지 않으므로 별도 처리가 필요 없다.
+const WORKER_VERSION = "v2";
+
 self.addEventListener("install", () => {
   self.skipWaiting();
 });
@@ -25,6 +27,7 @@ self.addEventListener("fetch", (event) => {
         const headers = new Headers(response.headers);
         headers.set("Cross-Origin-Embedder-Policy", "require-corp");
         headers.set("Cross-Origin-Opener-Policy", "same-origin");
+        headers.set("X-ELIZA-COI-Worker", WORKER_VERSION);
         return new Response(response.body, {
           status: response.status,
           statusText: response.statusText,

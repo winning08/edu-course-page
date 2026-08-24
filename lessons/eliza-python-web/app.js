@@ -1,5 +1,5 @@
 import { setupEditor } from "./editor.js";
-import { createPythonRunner } from "./python-runner.js";
+import { createPythonRunner } from "./python-runner.js?v=2026082401";
 import { GAS_ENDPOINT, ACTIVITY_VERSION } from "./config.js";
 
 const STORAGE_KEY = "eliza-python-web:v2";
@@ -42,6 +42,7 @@ function loadState() {
 
 function initApp() {
   const runtimeStatus = $("#runtime-status");
+  const runtimeRetryButton = $("#runtime-retry-button");
   const runButton = $("#run-button");
   const stopButton = $("#stop-button");
   const resetCodeButton = $("#reset-code-button");
@@ -180,20 +181,34 @@ function initApp() {
   }
 
   // --- 실행 상태 UI --------------------------------------------------------
+  let runtimeCanRun = false;
+
   function setRunningUI(isRunning) {
-    runButton.disabled = isRunning;
+    runButton.disabled = isRunning || !runtimeCanRun;
     stopButton.disabled = !isRunning;
     resetCodeButton.disabled = isRunning;
   }
 
   const runner = createPythonRunner({
     onReady(supportsInput) {
+      runtimeCanRun = supportsInput;
       runtimeStatus.textContent = supportsInput
         ? "파이썬 실행 환경 준비 완료. 실행 버튼을 눌러 시작하세요."
-        : "파이썬 실행 환경 준비 완료. 이 브라우저·네트워크 환경에서는 실시간 입력(input())이 제한될 수 있습니다.";
+        : (window.__ELIZA_COI_STATE__?.message || "대화 입력 기능을 준비하지 못했습니다. 입력 기능 다시 준비를 눌러주세요.");
+      runtimeRetryButton.hidden = supportsInput;
+      setRunningUI(false);
     },
     onLoadError(text) {
+      runtimeCanRun = false;
       runtimeStatus.textContent = `⚠️ 파이썬 실행 환경을 불러오지 못했습니다. 네트워크 상태를 확인한 뒤 실행 버튼을 다시 눌러보세요. (${text})`;
+      runtimeRetryButton.hidden = false;
+      setRunningUI(false);
+      disableInputRow();
+    },
+    onInputUnavailable() {
+      runtimeCanRun = false;
+      runtimeStatus.textContent = "대화 입력 기능이 준비되지 않아 실행하지 않았습니다. 입력 기능 다시 준비를 눌러주세요.";
+      runtimeRetryButton.hidden = false;
       setRunningUI(false);
       disableInputRow();
     },
@@ -218,7 +233,19 @@ function initApp() {
     },
   });
 
-  runner.preload();
+  // 첫 방문에서는 서비스워커가 제어권을 얻은 뒤 곧바로 새로고침하므로,
+  // 격리 준비 전 13MB 런타임을 중복 다운로드하지 않는다.
+  if (window.crossOriginIsolated) runner.preload();
+
+  runtimeRetryButton.addEventListener("click", () => {
+    runtimeRetryButton.disabled = true;
+    runtimeStatus.textContent = "입력 기능을 다시 준비하고 있습니다…";
+    if (typeof window.retryElizaInputSetup === "function") {
+      window.retryElizaInputSetup();
+    } else {
+      location.reload();
+    }
+  });
 
   runButton.addEventListener("click", () => {
     if (runner.isRunning()) return;

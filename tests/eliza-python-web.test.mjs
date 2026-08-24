@@ -61,7 +61,7 @@ test("Pyodide 런타임이 저장소 안에 로컬로 고정 버전 배치되어
   assert.ok(wasmStat.size > 1_000_000, "pyodide.asm.wasm 크기가 비정상적으로 작음");
 });
 
-test("worker.js는 Web Worker에서 Pyodide를 실행하고, Atomics.wait로 input()을 동기 대기하며, 공유 버퍼가 없으면 즉시 EOF로 대체한다", async () => {
+test("worker.js는 Web Worker에서 Pyodide를 실행하고 Atomics.wait로 input()을 동기 대기한다", async () => {
   const worker = await read("worker.js");
   assert.match(worker, /from "\.\/vendor\/pyodide\/pyodide\.mjs"/);
   assert.match(worker, /Atomics\.wait/);
@@ -71,12 +71,36 @@ test("worker.js는 Web Worker에서 Pyodide를 실행하고, Atomics.wait로 inp
   assert.match(worker, /runPythonAsync/);
 });
 
+test("교차 출처 격리는 실제 서비스워커 제어까지 기다리고 버전별 제한 횟수 안에서 복구한다", async () => {
+  const [bootstrap, serviceWorker] = await Promise.all([read("coi-bootstrap.js"), read("sw-coi.js")]);
+  assert.match(bootstrap, /navigator\.serviceWorker\.controller/);
+  assert.match(bootstrap, /controllerchange/);
+  assert.match(bootstrap, /updateViaCache:\s*"none"/);
+  assert.match(bootstrap, /MAX_RELOADS\s*=\s*2/);
+  assert.match(bootstrap, /retryElizaInputSetup/);
+  assert.match(serviceWorker, /Cross-Origin-Embedder-Policy/);
+  assert.match(serviceWorker, /Cross-Origin-Opener-Policy/);
+  assert.match(serviceWorker, /WORKER_VERSION\s*=\s*"v2"/);
+});
+
 test("python-runner.js는 Worker.terminate()로 무한 루프를 안전하게 중지하고, SharedArrayBuffer는 cross-origin isolated일 때만 사용한다", async () => {
   const runner = await read("python-runner.js");
   assert.match(runner, /new Worker\(new URL\("\.\/worker\.js".*\{ type: "module" \}\)/);
   assert.match(runner, /worker\.terminate\(\)/);
   assert.match(runner, /window\.crossOriginIsolated === true/);
   assert.match(runner, /typeof SharedArrayBuffer !== "undefined"/);
+  assert.match(runner, /if \(!supportsSyncInput\(\)\)/);
+  assert.match(runner, /onInputUnavailable/);
+});
+
+test("입력 기능 준비 전에는 실행을 막고 학생이 직접 다시 준비할 수 있다", async () => {
+  const [html, app] = await Promise.all([read("index.html"), read("app.js")]);
+  assert.match(html, /id="run-button"[^>]*disabled/);
+  assert.match(html, /id="runtime-retry-button"[^>]*hidden/);
+  assert.match(app, /runtimeCanRun/);
+  assert.match(app, /retryElizaInputSetup/);
+  assert.match(app, /onLoadError[\s\S]*runtimeRetryButton\.hidden = false/);
+  assert.match(app, /if \(window\.crossOriginIsolated\) runner\.preload\(\)/);
 });
 
 test("app.js는 코드·학번·이름을 탭 단위 sessionStorage에 저장하고, GAS_ENDPOINT가 비어 있으면 제출 버튼을 비활성화한다", async () => {
