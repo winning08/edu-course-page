@@ -111,7 +111,7 @@ test("app.js는 코드·학번·이름을 탭 단위 sessionStorage에 저장하
   assert.match(app, /studentName: studentNameInput\.value/);
   assert.match(app, /if \(!GAS_ENDPOINT\)/);
   assert.match(app, /openConfirmButton\.disabled = true/);
-  assert.match(app, /import \{ GAS_ENDPOINT, ACTIVITY_VERSION \} from "\.\/config\.js"/);
+  assert.match(app, /import \{ GAS_ENDPOINT, ACTIVITY_VERSION \} from "\.\/config\.js(\?v=[^"]*)?"/);
 });
 
 test("생기부 참고용으로 만든 동기와 활용 및 개선 방안을 최소한으로 받아 제출한다", async () => {

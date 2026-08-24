@@ -1,6 +1,6 @@
 import { setupEditor } from "./editor.js";
 import { createPythonRunner } from "./python-runner.js?v=2026082401";
-import { GAS_ENDPOINT, ACTIVITY_VERSION } from "./config.js";
+import { GAS_ENDPOINT, ACTIVITY_VERSION } from "./config.js?v=2026082402";
 
 const STORAGE_KEY = "eliza-python-web:v2";
 
