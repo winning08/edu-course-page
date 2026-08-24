@@ -12,7 +12,7 @@
 //   3) 배포 → 새 배포 → 유형: 웹 앱. 실행 계정 "나", 액세스 권한 "모든 사용자"로 배포합니다.
 //   4) 배포된 웹 앱 URL(.../exec 로 끝남)을 아래 GAS_ENDPOINT에 따옴표를 유지한 채 붙여넣습니다.
 //   5) 저장 후 페이지를 새로고침하면 "최종 제출" 버튼이 활성화됩니다.
-export const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwu-9vCfGE10L3EH-UQ2WyRJUs5mJvSJayLE89c_o_TE6M-6kzc9EmxI43hxJUVR101/exec";
+export const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxbGHwu-Z5OskC4pfKsG41L-cC2PreIGlT63SwqL93nGn17--fVPzuX-qun6TMIQNtk1g/exec";
 
 // 제출 데이터에 함께 실리는 활동 페이지 버전(선택 필드). 페이지 구조를 크게 바꿀 때만 올립니다.
 export const ACTIVITY_VERSION = "1.0.0";
