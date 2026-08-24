@@ -173,28 +173,6 @@
           "status": "published",
           "active": false,
           "objective": "목표까지 남은 거리를 어림짐작한 휴리스틱 h(n)을 더한 f(n)=g(n)+h(n) 기준으로 A*가 더 적은 칸을 열어보고도 최적 경로를 찾는 것을 확인하고, 세 알고리즘의 완전성·최적성·효율을 비교한다."
-        },
-        {
-          "id": "search-greedy-eight-puzzle",
-          "order": 5,
-          "title": "목표만 보고 판단하면? 최상 우선 탐색",
-          "path": "lessons/search-greedy-eight-puzzle/",
-          "duration": 20,
-          "difficulty": "보통",
-          "status": "published",
-          "active": true,
-          "objective": "목표까지 남은 거리를 어림짐작한 휴리스틱 h(n)만 보고 다음 상태를 고르는 최상 우선 탐색을 8-퍼즐로 체험하고, g(n)을 보지 않아 최적성을 보장하지 못한다는 한계를 이해한다."
-        },
-        {
-          "id": "search-hillclimb-puzzle",
-          "order": 6,
-          "title": "인공지능 탐색 문제 해결 연습",
-          "path": "lessons/search-hillclimb-puzzle/",
-          "duration": 20,
-          "difficulty": "보통",
-          "status": "published",
-          "active": true,
-          "objective": "수행평가 '인공지능 탐색 문제 해결'과 같은 규칙(일치 타일 개수 평가 함수, 직전 상태 제외, 방향 우선순위)으로 8-퍼즐 언덕 오르기를 단계별로 직접 계산해 본다."
         }
       ]
     }

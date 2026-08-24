@@ -131,28 +131,6 @@
       "duration": 22,
       "difficulty": "보통",
       "status": "published"
-    },
-    {
-      "id": "search-greedy-eight-puzzle",
-      "subject": "인공지능 기초",
-      "unit": "인공지능과 탐색",
-      "order": 5,
-      "title": "목표만 보고 판단하면? 최상 우선 탐색",
-      "path": "lessons/search-greedy-eight-puzzle/",
-      "duration": 20,
-      "difficulty": "보통",
-      "status": "published"
-    },
-    {
-      "id": "search-hillclimb-puzzle",
-      "subject": "인공지능 기초",
-      "unit": "인공지능과 탐색",
-      "order": 6,
-      "title": "인공지능 탐색 문제 해결 연습",
-      "path": "lessons/search-hillclimb-puzzle/",
-      "duration": 20,
-      "difficulty": "보통",
-      "status": "published"
     }
   ]
 }
