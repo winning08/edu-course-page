@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="../shared/lab-base.css">
   <link rel="stylesheet" href="styles.css?v=2026082004">
   <link rel="stylesheet" href="../../assets/guard.css">
-  <script src="coi-bootstrap.js"></script>
+  <script src="coi-bootstrap.js?v=2026082401"></script>
   <script type="module" src="../../assets/group-guard.js"></script>
-  <script type="module" src="app.js?v=2026082005"></script>
+  <script type="module" src="app.js?v=2026082401"></script>
 </head>
 <body data-guard-scope="page" data-guard-group="ai-history" data-guard-lesson="eliza-python-web">
   <a class="skip-link" href="#editor-heading">코드 편집기로 바로가기</a>
@@ -59,7 +59,7 @@
             <span class="workspace-step">1</span>
             <div class="workspace-title"><p>작성</p><h3>내 파이썬 코드</h3></div>
             <div class="editor-toolbar" aria-label="코드 실행 도구">
-              <button id="run-button" type="button" class="run-btn">▶ 실행</button>
+              <button id="run-button" type="button" class="run-btn" disabled>▶ 실행</button>
               <button id="stop-button" type="button" class="stop-btn" disabled>⏹ 중지</button>
               <button id="reset-code-button" type="button" class="ghost-btn">↺ 초기화</button>
             </div>
@@ -82,6 +82,7 @@
             <button id="terminal-send" type="submit" disabled>보내기</button>
           </form>
           <p id="input-wait-status" class="terminal-input-status" aria-live="polite">코드를 실행하면 대화 입력이 활성화됩니다.</p>
+          <button id="runtime-retry-button" type="button" class="ghost-btn runtime-retry" hidden>입력 기능 다시 준비</button>
         </div>
       </div>
     </section>

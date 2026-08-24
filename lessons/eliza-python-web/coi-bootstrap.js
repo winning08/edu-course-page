@@ -1,35 +1,69 @@
-// Cross-Origin Isolation 부트스트랩. 반드시 module 스크립트보다 먼저,
-// 일반 <script>(classic script)로 로드해 최대한 빨리 실행되게 한다.
-//
-// SharedArrayBuffer + Atomics.wait(python-runner.js/worker.js가 input()을
-// 동기적으로 기다리는 데 사용)를 쓰려면 브라우저가 "cross-origin isolated"
-// 상태여야 한다. 이 상태는 문서 응답에 Cross-Origin-Opener-Policy: same-origin,
-// Cross-Origin-Embedder-Policy: require-corp 헤더가 있어야 켜지는데, 정적 파일만
-// 서빙하는 이 사이트는 서버 응답 헤더를 직접 설정할 수 없다. 그래서 같은 출처
-// 응답에 그 두 헤더를 덧붙이는 서비스워커(sw-coi.js)를 등록하고, 서비스워커가
-// 활성화된 뒤 이 세션에서 딱 한 번만 새로고침해 격리 상태로 만든다.
-//
-// 여기서 실패하거나(구형 브라우저, 서비스워커 비활성 등) 격리에 끝내
-// 도달하지 못해도 활동 자체는 막히지 않는다 — python-runner.js가
-// window.crossOriginIsolated를 확인해 SharedArrayBuffer를 못 쓰는 경우
-// input()을 즉시 EOF로 처리하는 대체 경로로 넘어간다.
+// GitHub Pages처럼 응답 헤더를 직접 설정할 수 없는 정적 호스팅에서
+// SharedArrayBuffer를 사용할 수 있도록 서비스워커를 준비한다.
+// 등록 완료가 아니라 실제 controller 확보까지 기다린 후 새로고침하며,
+// 실패해도 무한 새로고침하지 않도록 버전별로 횟수를 제한한다.
 (function () {
-  const RELOAD_FLAG = "eliza-python-web:coi-reloaded:v1";
+  const BOOT_VERSION = "v2";
+  const ATTEMPT_KEY = `eliza-python-web:coi-attempts:${BOOT_VERSION}`;
+  const MAX_RELOADS = 2;
+  const state = { status: "checking", message: "입력 기능을 준비하고 있습니다." };
+  window.__ELIZA_COI_STATE__ = state;
 
-  if (window.crossOriginIsolated) return;
-  if (!("serviceWorker" in navigator)) return;
-  if (!window.isSecureContext) return;
-  // 이미 한 번 새로고침을 시도했는데도 격리되지 않았다면 더 재시도하지 않는다(무한 루프 방지).
-  if (sessionStorage.getItem(RELOAD_FLAG) === "1") return;
+  function publish(status, message) {
+    state.status = status;
+    state.message = message;
+    window.dispatchEvent(new CustomEvent("eliza-coi-state", { detail: { status, message } }));
+  }
 
-  navigator.serviceWorker
-    .register("./sw-coi.js")
-    .then(() => navigator.serviceWorker.ready)
-    .then(() => {
-      sessionStorage.setItem(RELOAD_FLAG, "1");
-      location.reload();
-    })
-    .catch((error) => {
-      console.warn("[eliza-python-web] cross-origin isolation 서비스워커 등록 실패:", error);
+  window.retryElizaInputSetup = function () {
+    sessionStorage.removeItem(ATTEMPT_KEY);
+    location.reload();
+  };
+
+  if (window.crossOriginIsolated) {
+    sessionStorage.removeItem(ATTEMPT_KEY);
+    publish("ready", "입력 기능 준비 완료");
+    return;
+  }
+
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) {
+    publish("unavailable", "이 브라우저에서는 대화 입력 기능을 준비할 수 없습니다.");
+    return;
+  }
+
+  function waitForController(timeoutMs) {
+    if (navigator.serviceWorker.controller) return Promise.resolve(true);
+    return new Promise((resolve) => {
+      const timer = setTimeout(() => resolve(false), timeoutMs);
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        clearTimeout(timer);
+        resolve(true);
+      }, { once: true });
     });
+  }
+
+  async function prepare() {
+    try {
+      const registration = await navigator.serviceWorker.register("./sw-coi.js?v=2", {
+        scope: "./",
+        updateViaCache: "none",
+      });
+      await registration.update();
+      await navigator.serviceWorker.ready;
+      await waitForController(8000);
+
+      const attempts = Number(sessionStorage.getItem(ATTEMPT_KEY) || "0");
+      if (attempts < MAX_RELOADS) {
+        sessionStorage.setItem(ATTEMPT_KEY, String(attempts + 1));
+        location.reload();
+        return;
+      }
+      publish("unavailable", "입력 기능 준비가 완료되지 않았습니다. 다시 준비 버튼을 눌러주세요.");
+    } catch (error) {
+      console.warn("[eliza-python-web] 입력 기능 준비 실패:", error);
+      publish("unavailable", "입력 기능을 준비하지 못했습니다. 다시 준비 버튼을 눌러주세요.");
+    }
+  }
+
+  prepare();
 })();
