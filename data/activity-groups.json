@@ -95,7 +95,7 @@
       "description": "직선 하나로 문제를 푸는 퍼셉트론부터 시작해, 선형 분리와 규칙 기반 시스템의 한계를 만나고, 여러 경계와 오차 기반 학습으로 다시 도약하는 인공지능의 첫 번째 겨울과 발전 흐름을 직접 체험합니다.",
       "path": "units/ai-history/",
       "status": "published",
-      "active": false,
+      "active": true,
       "children": [
         {
           "id": "ai-perceptron-wall",

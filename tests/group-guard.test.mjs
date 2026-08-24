@@ -22,9 +22,9 @@ test("모든 group은 명시적인 active boolean 필드를 갖는다", async ()
   }
 });
 
-test("ai-learning과 ai-history, ai-search 그룹은 일단 숨김 처리되어 active=false다(다른 그룹은 영향받지 않음)", async () => {
+test("ai-learning과 ai-search 그룹은 일단 숨김 처리되어 active=false다(다른 그룹은 영향받지 않음)", async () => {
   const data = await loadGroups();
-  const hiddenIds = ["ai-learning", "ai-history", "ai-search"];
+  const hiddenIds = ["ai-learning", "ai-search"];
   for (const id of hiddenIds) {
     const group = data.groups.find((candidate) => candidate.id === id);
     assert.ok(group, `${id} group을 찾을 수 없음`);
