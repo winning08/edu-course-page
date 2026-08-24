@@ -20,8 +20,8 @@ while True:
     message = input("나: ")
 
     # ELIZA의 대화 규칙 만들기
-\t
-\t
+
+
     print("ELIZA:", response)
 `;
 
