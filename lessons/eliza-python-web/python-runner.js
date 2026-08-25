@@ -51,7 +51,7 @@ export function createPythonRunner(callbacks) {
   }
 
   function spawnWorker() {
-    worker = new Worker(new URL("./worker.js", import.meta.url), { type: "module" });
+    worker = new Worker(new URL("./worker.js?v=2026082501", import.meta.url), { type: "module" });
     worker.onmessage = (event) => handleMessage(event.data);
     worker.onerror = (event) => {
       teardownWorker();

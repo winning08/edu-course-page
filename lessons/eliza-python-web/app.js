@@ -1,5 +1,5 @@
 import { setupEditor } from "./editor.js";
-import { createPythonRunner } from "./python-runner.js?v=2026082401";
+import { createPythonRunner } from "./python-runner.js?v=2026082501";
 import { GAS_ENDPOINT, ACTIVITY_VERSION } from "./config.js";
 
 const STORAGE_KEY = "eliza-python-web:v2";
@@ -11,18 +11,19 @@ const STARTER_CODE = `print("ELIZA와 대화를 시작합니다.")
 
 # 키워드: 응답 형태로 대화 규칙을 채워 넣으세요.
 # (예시처럼 계속 추가해 보세요)
-ans = {
-    "안녕": "안녕하세요! 오늘 기분이 어떠세요?",
+data = {
+    "안녕": "안녕하세요",
+    "이름이 뭐야?": "제 이름은 ELIZA에요.",
 }
 
 while True:
-    # message : 사용자의 입력
-    message = input("나: ")
+    # msg : 사용자의 입력
+    msg = input("나: ")
 
     # ELIZA의 대화 규칙 만들기
-\t
-\t
-    print("ELIZA:", response)
+
+
+    print("ELIZA:", reply)
 `;
 
 const $ = (selector) => document.querySelector(selector);
