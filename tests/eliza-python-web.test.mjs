@@ -247,6 +247,14 @@ test("editor.js는 Tab/Shift+Tab 들여쓰기, Enter 자동 들여쓰기, Esc �
   assert.match(editor, /textarea\.blur\(\)/);
 });
 
+test("문법 강조층과 입력층은 같은 글자 폭을 사용해 커서가 어긋나지 않는다", async () => {
+  const css = await read("styles.css");
+  assert.match(css, /\.code-editor[^}]*font-variant-ligatures:\s*none/);
+  assert.match(css, /\.code-highlight code[^}]*font:\s*inherit/);
+  assert.doesNotMatch(css, /\.tok-keyword[^}]*font-weight/);
+  assert.doesNotMatch(css, /\.tok-comment[^}]*font-style/);
+});
+
 test("data/activity-groups.json과 data/lessons.json에 eliza-python-web이 ai-history 두 번째 활동으로 등록되어 있다", async () => {
   const [groupsRaw, lessonsRaw] = await Promise.all([
     readFile(new URL("data/activity-groups.json", repoRoot), "utf8"),

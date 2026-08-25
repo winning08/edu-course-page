@@ -39,15 +39,15 @@
 .ghost-btn:hover:not(:disabled) { border-color: var(--accent); background: #f4f6ff; }
 .ghost-btn:disabled { opacity: .45; cursor: not-allowed; }
 
-.code-editor { position: relative; display: flex; flex: 1; height: min(460px, 60vh); background: #1e1e2e; overflow: hidden; font: 14px/1.65 var(--font-mono); tab-size: 4; }
+.code-editor { position: relative; display: flex; flex: 1; height: min(460px, 60vh); background: #1e1e2e; overflow: hidden; font: 14px/1.65 var(--font-mono); font-variant-ligatures: none; letter-spacing: 0; tab-size: 4; }
 .code-gutter { flex: none; width: 2.8rem; padding: .75rem .5rem; overflow: hidden; color: #6c7086; background: #181825; text-align: right; white-space: pre; user-select: none; }
 .code-highlight, .code-textarea { position: absolute; inset: 0; left: 2.8rem; margin: 0; padding: .75rem .9rem; overflow: auto; white-space: pre; font: inherit; tab-size: inherit; }
 .code-highlight { color: #cdd6f4; pointer-events: none; }
-.code-highlight code { white-space: pre; }
-.tok-keyword { color: #cba6f7; font-weight: 700; }
+.code-highlight code { white-space: pre; font: inherit; letter-spacing: inherit; }
+.tok-keyword { color: #cba6f7; }
 .tok-builtin { color: #89b4fa; }
 .tok-string { color: #a6e3a1; }
-.tok-comment { color: #6c7086; font-style: italic; }
+.tok-comment { color: #6c7086; }
 .tok-number { color: #fab387; }
 .code-textarea { color: transparent; background: transparent; caret-color: #f5e0dc; border: 0; resize: none; z-index: 1; }
 .code-textarea::selection { background: rgba(137, 180, 250, .35); }
