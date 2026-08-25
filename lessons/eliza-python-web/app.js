@@ -182,7 +182,9 @@ function initApp() {
   }
 
   // --- 실행 상태 UI --------------------------------------------------------
-  let runtimeCanRun = false;
+  // 교차 출처 격리가 준비됐다면 Pyodide 다운로드가 끝나기 전에도 실행을
+  // 누를 수 있다. Worker는 init과 run을 순서대로 받아 준비가 끝난 뒤 실행한다.
+  let runtimeCanRun = window.crossOriginIsolated === true;
 
   function setRunningUI(isRunning) {
     runButton.disabled = isRunning || !runtimeCanRun;
@@ -236,7 +238,11 @@ function initApp() {
 
   // 첫 방문에서는 서비스워커가 제어권을 얻은 뒤 곧바로 새로고침하므로,
   // 격리 준비 전 13MB 런타임을 중복 다운로드하지 않는다.
-  if (window.crossOriginIsolated) runner.preload();
+  if (window.crossOriginIsolated) {
+    setRunningUI(false);
+    runtimeStatus.textContent = "입력 기능 준비 완료. 실행하면 파이썬 환경을 불러옵니다.";
+    runner.preload();
+  }
 
   runtimeRetryButton.addEventListener("click", () => {
     runtimeRetryButton.disabled = true;

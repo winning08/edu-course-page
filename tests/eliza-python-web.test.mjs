@@ -100,7 +100,13 @@ test("입력 기능 준비 전에는 실행을 막고 학생이 직접 다시 �
   assert.match(app, /runtimeCanRun/);
   assert.match(app, /retryElizaInputSetup/);
   assert.match(app, /onLoadError[\s\S]*runtimeRetryButton\.hidden = false/);
-  assert.match(app, /if \(window\.crossOriginIsolated\) runner\.preload\(\)/);
+  assert.match(app, /if \(window\.crossOriginIsolated\) \{[\s\S]*runner\.preload\(\)/);
+});
+
+test("입력 기능이 준비된 브라우저에서는 Pyodide 다운로드 중에도 실행 버튼을 활성화한다", async () => {
+  const app = await read("app.js");
+  assert.match(app, /let runtimeCanRun = window\.crossOriginIsolated === true/);
+  assert.match(app, /if \(window\.crossOriginIsolated\) \{\s*setRunningUI\(false\);/);
 });
 
 test("app.js는 코드·학번·이름을 탭 단위 sessionStorage에 저장하고, GAS_ENDPOINT가 비어 있으면 제출 버튼을 비활성화한다", async () => {
