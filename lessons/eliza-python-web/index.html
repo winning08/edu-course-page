@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../../assets/guard.css">
   <script src="coi-bootstrap.js?v=2026082401"></script>
   <script type="module" src="../../assets/group-guard.js"></script>
-  <script type="module" src="app.js?v=2026082403"></script>
+  <script type="module" src="app.js?v=2026082501"></script>
 </head>
 <body data-guard-scope="page" data-guard-group="ai-history" data-guard-lesson="eliza-python-web">
   <a class="skip-link" href="#editor-heading">코드 편집기로 바로가기</a>
@@ -61,6 +61,7 @@
             <div class="editor-toolbar" aria-label="코드 실행 도구">
               <button id="run-button" type="button" class="run-btn" disabled>▶ 실행</button>
               <button id="stop-button" type="button" class="stop-btn" disabled>⏹ 중지</button>
+              <button id="copy-code-button" type="button" class="ghost-btn">📋 전체 복사</button>
               <button id="reset-code-button" type="button" class="ghost-btn">↺ 초기화</button>
             </div>
           </div>
@@ -69,6 +70,7 @@
             <pre class="code-highlight" id="code-highlight" aria-hidden="true"><code id="code-highlight-code"></code></pre>
             <textarea id="code-textarea" class="code-textarea" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="파이썬 코드 편집기"></textarea>
           </div>
+          <p id="copy-code-status" class="sr-only" role="status" aria-live="polite"></p>
           <p class="editor-hint">Tab: 들여쓰기 · Shift+Tab: 내어쓰기 · Enter: 들여쓰기 유지 · Esc→Tab: 편집기 나가기 · 코드는 현재 탭에 임시 저장</p>
         </div>
 

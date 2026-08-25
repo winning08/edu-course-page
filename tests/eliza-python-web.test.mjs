@@ -184,11 +184,29 @@ test("index.html은 활성화 가드·터미널·편집기·제출 영역과 접
   assert.match(html, /aria-live="polite"/);
   assert.match(html, /id="run-button"/);
   assert.match(html, /id="stop-button"[^>]*disabled/);
+  assert.match(html, /id="copy-code-button"/);
   assert.match(html, /id="reset-code-button"/);
   assert.match(html, /id="terminal-input"[^>]*disabled/);
   assert.match(html, /id="open-confirm-button"[^>]*disabled/);
   assert.match(html, /apps-script-example\.gs\.txt/);
   assert.doesNotMatch(html, /https?:\/\//, "외부 CDN/네트워크 URL을 참조하면 안 됨(Pyodide는 로컬 vendor만 사용)");
+});
+
+test("내 코드 전체 복사 버튼은 편집기 값을 클립보드에 복사하고 결과를 안내한다", async () => {
+  const html = await read("index.html");
+  const app = await read("app.js");
+  assert.match(html, /id="copy-code-button"[^>]*>[^<]*전체 복사<\/button>/);
+  assert.match(html, /id="copy-code-status"[^>]*role="status"[^>]*aria-live="polite"/);
+  assert.match(app, /navigator\.clipboard\?\.writeText/);
+  assert.match(app, /editor\.getValue\(\)/);
+  assert.match(app, /document\.execCommand\("copy"\)/);
+  assert.match(app, /클립보드에 복사했습니다/);
+});
+
+test("새로 실행할 때 이전 터미널 결과와 입력값을 모두 초기화한다", async () => {
+  const app = await read("app.js");
+  assert.match(app, /function clearTerminal\(\)[\s\S]*terminalLog\.innerHTML = "";[\s\S]*terminalInput\.value = "";/);
+  assert.match(app, /runButton\.addEventListener\("click",[\s\S]*clearTerminal\(\);[\s\S]*runner\.run\(editor\.getValue\(\)\)/);
 });
 
 test("실행 전/후 점검 체크리스트는 제거되어 있다", async () => {

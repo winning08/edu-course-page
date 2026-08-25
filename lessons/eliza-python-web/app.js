@@ -45,6 +45,8 @@ function initApp() {
   const runtimeRetryButton = $("#runtime-retry-button");
   const runButton = $("#run-button");
   const stopButton = $("#stop-button");
+  const copyCodeButton = $("#copy-code-button");
+  const copyCodeStatus = $("#copy-code-status");
   const resetCodeButton = $("#reset-code-button");
   const terminalLog = $("#terminal-log");
   const terminalForm = $("#terminal-input-form");
@@ -162,6 +164,7 @@ function initApp() {
 
   function clearTerminal() {
     terminalLog.innerHTML = "";
+    terminalInput.value = "";
     openLine = null;
   }
 
@@ -263,6 +266,36 @@ function initApp() {
     setRunningUI(false);
     disableInputRow();
   });
+
+  async function copyCodeToClipboard() {
+    const code = editor.getValue();
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        const copyBuffer = document.createElement("textarea");
+        copyBuffer.value = code;
+        copyBuffer.setAttribute("readonly", "");
+        copyBuffer.style.position = "fixed";
+        copyBuffer.style.opacity = "0";
+        document.body.appendChild(copyBuffer);
+        copyBuffer.select();
+        const copied = document.execCommand("copy");
+        copyBuffer.remove();
+        if (!copied) throw new Error("copy command failed");
+      }
+      copyCodeButton.textContent = "✓ 복사됨";
+      copyCodeStatus.textContent = "내 파이썬 코드 전체를 클립보드에 복사했습니다.";
+    } catch {
+      copyCodeButton.textContent = "복사 실패";
+      copyCodeStatus.textContent = "코드를 복사하지 못했습니다. 코드 편집기에서 직접 전체 선택해 복사해 주세요.";
+    }
+    window.setTimeout(() => {
+      copyCodeButton.textContent = "📋 전체 복사";
+    }, 1800);
+  }
+
+  copyCodeButton.addEventListener("click", copyCodeToClipboard);
 
   resetCodeButton.addEventListener("click", () => {
     if (runner.isRunning()) return;
