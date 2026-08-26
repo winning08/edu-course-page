@@ -32,17 +32,16 @@ test("새 그룹 ai-vocabulary는 초기 active=true다", async () => {
   assert.equal(group.children[0].id, "ai-keyword-bingo");
 });
 
-test("ai-learning과 ai-search 그룹은 일단 숨김 처리되어 active=false다(다른 그룹은 영향받지 않음)", async () => {
+test("활동지 03(ai-search)까지 공개하고 활동지 04(ai-learning)는 숨긴다", async () => {
   const data = await loadGroups();
-  const inactiveIds = new Set(["ai-learning", "ai-search"]);
-  for (const id of inactiveIds) {
-    const group = data.groups.find((candidate) => candidate.id === id);
-    assert.ok(group, `${id} 그룹을 찾을 수 없음`);
-    assert.equal(group.active, false);
-  }
-  const others = data.groups.filter((candidate) => !inactiveIds.has(candidate.id));
+  const learning = data.groups.find((candidate) => candidate.id === "ai-learning");
+  const search = data.groups.find((candidate) => candidate.id === "ai-search");
+  assert.equal(learning.active, false);
+  assert.equal(search.active, true);
+  assert.deepEqual(search.children.map(({ active }) => active), [true, true, false, false]);
+  const others = data.groups.filter((candidate) => candidate.id !== "ai-learning");
   for (const other of others) {
-    assert.equal(other.active, true, `${other.id}는 영향받지 않고 active=true를 유지해야 함`);
+    assert.equal(other.active, true, `${other.id}는 활동지 03 이하이므로 active=true여야 함`);
   }
 });
 

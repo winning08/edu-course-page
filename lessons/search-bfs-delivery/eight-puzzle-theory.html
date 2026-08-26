@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="강 건너기에서 배운 상태와 행동을 8-퍼즐에 적용하고 탐색 트리의 깊이 1을 만드는 이론 실습">
+  <title>8-퍼즐로 탐색 문제 표현하기 | 문제 해결과 탐색</title>
+  <link rel="stylesheet" href="../../assets/fonts.css">
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="eight-puzzle-theory.css?v=2026082603">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="eight-puzzle-theory.js?v=2026082602"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-bfs-delivery">
+  <a class="skip-link" href="#theory-title">이론 실습으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel"><h1>아직 준비 중인 활동입니다</h1><a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a></div>
+  <div id="guard-content">
+    <header class="topbar"><a class="back-link" href="index.html">← 강 건너기</a><div class="module-title"><span>수업 04</span><strong>인공지능과 탐색</strong></div></header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">문제 해결과 탐색 · 이론</p><h1 id="page-title">문제 해결과 탐색</h1></div>
+        <div class="intro-copy"><p>강 건너기와 8-퍼즐은 모양은 다르지만, <strong>현재 모습에서 가능한 행동을 하며 목표를 찾는 문제</strong>라는 같은 구조를 갖습니다.</p><dl><div><dt>방법</dt><dd>이론 실습</dd></div><div><dt>시간</dt><dd>8분</dd></div><div><dt>핵심</dt><dd>상태·행동</dd></div></dl></div>
+      </section>
+
+      <ol class="learning-flow" aria-label="학습 흐름"><li class="done"><span>1</span><strong>강 건너기 체험</strong></li><li class="current"><span>2</span><strong>8-퍼즐로 이론 정리</strong></li></ol>
+
+      <section class="theory-card" aria-labelledby="theory-title">
+        <div class="card-head"><span>이론 실습</span><strong>문제 해결과 탐색</strong></div>
+        <div class="theory-intro"><p class="section-label">교과서 8-퍼즐 예시</p><h2 id="theory-title">탐색할 수 있는 문제로 바꿔 보세요</h2><p>인공지능이 문제를 탐색하려면 먼저 <strong>상태</strong>, <strong>행동</strong>, <strong>초기 상태</strong>, <strong>목표 상태</strong>를 정해야 합니다.</p></div>
+
+        <div class="concept-compare">
+          <div><span>강 건너기</span><dl><div><dt>상태</dt><dd>두 둑에 있는 대상의 모습</dd></div><div><dt>행동</dt><dd>농부와 대상이 강을 건넘</dd></div></dl></div>
+          <span aria-hidden="true">→</span>
+          <div><span>8-퍼즐</span><dl><div><dt>상태</dt><dd>숫자판의 한 순간 모습</dd></div><div><dt>행동</dt><dd>빈칸을 한 칸 옮기기</dd></div></dl></div>
+        </div>
+
+        <section class="step-section" aria-labelledby="state-title"><span class="step-number">1</span><div><h3 id="state-title">초기 상태와 목표 상태를 확인하세요</h3><div class="endpoints"><div><strong>초기 상태</strong><div id="theory-start"></div></div><span aria-hidden="true">→ 탐색 →</span><div><strong>목표 상태</strong><div id="theory-goal"></div></div></div></div></section>
+
+        <section class="step-section" aria-labelledby="action-title"><span class="step-number">2</span><div><h3 id="action-title">가능한 다음 상태를 직접 만들어 보세요</h3><p>빈칸과 맞닿은 숫자를 누르면 숫자가 빈칸으로 이동합니다. 초기 상태에서 만들 수 있는 <strong>서로 다른 상태 4개</strong>를 모두 찾으세요.</p><div class="state-maker"><div><p class="maker-label">조작할 초기 상태</p><div id="maker-board" class="maker-board" role="group" aria-label="다음 상태를 만들 8-퍼즐"></div><button id="maker-reset" class="maker-reset" type="button">초기 상태로</button></div><div class="made-panel"><div class="made-heading"><strong>내가 만든 상태</strong><span id="made-count">0 / 4</span></div><div id="made-states" class="made-states"><p class="empty-message">숫자판을 움직이면 여기에 상태가 기록됩니다.</p></div></div></div><p id="maker-feedback" class="maker-feedback" aria-live="polite">빈칸 옆의 숫자를 누르세요.</p></div></section>
+
+        <section id="tree-section" class="step-section tree-section" aria-labelledby="tree-title" hidden><span class="step-number">3</span><div><h3 id="tree-title">만든 상태로 탐색 트리를 구성하세요</h3><p>아래의 상태 카드를 하나씩 눌러 초기 상태 아래에 연결하세요. 네 개를 모두 연결하면 탐색 트리의 깊이 1이 완성됩니다.</p><div id="tree-candidates" class="tree-candidates" aria-label="트리에 추가할 상태"></div>
+          <div class="tree-builder">
+            <div class="tree-depth-row">
+              <div class="tree-parent"><strong>초기 상태</strong><div id="tree-parent-board"></div></div>
+              <p class="tree-depth-tag"><span class="depth-dots" aria-hidden="true">••••••▶</span>트리의 깊이 0</p>
+            </div>
+            <div class="tree-depth-row">
+              <div id="tree-children" class="child-states" aria-live="polite"></div>
+              <p class="tree-depth-tag"><span class="depth-dots" aria-hidden="true">••••••▶</span>트리의 깊이 1</p>
+            </div>
+            <div id="tree-depth-preview" class="tree-depth-row is-preview" hidden>
+              <div class="child-states is-ghost" aria-hidden="true"><span class="ghost-state">⋯</span><span class="ghost-state">⋯</span><span class="ghost-state">⋯</span><span class="ghost-state">⋯</span></div>
+              <p class="tree-depth-tag"><span class="depth-dots" aria-hidden="true">••▶</span>트리의 깊이 2</p>
+            </div>
+          </div>
+          <p id="tree-progress" class="tree-progress">0 / 4개 연결</p>
+          <div id="tree-complete" class="key-point" hidden><strong>탐색 트리 깊이 1 완성</strong><p>한 상태에서 가능한 행동을 하면 여러 다음 상태가 만들어집니다. 이 관계를 트리로 넓혀 가며 목표를 찾는 과정이 <strong>탐색</strong>입니다. 방금 만든 상태에서 또 행동을 하면, 트리의 깊이는 2, 3으로 계속 늘어납니다.</p></div>
+        </div></section>
+      </section>
+
+      <nav class="lesson-pager" aria-label="활동 이동"><a href="index.html"><em>이전</em><strong>강 건너기 다시 보기</strong></a></nav>
+    </main>
+    <footer><span>정보 · 인공지능 기초</span><span>상태 · 행동 · 탐색 트리</span></footer>
+  </div>
+</body>
+</html>

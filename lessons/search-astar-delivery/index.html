@@ -4,18 +4,17 @@
   <meta charset="utf-8">
   <script>document.documentElement.setAttribute("data-guard", "pending");</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="목표까지 남은 거리를 어림짐작한 휴리스틱 h(n)을 더한 f(n)=g(n)+h(n)으로 A* 탐색을 예측하고, BFS·균일 비용 탐색·A*의 완전성·최적성·효율을 비교하는 마무리 활동">
-  <title>목표를 어림짐작하기: A* 탐색 | 인공지능과 탐색</title>
+  <meta name="description" content="교과서의 8-퍼즐 예시와 새로운 문제로 A* 탐색의 g(n), h(n), f(n) 값을 직접 비교하는 체험 활동">
+  <title>8-퍼즐로 익히는 A* 탐색 | 인공지능과 탐색</title>
   <link rel="stylesheet" href="../../assets/fonts.css">
   <link rel="stylesheet" href="../shared/lab-base.css">
-  <link rel="stylesheet" href="../shared/search-grid.css">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="../../assets/guard.css">
   <script type="module" src="../../assets/group-guard.js"></script>
   <script type="module" src="game.js"></script>
 </head>
 <body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-astar-delivery">
-  <a class="skip-link" href="#experiment">실험으로 바로가기</a>
+  <a class="skip-link" href="#activity">활동으로 바로가기</a>
   <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
   <div id="guard-blocked" class="guard-panel">
     <h1>아직 준비 중인 활동입니다</h1>
@@ -23,151 +22,119 @@
     <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
   </div>
   <div id="guard-content">
-  <header class="topbar">
-    <a class="back-link" href="../../units/ai-search/">← 활동 목록</a>
-    <div class="module-title"><span>수업 04</span><strong>인공지능과 탐색</strong></div>
-    <button id="projector-toggle" class="utility-button" type="button" aria-pressed="false">프로젝터 모드</button>
-  </header>
+    <header class="topbar">
+      <a class="back-link" href="../../units/ai-search/">← 활동 목록</a>
+      <div class="module-title"><span>활동지 03</span><strong>인공지능과 탐색</strong></div>
+      <span class="lesson-mark">A* 탐색</span>
+    </header>
 
-  <main>
-    <section class="intro" aria-labelledby="page-title">
-      <div>
-        <p class="eyebrow">지능적 탐색 · 활동 04</p>
-        <h1 id="page-title">목표를 어림짐작하기: A* 탐색</h1>
-      </div>
-      <div class="intro-copy">
-        <p>같은 눈 쌓인 지도, 같은 정문·매점입니다. 이번엔 로봇이 "매점이 대략 어느 방향인지" 어림짐작한 값을 함께 씁니다. <strong>탐색 시간을 줄이려고 비용 정보 외에 추정된 정보까지 쓰는 것</strong>을 지능적 탐색이라고 합니다.</p>
-        <dl><div><dt>단계</dt><dd>예측 → A* 예측 → 완전성·최적성·효율 비교</dd></div><div><dt>난이도</dt><dd>보통</dd></div></dl>
-      </div>
-    </section>
-
-    <div class="concept-bridge">
-      <p class="concept-bridge-label">휴리스틱값과 A* 탐색</p>
-      <p><strong>휴리스틱(heuristics)</strong>은 문제 해결을 위해 알고 있는 경험적 지식입니다. 다음 칸을 고를 때 목표까지 남은 비용을 추정한 값을 그 상태의 <b>휴리스틱값 h(n)</b>이라고 합니다. 이 지도는 대각선으로 움직일 수 없으니, 매점까지 <b>가로로 이동할 칸 수 + 세로로 이동할 칸 수</b>(맨해튼 거리)를 h(n)으로 씁니다 — 실제 눈길을 다 아는 게 아니라 어림짐작이라, 진짜 거리와 다를 수 있습니다.</p>
-      <p><b>A*</b>는 상태를 고를 때 "초기 상태에서 현재 상태까지의 비용 값(g)"과 "현재 상태에서 목표 상태까지의 비용 추정값(h)"을 더한 <b>f(n) = g(n) + h(n)</b>이 가장 작은 상태부터 확인하는 최상 우선 탐색입니다. 모든 상태를 다 검토하는 대신 휴리스틱값을 함께 써서 더 빠르고 효율적으로 탐색합니다.</p>
-    </div>
-
-    <section id="predict-view" class="transition" aria-labelledby="predict-title">
-      <p class="eyebrow">먼저 예측하기</p>
-      <h2 id="predict-title" tabindex="-1">활동02에서 UCS는 이 지도에서 25칸을 열어봤습니다. A*는 몇 칸 정도 열어볼까요?</h2>
-      <p>목표 방향을 어림짐작하는 힌트(h)가 추가되면 열어보는 칸 수가 어떻게 달라질지 예상해 보세요.</p>
-      <div class="predict-buttons" id="predict-buttons-1">
-        <button type="button" data-answer="similar">UCS와 비슷하게 많이 열어볼 것이다</button>
-        <button type="button" data-answer="fewer">UCS보다 훨씬 적게 열어볼 것이다</button>
-      </div>
-      <div id="predict-result" class="step-feedback" aria-live="polite" hidden></div>
-      <button id="start-astar-button" type="button" class="stage-next" hidden>A*로 직접 확인하기 <span aria-hidden="true">→</span></button>
-    </section>
-
-    <section id="experiment" class="experiment" aria-labelledby="experiment-title" hidden>
-      <div class="experiment-head" id="experiment-head">
-        <div><span id="stage-label">단계 1 / 11 · A* 탐색</span><div class="progress" aria-hidden="true"><i id="progress-bar"></i></div></div>
-      </div>
-
-      <div id="trace-view">
-        <div class="sample-head">
-          <div><span class="sample-id" id="step-badge">단계 1</span><h2 id="experiment-title">다음에 열릴 칸은 어디일까요?</h2></div>
-          <p>후보들 중 <strong>f(n) = g(n) + h(n)이 가장 작은 칸</strong>을 하나 고르세요.</p>
+    <main id="activity">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">지능적 탐색 · 활동 04</p>
+          <h1 id="page-title">8-퍼즐로 익히는 A* 탐색</h1>
+          <p class="hero-copy">지금까지 온 거리와 목표까지 남은 거리의 어림값을 함께 보면, 목표에 더 가까운 상태를 먼저 찾을 수 있습니다.</p>
         </div>
-        <p id="trap-warning" class="trap-warning" hidden>⚠️ 이번 단계는 특히 조심하세요 — 목표에 가까워 보이는 칸과, f 값이 실제로 더 작은 칸을 잘 비교해 보세요.</p>
-        <div class="map-shell">
-          <div class="map-side">
-            <p class="map-rule"><strong>동점 규칙</strong> f(n)이 같으면 h(n)이 더 작은 쪽, 그래도 같으면 위→아래→왼쪽→오른쪽 순서로 먼저 봅니다.</p>
-            <div id="map-grid" class="map-grid"></div>
-            <ul class="map-legend">
-              <li><span class="swatch" style="background:#eef1f6"></span>이미 확정된 칸</li>
-              <li><span class="swatch" style="background:#fff3cd;border-color:#b8811b"></span>오픈 리스트(후보)</li>
-              <li><span class="swatch" style="background:#dff3e8;border-color:#147a59"></span>최종 경로</li>
-            </ul>
-          </div>
-          <div class="trace-side">
-            <p class="candidate-prompt" id="candidate-prompt">f(n)이 가장 작은 후보를 하나 고르세요.</p>
-            <div id="candidate-cards" class="candidate-cards" role="group" aria-label="다음에 열릴 후보 칸"></div>
-            <div id="step-feedback" class="step-feedback" aria-live="polite" hidden></div>
-            <div class="candidate-actions">
-              <button id="next-step" type="button" hidden>다음 단계 <span aria-hidden="true">→</span></button>
+        <div class="formula-card" aria-label="A 스타 평가 함수">
+          <span>다음 상태를 고르는 기준</span>
+          <strong>f(n) = g(n) + h(n)</strong>
+          <dl>
+            <div><dt>g(n)</dt><dd>이 8-퍼즐에서 지금까지 빈칸을 움직인 횟수</dd></div>
+            <div><dt>h(n)</dt><dd>이 활동에서 정한 어림값: 목표 자리와 다른 숫자 타일 수</dd></div>
+          </dl>
+          <p>※ h의 계산 방법은 문제마다 다릅니다. 이 8-퍼즐에서는 빈칸을 제외한 ‘제자리가 아닌 숫자 타일 수’를 사용합니다.</p>
+        </div>
+      </section>
+
+      <nav class="stage-nav" aria-label="활동 진행 단계">
+        <button type="button" data-view="intro" aria-current="step"><b>1</b><span>방법 알아보기</span></button>
+        <button type="button" data-view="textbook" disabled><b>2</b><span>교과서 예시</span></button>
+        <button type="button" data-view="new" disabled><b>3</b><span>새 문제</span></button>
+        <button type="button" data-view="result" disabled><b>4</b><span>정리</span></button>
+      </nav>
+
+      <section id="intro-view" class="lesson-view" aria-labelledby="intro-title">
+        <div class="section-heading">
+          <p class="eyebrow">활동 전 준비</p>
+          <h2 id="intro-title" tabindex="-1">g(n), h(n), f(n)은 무엇을 뜻할까요?</h2>
+          <p>A* 탐색은 지금까지 사용한 비용과 앞으로 필요할 것 같은 비용의 어림값을 더해 다음 상태를 고릅니다. 아래 계산법은 <b>이번 8-퍼즐에 적용한 기준</b>입니다.</p>
+        </div>
+        <div class="value-grid">
+          <article class="value-card value-g"><span>이 8-퍼즐에서 이미 사용한 비용</span><strong>g(n)</strong><p><b>초기 상태부터 현재 상태까지</b> 빈칸을 움직인 횟수입니다.</p><em>빈칸을 2번 움직였다면 g(n)=2</em></article>
+          <article class="value-card value-h"><span>이 8-퍼즐에서 사용하는 어림값</span><strong>h(n)</strong><p>현재 퍼즐에서 <b>목표 자리와 다른 숫자 타일</b>의 개수입니다.</p><em>이번 활동에서는 빈칸을 세지 않습니다</em></article>
+          <article class="value-card value-f"><span>이 8-퍼즐의 다음 상태 선택 기준</span><strong>f(n)</strong><p><b>g(n)+h(n)</b>으로 계산하며, f(n)이 가장 작은 상태를 먼저 봅니다.</p><em>g(n)=2, h(n)=3이면 f(n)=5</em></article>
+        </div>
+        <div class="warmup" aria-labelledby="warmup-title">
+          <div class="warmup-copy">
+            <p class="eyebrow">계산 연습</p><h3 id="warmup-title">이 퍼즐판의 f를 계산해 봅시다</h3>
+            <p>아직 빈칸을 움직이지 않은 <b>초기 상태</b>이므로 <b>g(n)=0</b>입니다. 두 퍼즐판을 비교하여 h(n)과 f(n)을 계산하세요.</p>
+            <div class="warmup-equation" aria-label="g(n)은 0이고, h(n)과 f(n)을 계산하는 문제">
+              <span><small>주어진 값</small><b>g(n) = 0</b></span><i aria-hidden="true">+</i><span><small>다른 숫자 타일 수</small><b>h(n) = ?</b></span><i aria-hidden="true">=</i><span class="answer"><small>선택 기준</small><b>f(n) = ?</b></span>
             </div>
+            <form id="warmup-form" class="warmup-answer-form">
+              <fieldset>
+                <legend>8-퍼즐의 h와 f 값을 직접 입력하세요</legend>
+                <label><span>빈칸을 움직인 횟수</span><strong>g(n)</strong><input id="warmup-g" name="g" type="number" value="0" readonly aria-readonly="true"><small>주어진 값</small></label>
+                <i aria-hidden="true">+</i>
+                <label><span>목표 자리와 다른 숫자 타일 수</span><strong>h(n)</strong><input id="warmup-h" name="h" type="number" min="0" max="8" inputmode="numeric" required autocomplete="off"><small>0~8 사이의 수</small></label>
+                <i aria-hidden="true">=</i>
+                <label><span>g(n)+h(n)</span><strong>f(n)</strong><input id="warmup-f" name="f" type="number" min="0" max="20" inputmode="numeric" required autocomplete="off"><small>g(n)=0을 사용하세요</small></label>
+                <div class="warmup-submit"><span aria-hidden="true">계산 결과</span><button type="submit">계산 확인</button><small aria-hidden="true">&nbsp;</small></div>
+              </fieldset>
+            </form>
+            <div id="warmup-feedback" class="trace-feedback" aria-live="polite" hidden></div>
+          </div>
+          <div class="warmup-boards">
+            <div class="warmup-board"><span>현재 상태</span><div class="puzzle-board" role="img" aria-label="현재 상태: 2, 8, 3, 1, 6, 4, 7, 빈칸, 5"><span class="tile">2</span><span class="tile">8</span><span class="tile">3</span><span class="tile">1</span><span class="tile">6</span><span class="tile">4</span><span class="tile">7</span><span class="tile blank"><i aria-hidden="true">빈칸</i></span><span class="tile">5</span></div></div>
+            <div class="warmup-board goal"><span>목표 상태</span><div class="puzzle-board" role="img" aria-label="목표 상태: 1, 2, 3, 8, 빈칸, 4, 7, 6, 5"><span class="tile">1</span><span class="tile">2</span><span class="tile">3</span><span class="tile">8</span><span class="tile blank"><i aria-hidden="true">빈칸</i></span><span class="tile">4</span><span class="tile">7</span><span class="tile">6</span><span class="tile">5</span></div></div>
           </div>
         </div>
-        <div class="record-table-wrap">
-          <table class="record-table">
-            <caption class="sr-only">A* 탐색 기록표: 순서·칸 이름·이전 칸·g(n)·h(n)·f(n)</caption>
-            <thead><tr><th scope="col">순서</th><th scope="col">칸 이름</th><th scope="col">이전 칸</th><th scope="col">g(n)</th><th scope="col">h(n)</th><th scope="col">f(n)=g+h</th></tr></thead>
-            <tbody id="record-body"><tr class="empty-row"><td colspan="6">아직 확정된 칸이 없습니다.</td></tr></tbody>
-          </table>
+        <div class="rule-grid compact-rules">
+          <article><span>01</span><h3>후보 확인</h3><p>아직 살펴보지 않은 퍼즐판의 g(n)과 h(n)을 확인합니다.</p></article><article><span>02</span><h3>f(n) 계산</h3><p>각 후보의 g(n)+h(n)을 계산합니다.</p></article><article><span>03</span><h3>상태 선택</h3><p>f(n)이 가장 작은 상태부터 확인합니다.</p></article>
         </div>
-      </div>
+        <aside class="tie-note"><strong>f(n)이 같다면?</strong> 먼저 후보에 들어온 상태를 선택합니다. 이 활동에서는 빈칸을 <b>위 → 아래 → 왼쪽 → 오른쪽</b> 순서로 움직여 후보를 만듭니다.</aside>
+        <button id="start-textbook" class="primary-action" type="button" data-next="textbook" disabled>계산 연습 후 시작할 수 있습니다</button>
+      </section>
 
-      <div id="results-view" class="summary" hidden>
-        <p class="eyebrow">A* 탐색 완료</p>
-        <h2 tabindex="-1">세 알고리즘, 한눈에 비교하기</h2>
-        <p id="results-summary"></p>
-
-        <div class="table-wrap final-compare-wrap">
-          <table class="compare-table final-compare-table">
-            <thead>
-              <tr><th scope="col"></th><th scope="col">너비 우선 탐색(BFS)</th><th scope="col">균일 비용 탐색(UCS)</th><th scope="col">A* 탐색</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">무엇을 기준으로 다음 칸을 고르는가</th>
-                <td>먼저 발견된 순서(층)</td>
-                <td>지금까지 비용 g(n)이 최소</td>
-                <td>g(n)+h(n)=f(n)이 최소</td>
-              </tr>
-              <tr>
-                <th scope="row">목표 방향을 어림짐작하는가(h 사용)</th>
-                <td>아니오</td>
-                <td>아니오</td>
-                <td>예</td>
-              </tr>
-              <tr>
-                <th scope="row">완전성 — 목표가 있으면 언젠가는 찾는가</th>
-                <td>예</td>
-                <td>예</td>
-                <td>예(h가 실제 비용보다 크게 어림짐작하지만 않으면)</td>
-              </tr>
-              <tr>
-                <th scope="row">최적성 — 가장 좋은 경로를 보장하는가</th>
-                <td>조건부(비용이 모두 같을 때만)</td>
-                <td>항상 보장</td>
-                <td>항상 보장(위 조건을 만족하면)</td>
-              </tr>
-              <tr>
-                <th scope="row">효율 — 이 지도에서 열어본 칸 수</th>
-                <td id="bfs-opened-cell"></td>
-                <td id="ucs-opened-cell"></td>
-                <td id="astar-opened-cell"></td>
-              </tr>
-            </tbody>
-          </table>
+      <section id="textbook-view" class="lesson-view" aria-labelledby="textbook-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">활동 1 · 교과서 예시 따라가기</p>
+          <h2 id="textbook-title" tabindex="-1">g(n), h(n), f(n)을 계산한 뒤 상태를 선택하세요</h2>
+          <p>교과서와 같은 초기 상태와 목표 상태입니다. 모든 후보의 값을 정확히 입력하면 다음에 확인할 상태를 선택할 수 있습니다.</p>
         </div>
+        <div class="puzzle-reference" data-reference="textbook"></div>
+        <div class="trace-panel" data-activity="textbook"></div>
+      </section>
 
-        <details class="depth-box">
-          <summary>더 알아보기 — h(n)=0이면 어떻게 될까?</summary>
-          <p>만약 h(n)을 항상 0으로 두면 f(n)=g(n)이 되어, A*는 균일 비용 탐색과 완전히 똑같이 동작합니다. 즉 UCS는 A*의 특수한 경우(휴리스틱이 없는 경우)라고 볼 수 있습니다. 반대로 h(n)이 실제로 남은 비용보다 <strong>더 크게</strong> 어림짐작되면, A*가 최적 경로를 놓칠 수도 있습니다. 휴리스틱값은 경험적 지식이라 사람마다 다르게 정의할 수 있다는 점도 기억하세요.</p>
-        </details>
-
-        <aside class="reveal-box">
-          <span>이 지도에서 확인한 것</span>
-          <p>세 알고리즘 모두 이 지도에서 목표를 찾았지만(완전성), 비용이 다를 때 정말 가장 싼 길을 찾은 것은 UCS와 A*뿐이었습니다(최적성). 그중 A*는 목표 방향을 어림짐작한 덕분에 <strong>훨씬 적은 칸만 열어보고도</strong> 똑같이 최적의 경로를 찾았습니다(효율).</p>
-        </aside>
-
-        <div class="discussion">
-          <span>함께 생각해 보기</span>
-          <p>UCS와 A*가 결국 찾아낸 최종 경로는 똑같았는데, 왜 A*는 더 적은 칸을 열어봤을까요?</p>
-          <p>만약 로봇이 목표까지 남은 거리(h)만 보고 지금까지 든 비용(g)은 아예 무시한 채 이동한다면 어떤 문제가 생길까요? — 방금 함정 문항을 다시 떠올려 보세요.</p>
-          <p>지도 앱(내비게이션)이 "최단 거리" 경로와 "최소 시간" 경로를 다르게 추천하는 이유를, 오늘 배운 g(n) 개념으로 설명해 봅시다.</p>
+      <section id="new-view" class="lesson-view" aria-labelledby="new-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">활동 2 · 새로운 문제에 적용하기</p>
+          <h2 id="new-title" tabindex="-1">A* 탐색 수행하기: 연습</h2>
+          <p>새 후보마다 g(n)만 제공합니다. 목표 상태와 비교해 h(n)을 구하고 f(n)=g(n)+h(n)을 입력한 뒤, 전체 오픈 리스트에서 다음 상태를 선택하세요.</p>
         </div>
-        <div class="next-step">
-          <a class="next-step-link" href="../../units/ai-search/">활동 목록으로 돌아가기 <span aria-hidden="true">→</span></a>
-          <a class="next-step-link" href="../../">전체 활동지 홈으로 <span aria-hidden="true">→</span></a>
+        <div class="puzzle-reference" data-reference="new"></div>
+        <div class="trace-panel" data-activity="new"></div>
+      </section>
+
+      <section id="result-view" class="lesson-view result-view" aria-labelledby="result-title" hidden>
+        <p class="eyebrow">활동 정리</p>
+        <h2 id="result-title" tabindex="-1">A*는 두 가지 정보를 함께 사용했습니다</h2>
+        <div id="score-summary" class="score-summary" aria-live="polite"></div>
+        <div class="takeaway-grid">
+          <article><span>이 8-퍼즐에서 지금까지의 비용</span><strong>g(n)</strong><p>시작 상태에서 현재 상태까지 빈칸이 움직인 횟수</p></article>
+          <i aria-hidden="true">+</i>
+          <article><span>이 8-퍼즐에서 정한 어림값</span><strong>h(n)</strong><p>빈칸을 제외하고 목표 상태와 자리가 다른 숫자 타일의 수</p></article>
+          <i aria-hidden="true">=</i>
+          <article class="accent"><span>선택 기준</span><strong>f(n)</strong><p>값이 가장 작은 상태를 먼저 확인</p></article>
         </div>
-        <button id="restart-button" type="button">처음부터 다시 하기</button>
-      </div>
-    </section>
-  </main>
-  <footer><span>정보 · 인공지능 기초</span><span>예측하기 · 실행하기 · 관찰하기 · 비교하기</span></footer>
+        <aside class="discussion"><span>함께 생각해 보기</span><p>h(n)만 보고 다음 상태를 고르면 왜 항상 가장 짧은 길을 찾는다고 말할 수 없을까요?</p></aside>
+        <div class="result-actions">
+          <button id="restart-button" type="button">처음부터 다시 하기</button>
+          <a href="../../units/ai-search/">활동 목록으로 돌아가기 →</a>
+        </div>
+      </section>
+    </main>
+    <footer><span>정보 · 인공지능 기초</span><span>계산하기 · 선택하기 · 비교하기</span></footer>
   </div>
 </body>
 </html>

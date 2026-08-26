@@ -104,7 +104,7 @@
       "subject": "인공지능 기초",
       "unit": "인공지능과 탐색",
       "order": 1,
-      "title": "강 건너기로 만나는 탐색",
+      "title": "문제 해결과 탐색",
       "path": "lessons/search-bfs-delivery/",
       "duration": 12,
       "difficulty": "입문",
@@ -126,9 +126,9 @@
       "subject": "인공지능 기초",
       "unit": "인공지능과 탐색",
       "order": 3,
-      "title": "눈이 내리면? 가장 싼 길 찾기",
+      "title": "매점까지 가장 빠르게 가기",
       "path": "lessons/search-cost-delivery/",
-      "duration": 20,
+      "duration": 15,
       "difficulty": "보통",
       "status": "published"
     },
@@ -137,9 +137,9 @@
       "subject": "인공지능 기초",
       "unit": "인공지능과 탐색",
       "order": 4,
-      "title": "목표를 어림짐작하기: A* 탐색",
+      "title": "8-퍼즐로 익히는 A* 탐색",
       "path": "lessons/search-astar-delivery/",
-      "duration": 22,
+      "duration": 25,
       "difficulty": "보통",
       "status": "published"
     }

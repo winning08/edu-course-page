@@ -1,171 +1,268 @@
-import { runBfsLayers, runPriorityTrace } from "../shared/search-lab.js";
-import { renderMap, renderCandidateCards, markCandidateResult } from "../shared/search-ui.js";
-import { buildAstarSteps, checkStepAnswer, getTrapInfo, isTrapStep, buildFinalComparison } from "./game-core.js";
+import { GOAL_STATE, NEW_GOAL_STATE, TEXTBOOK_START, NEW_START, solveAstar, checkChoice } from "./game-core.js";
 
-const $ = (selector) => document.querySelector(selector);
-const el = {
-  predictButtons1: $("#predict-buttons-1"),
-  predictResult: $("#predict-result"),
-  startAstarButton: $("#start-astar-button"),
-  predictView: $("#predict-view"),
-  experiment: $("#experiment"),
-  stageLabel: $("#stage-label"),
-  progressBar: $("#progress-bar"),
-  stepBadge: $("#step-badge"),
-  trapWarning: $("#trap-warning"),
-  mapGrid: $("#map-grid"),
-  candidatePrompt: $("#candidate-prompt"),
-  candidateCards: $("#candidate-cards"),
-  nextStep: $("#next-step"),
-  stepFeedback: $("#step-feedback"),
-  recordBody: $("#record-body"),
-  traceView: $("#trace-view"),
-  resultsView: $("#results-view"),
-  resultsSummary: $("#results-summary"),
-  bfsOpenedCell: $("#bfs-opened-cell"),
-  ucsOpenedCell: $("#ucs-opened-cell"),
-  astarOpenedCell: $("#astar-opened-cell"),
-  restartButton: $("#restart-button"),
-  projectorToggle: $("#projector-toggle"),
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+const configs = {
+  textbook: { start: TEXTBOOK_START, goal: GOAL_STATE, label: "교과서 예시" },
+  new: { start: NEW_START, goal: NEW_GOAL_STATE, label: "새 문제" },
+};
+const state = {
+  textbook: { step: 0, correct: 0, answered: false, calcVerified: false, result: solveAstar(TEXTBOOK_START) },
+  new: { step: 0, correct: 0, answered: false, calcVerified: false, result: solveAstar(NEW_START, NEW_GOAL_STATE) },
 };
 
-const bfsResult = runBfsLayers();
-const ucsResult = runPriorityTrace({ useHeuristic: false });
-const astarResult = runPriorityTrace({ useHeuristic: true });
-const steps = buildAstarSteps(astarResult);
-const trapInfo = getTrapInfo(astarResult);
-const orderIndex = new Map(astarResult.order.map((id, index) => [id, index + 1]));
-
-let currentStepIndex = 0;
-let answered = false;
-let predictedFewer = null;
-
-function renderStepMap(step) {
-  const closedUpTo = astarResult.order.slice(0, step.index);
-  const statesById = {};
-  for (const id of closedUpTo) statesById[id] = "visited";
-  for (const candidate of step.candidates) {
-    if (!statesById[candidate.cellId]) statesById[candidate.cellId] = "frontier";
-  }
-  renderMap(el.mapGrid, { statesById, profile: "snow" });
+function boardMarkup(board, label = "퍼즐판") {
+  return `<div class="puzzle-board" role="img" aria-label="${label}: ${board.map((v) => v || "빈칸").join(", ")}">${board.map((tile) => `<span class="tile${tile === 0 ? " blank" : ""}">${tile || '<i aria-hidden="true">빈칸</i>'}</span>`).join("")}</div>`;
 }
 
-function appendRecordRow(step) {
-  if (el.recordBody.querySelector(".empty-row")) el.recordBody.innerHTML = "";
-  const row = document.createElement("tr");
-  const parentId = astarResult.parent.get(step.expanded) ?? "—(시작)";
-  row.innerHTML = `<th scope="row">${orderIndex.get(step.expanded)}</th><td>${step.expanded}</td><td>${parentId}</td><td>${step.g}</td><td>${step.h}</td><td>${step.f}</td>`;
-  el.recordBody.appendChild(row);
+function renderReference(kind) {
+  const root = $(`[data-reference="${kind}"]`);
+  root.innerHTML = `
+    <article><span>초기 상태</span>${boardMarkup(configs[kind].start, "초기 상태")}</article>
+    <div class="reference-arrow" aria-hidden="true">→</div>
+    <article><span>목표 상태</span>${boardMarkup(configs[kind].goal, "목표 상태")}</article>`;
 }
 
-function updateStageLabel(step) {
-  el.stageLabel.textContent = `단계 ${step.displayIndex} / ${steps.length} · A* 탐색`;
-  el.progressBar.style.width = `${Math.round((step.displayIndex / steps.length) * 100)}%`;
-  el.stepBadge.textContent = `단계 ${step.displayIndex}`;
+function usableSteps(kind) {
+  return state[kind].result.steps.slice(1);
 }
 
-function showStep(index) {
-  currentStepIndex = index;
-  answered = false;
-  const step = steps[index];
-  updateStageLabel(step);
-  renderStepMap(step);
-  el.stepFeedback.hidden = true;
-  el.stepFeedback.className = "step-feedback";
-  el.nextStep.hidden = true;
-  el.trapWarning.hidden = !isTrapStep(step, trapInfo);
-  el.candidatePrompt.textContent = "f(n)이 가장 작은 후보를 하나 고르세요.";
-  renderCandidateCards(el.candidateCards, step.candidates, {
-    mode: "single",
-    metrics: [{ key: "g", label: "g" }, { key: "h", label: "h" }, { key: "f", label: "f" }],
+function practiceCandidatesMarkup(step, activity, currentKey, { givenG = false } = {}) {
+  const indexed = step.candidates.map((candidate, index) => ({ candidate, index }));
+  const waiting = indexed.filter(({ candidate }) => candidate.parentKey !== currentKey);
+  const created = indexed.filter(({ candidate }) => candidate.parentKey === currentKey);
+  const renderGroup = (items, type) => {
+    if (!items.length) return "";
+    const waitingGroup = type === "waiting";
+    return `<section class="candidate-group ${type}" aria-labelledby="${type}-candidates-title">
+      <div class="candidate-group-heading">
+        <span class="origin-badge">${waitingGroup ? "이전 후보" : "새 후보"}</span>
+        <div><h4 id="${type}-candidates-title">${waitingGroup ? "이전 단계부터 기다리던 후보" : "현재 상태에서 새로 만든 후보"}</h4><p>${waitingGroup ? "앞 단계에서 선택되지 않아 오픈 리스트에 남아 있었습니다." : "현재 상태의 빈칸을 움직여 이번 단계에 추가했습니다."}</p></div>
+      </div>
+      <div class="candidate-grid">
+        ${items.map(({ candidate, index }) => `<article class="candidate-card candidate-entry" data-key="${candidate.key}">
+          <span class="candidate-number">후보 ${index + 1}</span>
+          <span class="saved-state-mark ${waitingGroup ? "saved" : "added"}">${waitingGroup ? "✓ 오픈 리스트에 저장됨" : "+ 이번 단계에 추가됨"}</span>
+          ${boardMarkup(candidate.board, `후보 ${index + 1}`)}
+          ${waitingGroup
+            ? `<dl class="saved-metrics" aria-label="후보 ${index + 1}에 저장된 값"><div><dt>g(n)</dt><dd>${candidate.g}</dd></div><div><dt>h(n)</dt><dd>${candidate.h}</dd></div><div><dt>f(n)</dt><dd>${candidate.f}</dd></div></dl>`
+            : `<div class="metric-inputs">
+                ${givenG ? `<label class="given-metric"><span>g(n)</span><output aria-label="후보 ${index + 1}에 주어진 g(n) 값">${candidate.g}</output></label>` : `<label><span>g(n)</span><input type="number" inputmode="numeric" min="0" max="30" data-candidate-index="${index}" data-metric="g" aria-label="후보 ${index + 1}의 g 값" ${activity.calcVerified ? `value="${candidate.g}" disabled` : ""} required></label>`}
+                ${["h", "f"].map((metric) => `<label><span>${metric}(n)</span><input type="number" inputmode="numeric" min="0" max="30" data-candidate-index="${index}" data-metric="${metric}" aria-label="후보 ${index + 1}의 ${metric} 값" ${activity.calcVerified ? `value="${candidate[metric]}" disabled` : ""} required></label>`).join("")}
+              </div>`}
+          ${activity.calcVerified ? `<button type="button" class="candidate-select" data-key="${candidate.key}" ${activity.answered ? "disabled" : ""}>이 상태 선택</button>` : ""}
+        </article>`).join("")}
+      </div>
+    </section>`;
+  };
+  return `<form class="candidate-calculation">
+    <aside class="open-list-guide"><strong>한 줄에 있는 두 구역 모두 오픈 리스트입니다.</strong> 새 후보의 값을 계산한 뒤, 이전 후보와 새 후보를 합쳐 f(n)이 가장 작은 상태를 선택하세요.</aside>
+    <div class="candidate-groups-row" aria-label="이전 후보와 새 후보 전체">
+      ${renderGroup(waiting, "waiting")}
+      ${renderGroup(created, "created")}
+    </div>
+    ${activity.calcVerified ? '<p class="calculation-status">새 후보의 값이 모두 맞았습니다. 이전 후보까지 포함하여 f(n)이 가장 작은 상태를 선택하세요.</p>' : `<button type="submit" class="check-candidate-values">${givenG ? "값 확인하기" : "새 후보의 값 확인"}</button>`}
+  </form>`;
+}
+
+function renderTrace(kind) {
+  const root = $(`[data-activity="${kind}"]`);
+  const activity = state[kind];
+  const steps = usableSteps(kind);
+  const step = steps[activity.step];
+  const current = activity.result.steps[activity.step].chosen;
+  const isLast = activity.step === steps.length - 1;
+  if (!step) return;
+
+  root.innerHTML = `
+    <div class="trace-heading">
+      <div><span>${configs[kind].label}</span><strong>선택 ${activity.step + 1} / ${steps.length}</strong></div>
+      <div class="progress" aria-hidden="true"><i style="width:${Math.round(((activity.step + 1) / steps.length) * 100)}%"></i></div>
+    </div>
+    <div class="current-state">
+      <div><span>현재 확인한 상태</span>${boardMarkup(current.board, "현재 확인한 상태")}</div>
+      <div class="current-info">
+        <p>${current.move === "시작" ? "초기 상태입니다." : `빈칸을 <b>${current.move}</b>로 움직여 도착했습니다.`}</p>
+        <dl class="current-metrics" aria-label="현재 상태의 g(n), h(n), f(n) 값">
+          <div><dt>g(n)</dt><dd>${current.g}</dd></div>
+          <i aria-hidden="true">+</i>
+          <div><dt>h(n)</dt><dd>${current.h}</dd></div>
+          <i aria-hidden="true">=</i>
+          <div class="metric-f"><dt>f(n)</dt><dd>${current.f}</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="candidate-area">
+      <div class="candidate-heading"><h3>${!activity.calcVerified ? (kind === "textbook" ? "모든 새 후보의 g(n), h(n), f(n)을 계산하세요" : "주어진 g(n)을 보고 h(n), f(n)을 계산하세요") : "후보 중 다음에 확인할 상태는?"}</h3><p>${activity.calcVerified ? "f(n)이 가장 작은 후보를 선택하세요." : "값을 모두 맞히면 상태를 선택할 수 있습니다."}</p></div>
+      ${practiceCandidatesMarkup(step, activity, current.key, { givenG: kind === "new" })}
+    </div>
+    <div class="trace-feedback" aria-live="polite" ${activity.answered ? "" : "hidden"}></div>
+    <button class="primary-action trace-next" type="button" ${activity.answered ? "" : "hidden"}>${isLast ? (kind === "textbook" ? "새 문제에 도전하기" : "활동 정리하기") : "다음 선택으로"} <span aria-hidden="true">→</span></button>`;
+
+  if (activity.answered) showStoredFeedback(kind);
+}
+
+function showStoredFeedback(kind) {
+  const root = $(`[data-activity="${kind}"]`);
+  const activity = state[kind];
+  const step = usableSteps(kind)[activity.step];
+  const picked = activity.lastPicked;
+  const feedback = $(".trace-feedback", root);
+  if (!feedback || !picked) return;
+  const correct = picked === step.chosenKey;
+  $$(".candidate-card", root).forEach((card) => {
+    if (card.dataset.key === step.chosenKey) card.classList.add("correct");
+    if (card.dataset.key === picked && !correct) card.classList.add("incorrect");
   });
+  feedback.hidden = false;
+  feedback.className = `trace-feedback ${correct ? "correct" : "incorrect"}`;
+  feedback.innerHTML = correct
+    ? `<strong>맞았습니다.</strong> f(n)=${step.chosen.f}로 가장 작은 상태입니다.`
+    : `<strong>확인해 봅시다.</strong> 다음 상태는 f(n)=${step.chosen.g}+${step.chosen.h}=${step.chosen.f}인 퍼즐판입니다.`;
 }
 
-el.candidateCards.addEventListener("click", (event) => {
-  const button = event.target.closest(".candidate-card");
-  if (!button || button.disabled || answered) return;
-  answered = true;
-  const step = steps[currentStepIndex];
-  const pickedId = button.dataset.cellId;
-  const outcome = checkStepAnswer(step, pickedId);
-  button.setAttribute("aria-pressed", "true");
-  markCandidateResult(el.candidateCards, [step.expanded]);
-  appendRecordRow(step);
+function chooseCandidate(kind, key) {
+  const activity = state[kind];
+  if (activity.answered) return;
+  const step = usableSteps(kind)[activity.step];
+  const outcome = checkChoice(step, key);
+  activity.answered = true;
+  activity.lastPicked = key;
+  if (outcome.correct) activity.correct += 1;
+  renderTrace(kind);
+  $(".trace-next", $(`[data-activity="${kind}"]`)).focus();
+}
 
-  el.stepFeedback.hidden = false;
-  el.stepFeedback.classList.add(outcome.correct ? "correct" : "incorrect");
-  const trapPicked = isTrapStep(step, trapInfo) && trapInfo.trap.cellId === pickedId;
-  if (outcome.correct) {
-    el.stepFeedback.innerHTML = `<strong>정답이에요.</strong><p>${step.expanded}은(는) f=g+h=${step.g}+${step.h}=${step.f}로 가장 작았습니다.</p>`;
-  } else if (trapPicked) {
-    el.stepFeedback.innerHTML = `<strong>그렇게 생각하기 쉬워요.</strong><p>${pickedId}는 h(목표까지 어림짐작)만 보면 가까워 보이지만, 그 칸까지 오는 데 이미 비용(g)이 많이 들어서 f로 따지면 더 비쌉니다. 실제로 열린 칸은 <b>${step.expanded}</b>(f=${step.f})입니다. g 없이 h만 보면 이렇게 속기 쉬워요.</p>`;
+function advanceTrace(kind) {
+  const activity = state[kind];
+  const steps = usableSteps(kind);
+  if (activity.step < steps.length - 1) {
+    activity.step += 1;
+    activity.answered = false;
+    activity.calcVerified = false;
+    activity.lastPicked = null;
+    renderTrace(kind);
+    $(`[data-activity="${kind}"]`).scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
   } else {
-    el.stepFeedback.innerHTML = `<strong>다시 확인해 볼까요.</strong><p>실제로 다음에 열린 칸은 <b>${step.expanded}</b>(f=${step.f})입니다. 후보들의 f 값을 다시 비교해 보세요.</p>`;
+    showView(kind === "textbook" ? "new" : "result");
   }
-
-  el.nextStep.hidden = false;
-  el.nextStep.textContent = currentStepIndex + 1 >= steps.length ? "결과 보기 →" : "다음 단계 →";
-  el.nextStep.focus();
-});
-
-el.nextStep.addEventListener("click", () => {
-  const nextIndex = currentStepIndex + 1;
-  if (nextIndex >= steps.length) {
-    finishTrace();
-    return;
-  }
-  showStep(nextIndex);
-});
-
-function finishTrace() {
-  el.traceView.hidden = true;
-  el.resultsView.hidden = false;
-  renderResults();
-  el.resultsView.querySelector("h2").focus();
 }
 
-function renderResults() {
-  const comparison = buildFinalComparison({ bfsResult, ucsResult, astarResult });
-  const guessNote = predictedFewer === true
-    ? "처음 예상대로 A*가 훨씬 적게 열어봤습니다."
-    : predictedFewer === false
-      ? "처음 예상과 달리, A*는 UCS보다 훨씬 적은 칸만 열어봤습니다."
-      : "";
-  el.resultsSummary.textContent = `A*는 이 지도에서 ${comparison.astar.opened}칸만 열어보고 매점에 도착했습니다(UCS는 ${comparison.ucs.opened}칸). 최종 경로 비용은 ${comparison.astar.pathCost}로 UCS와 같습니다 — 같은 최적 경로를 더 적게 검토해서 찾은 것입니다. ${guessNote}`;
-  el.bfsOpenedCell.textContent = `${comparison.bfs.opened}칸`;
-  el.ucsOpenedCell.textContent = `${comparison.ucs.opened}칸`;
-  el.astarOpenedCell.textContent = `${comparison.astar.opened}칸`;
+function reducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-el.predictButtons1.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-answer]");
-  if (!button) return;
-  predictedFewer = button.dataset.answer === "fewer";
-  [...el.predictButtons1.children].forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-  el.predictResult.hidden = false;
-  el.predictResult.className = "step-feedback";
-  el.predictResult.innerHTML = "<p>좋아요, 이제 A*를 한 단계씩 직접 진행하면서 실제로 몇 칸을 열어보는지 확인해 봅시다.</p>";
-  el.startAstarButton.hidden = false;
-  el.startAstarButton.focus();
+function showView(name) {
+  $$(".lesson-view").forEach((view) => { view.hidden = view.id !== `${name}-view`; });
+  const navButtons = $$(".stage-nav button");
+  const names = ["intro", "textbook", "new", "result"];
+  const index = names.indexOf(name);
+  navButtons.forEach((button, buttonIndex) => {
+    if (buttonIndex <= index) button.disabled = false;
+    button.toggleAttribute("aria-current", buttonIndex === index);
+  });
+  if (name === "result") renderResult();
+  const heading = $(`#${name}-view h2`);
+  heading?.focus();
+  window.scrollTo({ top: 0, behavior: reducedMotion() ? "auto" : "smooth" });
+}
+
+function renderResult() {
+  const textbookTotal = usableSteps("textbook").length;
+  const newTotal = usableSteps("new").length;
+  $("#score-summary").innerHTML = `
+    <article><span>교과서 예시</span><strong>${state.textbook.correct} / ${textbookTotal}</strong><p>목표까지 ${state.textbook.result.cost}번 이동</p></article>
+    <article><span>새 문제</span><strong>${state.new.correct} / ${newTotal}</strong><p>목표까지 ${state.new.result.cost}번 이동</p></article>`;
+}
+
+function resetAll() {
+  for (const kind of Object.keys(state)) Object.assign(state[kind], { step: 0, correct: 0, answered: false, calcVerified: false, lastPicked: null });
+  renderTrace("textbook");
+  renderTrace("new");
+  $("#warmup-form").reset();
+  $("#warmup-form").classList.remove("correct", "incorrect");
+  $$("#warmup-form input, #warmup-form button").forEach((control) => { control.disabled = false; });
+  $("#warmup-feedback").hidden = true;
+  const start = $("#start-textbook");
+  start.disabled = true;
+  start.textContent = "계산 연습 후 시작할 수 있습니다";
+  showView("intro");
+}
+
+for (const kind of Object.keys(configs)) {
+  renderReference(kind);
+  renderTrace(kind);
+}
+
+document.addEventListener("click", (event) => {
+  const nav = event.target.closest(".stage-nav button[data-view]");
+  if (nav && !nav.disabled) return showView(nav.dataset.view);
+  const next = event.target.closest("[data-next]");
+  if (next) return showView(next.dataset.next);
+  const candidate = event.target.closest("button.candidate-card, .candidate-select");
+  if (candidate) return chooseCandidate(candidate.closest("[data-activity]").dataset.activity, candidate.dataset.key);
+  const traceNext = event.target.closest(".trace-next");
+  if (traceNext) return advanceTrace(traceNext.closest("[data-activity]").dataset.activity);
 });
 
-el.startAstarButton.addEventListener("click", () => {
-  el.predictView.hidden = true;
-  el.experiment.hidden = false;
-  showStep(0);
-  el.experiment.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+document.addEventListener("submit", (event) => {
+  const form = event.target.closest(".candidate-calculation");
+  if (!form) return;
+  event.preventDefault();
+  const root = form.closest("[data-activity]");
+  const kind = root.dataset.activity;
+  const activity = state[kind];
+  const step = usableSteps(kind)[activity.step];
+  let wrongCount = 0;
+  $$("input[data-candidate-index]", form).forEach((input) => {
+    const candidate = step.candidates[Number(input.dataset.candidateIndex)];
+    const correct = Number(input.value) === candidate[input.dataset.metric];
+    input.classList.toggle("input-correct", correct);
+    input.classList.toggle("input-incorrect", !correct);
+    input.setAttribute("aria-invalid", String(!correct));
+    if (!correct) wrongCount += 1;
+  });
+  const feedback = $(".trace-feedback", root);
+  feedback.hidden = false;
+  if (wrongCount === 0) {
+    activity.calcVerified = true;
+    renderTrace(kind);
+    $(".candidate-select", root)?.focus();
+  } else {
+    feedback.className = "trace-feedback incorrect";
+    feedback.innerHTML = kind === "new"
+      ? `<strong>${wrongCount}개의 값을 다시 확인하세요.</strong> h(n)은 이 8-퍼즐에서 제자리가 아닌 숫자 타일 수이며, f(n)은 주어진 g(n)에 h(n)을 더한 값입니다.`
+      : `<strong>${wrongCount}개의 값을 다시 확인하세요.</strong> g(n)은 시작부터 이동한 횟수, h(n)은 이 8-퍼즐에서 제자리가 아닌 숫자 타일 수이며, f(n)=g(n)+h(n)입니다.`;
+    $("input.input-incorrect", form)?.focus();
+  }
 });
 
-el.restartButton.addEventListener("click", () => {
-  el.resultsView.hidden = true;
-  el.traceView.hidden = false;
-  el.recordBody.innerHTML = '<tr class="empty-row"><td colspan="6">아직 확정된 칸이 없습니다.</td></tr>';
-  showStep(0);
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.experiment.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+$("#warmup-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const hInput = $("#warmup-h");
+  const fInput = $("#warmup-f");
+  const correct = Number(hInput.value) === 4 && Number(fInput.value) === 4;
+  const form = event.currentTarget;
+  form.classList.remove("correct", "incorrect");
+  form.classList.add(correct ? "correct" : "incorrect");
+  const feedback = $("#warmup-feedback");
+  feedback.hidden = false;
+  feedback.className = `trace-feedback ${correct ? "correct" : "incorrect"}`;
+  if (correct) {
+    feedback.innerHTML = "<strong>맞았습니다.</strong> 이 8-퍼즐에서 제자리가 아닌 숫자 타일은 2, 8, 1, 6의 4개이므로 h(n)=4이고, f(n)=g(n)+h(n)=0+4=4입니다.";
+    $$("#warmup-form input, #warmup-form button").forEach((control) => { control.disabled = true; });
+    const start = $("#start-textbook");
+    start.disabled = false;
+    start.innerHTML = '교과서 예시 시작하기 <span aria-hidden="true">→</span>';
+    start.focus();
+  } else {
+    feedback.innerHTML = "<strong>다시 계산해 보세요.</strong> 빈칸은 제외하고 목표 자리와 다른 숫자 타일을 센 뒤, 그 h(n) 값에 주어진 g(n)=0을 더하세요.";
+    hInput.focus();
+  }
 });
 
-el.projectorToggle.addEventListener("click", () => {
-  const enabled = document.body.classList.toggle("projector-mode");
-  el.projectorToggle.setAttribute("aria-pressed", String(enabled));
-});
+$("#restart-button").addEventListener("click", resetAll);
+
+const previewStep = new URLSearchParams(window.location.search).get("preview");
+const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+if (isLocalPreview && previewStep === "3") showView("new");
