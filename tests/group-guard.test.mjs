@@ -22,14 +22,14 @@ test("모든 group은 명시적인 active boolean 필드를 갖는다", async ()
   }
 });
 
-test("ai-learning과 ai-search 그룹은 숨김 처리되어 active=false다(다른 그룹은 영향받지 않음)", async () => {
+test("ai-learning은 숨기고 ai-search는 활성화한다(다른 그룹은 영향받지 않음)", async () => {
   const data = await loadGroups();
   const learning = data.groups.find((candidate) => candidate.id === "ai-learning");
   const search = data.groups.find((candidate) => candidate.id === "ai-search");
   assert.equal(learning.active, false);
-  assert.equal(search.active, false);
+  assert.equal(search.active, true);
   assert.deepEqual(search.children.map(({ active }) => active), [true, true, false, false]);
-  const others = data.groups.filter((candidate) => !["ai-learning", "ai-search"].includes(candidate.id));
+  const others = data.groups.filter((candidate) => candidate.id !== "ai-learning");
   for (const other of others) {
     assert.equal(other.active, true, `${other.id}는 영향받지 않고 active=true를 유지해야 함`);
   }
