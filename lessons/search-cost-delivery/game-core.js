@@ -1,31 +1,43 @@
-import { runBfsLayers, runPriorityTrace, pathCostUnder } from "../shared/search-lab.js";
+import { runUcsGraphTrace, pathCostFor, nodeLabel, START, GOAL } from "../shared/search-graph-lab.js?v=2026082401";
 
-// 학생이 손으로 직접 예측하는 확장 단계 수(맨 처음 시작 칸 자신은 제외, 나머지는 "빠르게 진행하기").
-export const INTERACTIVE_STEP_CAP = 8;
+// 이동 횟수는 적지만(2번) 더 비싼 비교 경로 — "적게 이동한다고 항상 싸지는 않다"는 예측 단계의 근거.
+export const FEWER_HOPS_PATH = ["gate", "lobby", "store"];
 
-// steps[0]은 오픈 리스트에 시작 칸 하나뿐이라 예측할 게 없으므로, 문제는 steps[1]부터 만든다.
-export function buildUcsSteps(ucsResult = runPriorityTrace({ useHeuristic: false })) {
-  return ucsResult.steps.slice(1).map((step, index) => ({
+export function buildRounds(trace = runUcsGraphTrace()) {
+  return trace.steps.map((step) => ({
     ...step,
-    displayIndex: index + 1,
-    interactive: index + 1 <= INTERACTIVE_STEP_CAP,
+    isSetup: step.pickCandidates.length <= 1,
+    dupChildren: step.children.filter((c) => c.status === "open-worse-skip" || c.status === "open-replace"),
+    infoChildren: step.children.filter((c) => c.status === "new" || c.status === "closed-skip"),
   }));
 }
 
-export function checkStepAnswer(step, selectedCellId) {
-  return { correct: selectedCellId === step.expanded };
+export function checkPickAnswer(round, selectedId) {
+  return { correct: selectedId === round.expandedId };
 }
 
-export function summarize({ bfsResult = runBfsLayers(), ucsResult = runPriorityTrace({ useHeuristic: false }) } = {}) {
-  const bfsCostUnderSnow = pathCostUnder(bfsResult.path, "snow");
+// insert=true는 "새 값을 오픈 리스트에 넣는다(=기존 값을 교체한다)"는 학생의 선택.
+export function checkDupAnswer(dupChild, insert) {
+  const shouldInsert = dupChild.status === "open-replace";
+  return { correct: insert === shouldInsert, shouldInsert };
+}
+
+export function summarize({ trace = runUcsGraphTrace() } = {}) {
+  const fewerHopsCost = pathCostFor(FEWER_HOPS_PATH);
   return {
-    ucsOpened: ucsResult.opened,
-    ucsPathCost: ucsResult.pathCost,
-    ucsPath: ucsResult.path,
-    ucsHops: ucsResult.path.length - 1,
-    bfsPath: bfsResult.path,
-    bfsCostUnderSnow,
-    bfsHops: bfsResult.path.length - 1,
-    cheaper: bfsCostUnderSnow - ucsResult.pathCost,
+    path: trace.path,
+    pathCost: trace.pathCost,
+    hops: trace.path.length - 1,
+    testedCount: trace.order.length,
+    fewerHopsPath: FEWER_HOPS_PATH,
+    fewerHopsCost,
+    fewerHopsHops: FEWER_HOPS_PATH.length - 1,
+    saved: fewerHopsCost - trace.pathCost,
   };
 }
+
+export function pathLabel(pathIds) {
+  return pathIds.map((id) => nodeLabel(id)).join(" → ");
+}
+
+export { START, GOAL };

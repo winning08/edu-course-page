@@ -1,69 +1,64 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { runPriorityTrace } from "../lessons/shared/search-lab.js";
-import { buildAstarSteps, checkStepAnswer, getTrapInfo, isTrapStep, buildFinalComparison } from "../lessons/search-astar-delivery/game-core.js";
+import { GOAL_STATE, NEW_GOAL_STATE, TEXTBOOK_START, NEW_START, getNeighbors, misplacedTiles, solveAstar, checkChoice } from "../lessons/search-astar-delivery/game-core.js";
 
 const lessonRoot = new URL("../lessons/search-astar-delivery/", import.meta.url);
-const astarResult = runPriorityTrace({ useHeuristic: true });
-const steps = buildAstarSteps(astarResult);
-const trapInfo = getTrapInfo(astarResult);
 
-test("A* 단계는 1부터 순차적으로 매겨지고, 모든 단계가 학생이 직접 푸는 대상이다(총 열린 칸이 적어 fast-forward 불필요)", () => {
-  assert.deepEqual(steps.map((s) => s.displayIndex), steps.map((_, i) => i + 1));
-  assert.ok(steps.length <= 12, "A*가 열어보는 칸이 적어야 전 단계를 학생이 직접 풀 수 있음");
+test("교과서 예시의 초기·목표 상태와 휴리스틱을 그대로 사용한다", () => {
+  assert.deepEqual(TEXTBOOK_START, [2,8,3,1,6,4,7,0,5]);
+  assert.deepEqual(GOAL_STATE, [1,2,3,8,0,4,7,6,5]);
+  assert.equal(misplacedTiles(TEXTBOOK_START), 4);
+  assert.equal(misplacedTiles(GOAL_STATE), 0);
 });
 
-test("checkStepAnswer는 실제로 확장된 칸을 골랐을 때만 correct다", () => {
-  const step = steps[0];
-  assert.equal(checkStepAnswer(step, step.expanded).correct, true);
-  const wrong = step.candidates.find((c) => c.cellId !== step.expanded);
-  if (wrong) assert.equal(checkStepAnswer(step, wrong.cellId).correct, false);
+test("빈칸의 다음 상태는 위·아래·왼쪽·오른쪽 순서로 만든다", () => {
+  assert.deepEqual(getNeighbors(TEXTBOOK_START).map((item) => item.move), ["위","왼쪽","오른쪽"]);
 });
 
-test("함정 단계가 실제로 존재하고, isTrapStep은 그 단계에서만 true다", () => {
-  assert.ok(trapInfo, "함정 단계를 찾지 못함");
-  const trapStep = steps.find((s) => s.index === trapInfo.stepIndex);
-  assert.ok(trapStep, "함정 단계가 실제 단계 목록 안에 있어야 함");
-  assert.equal(isTrapStep(trapStep, trapInfo), true);
-  const otherStep = steps.find((s) => s.index !== trapInfo.stepIndex);
-  assert.equal(isTrapStep(otherStep, trapInfo), false);
+test("교과서 예시는 A*로 5회 만에 목표에 도달한다", () => {
+  const result = solveAstar(TEXTBOOK_START);
+  assert.equal(result.found, true);
+  assert.equal(result.cost, 5);
+  assert.deepEqual(result.path.slice(1).map((node) => node.move), ["위","위","왼쪽","아래","오른쪽"]);
 });
 
-test("buildFinalComparison은 A*가 UCS보다 적게 열고, 경로 비용은 서로 같음을 보여준다", () => {
-  const comparison = buildFinalComparison();
-  assert.ok(comparison.astar.opened < comparison.ucs.opened);
-  assert.equal(comparison.astar.pathCost, comparison.ucs.pathCost);
+test("새 연습 문제는 네 번 선택해 목표에 도달한다", () => {
+  const result = solveAstar(NEW_START, NEW_GOAL_STATE);
+  assert.deepEqual(NEW_GOAL_STATE, [1,2,3,4,5,6,7,8,0]);
+  assert.equal(result.found, true);
+  assert.equal(result.cost, 4);
+  assert.equal(result.steps.length - 1, 4);
 });
 
-test("독립 lesson 페이지와 접근성 장치를 제공한다", async () => {
-  const [html, labCss, js] = await Promise.all([
+test("모든 단계에서 선택된 후보의 f는 최소이며 f=g+h이다", () => {
+  for (const result of [solveAstar(TEXTBOOK_START), solveAstar(NEW_START, NEW_GOAL_STATE)]) {
+    for (const step of result.steps) {
+      assert.equal(step.chosen.f, step.chosen.g + step.chosen.h);
+      assert.equal(step.chosen.f, Math.min(...step.candidates.map((candidate) => candidate.f)));
+      assert.equal(checkChoice(step, step.chosenKey).correct, true);
+    }
+  }
+});
+
+test("두 활동·접근성·활동지 03 연결을 제공한다", async () => {
+  const [html, css] = await Promise.all([
     readFile(new URL("index.html", lessonRoot), "utf8"),
-    readFile(new URL("../shared/lab-base.css", lessonRoot), "utf8"),
-    readFile(new URL("game.js", lessonRoot), "utf8"),
+    readFile(new URL("styles.css", lessonRoot), "utf8"),
   ]);
   assert.match(html, /<html lang="ko">/);
-  assert.match(html, /aria-live="polite"/);
-  assert.match(html, /프로젝터 모드/);
-  assert.match(html, /data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-astar-delivery"/);
-  assert.match(labCss, /prefers-reduced-motion/);
-  assert.match(js, /prefers-reduced-motion: reduce/);
-});
-
-test("f(n)=g(n)+h(n)과 완전성·최적성·효율 비교표, 함정 문항 경고 UI가 화면에 있다", async () => {
-  const html = await readFile(new URL("index.html", lessonRoot), "utf8");
+  assert.match(html, /활동 1 · 교과서 예시 따라가기/);
+  assert.match(html, /모든 후보의 값을 정확히 입력하면/);
+  assert.match(html, /활동 2 · 새로운 문제에 적용하기/);
+  assert.match(html, /새 후보마다 g\(n\)만 제공합니다/);
   assert.match(html, /f\(n\) = g\(n\) \+ h\(n\)/);
-  assert.match(html, /완전성/);
-  assert.match(html, /최적성/);
-  assert.match(html, /효율/);
-  assert.match(html, /id="trap-warning"[^>]*hidden/);
-  assert.match(html, /id="bfs-opened-cell"/);
-  assert.match(html, /id="ucs-opened-cell"/);
-  assert.match(html, /id="astar-opened-cell"/);
-});
-
-test("결과 화면은 units/ai-search와 루트 홈으로 각각 돌아가는 링크를 함께 제공한다", async () => {
-  const html = await readFile(new URL("index.html", lessonRoot), "utf8");
-  assert.match(html, /href="\.\.\/\.\.\/units\/ai-search\/"/);
-  assert.match(html, /href="\.\.\/\.\.\/">전체 활동지 홈으로/);
+  assert.match(html, /이미 사용한 비용/);
+  assert.match(html, /이 8-퍼즐에서 사용하는 어림값/);
+  assert.match(html, /id="warmup-h"/);
+  assert.match(html, /id="warmup-f"/);
+  assert.match(html, /id="warmup-g"[^>]*value="0"[^>]*readonly/);
+  assert.doesNotMatch(html, /data-warmup-answer/);
+  assert.match(html, /data-guard-group="ai-search" data-guard-lesson="search-astar-delivery"/);
+  assert.match(html, /aria-live="polite"/);
+  assert.match(css, /prefers-reduced-motion/);
 });

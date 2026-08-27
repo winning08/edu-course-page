@@ -1,6 +1,6 @@
 import {
   RIVER_ITEMS, RIVER_INITIAL, createRiverSession, tryRiverMove, solveRiverBfs,
-} from "./game-core.js?v=2026081904";
+} from "./game-core.js?v=2026082504";
 
 const $ = (selector) => document.querySelector(selector);
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -16,6 +16,8 @@ const el = {
   stateAnnouncement: $("#river-state-announcement"),
   currentState: $("#river-current-state"),
   reset: $("#river-reset-play"), restart: $("#river-restart"), projector: $("#projector-toggle"),
+  showCannibals: $("#show-cannibals-button"), cannibalsGame: $("#cannibals-game"),
+  gameover: $("#river-gameover"), gameoverMessage: $("#river-gameover-message"), gameoverRestart: $("#river-gameover-restart"),
 };
 
 function actionLabel(actionId) {
@@ -61,15 +63,15 @@ function render() {
       <h3>${side === "L" ? "왼쪽 · 출발지" : "오른쪽 · 목적지"}</h3>
       <div class="river-characters">${people.map((item) => {
         if (item.id === "farmer") return `<span class="river-character is-farmer"><span aria-hidden="true">${item.icon}</span><b>${item.label}</b></span>`;
-        const available = state.farmer === side;
+        const available = state.farmer === side && !session.gameOver;
         const selected = passenger === item.id;
-        return `<button type="button" class="river-character${available ? " is-available" : ""}${selected ? " is-selected" : ""}" data-passenger="${item.id}" aria-pressed="${selected}" ${available ? "" : "disabled"}><span aria-hidden="true">${item.icon}</span><b>${item.label}</b><small>${selected ? "배에 탑승" : available ? "눌러서 태우기" : "농부가 반대편"}</small></button>`;
+        return `<button type="button" class="river-character${available ? " is-available" : ""}${selected ? " is-selected" : ""}" data-passenger="${item.id}" aria-pressed="${selected}" ${available ? "" : "disabled"}><span aria-hidden="true">${item.icon}</span><b>${item.label}</b><small>${selected ? "배에 탑승" : available ? "눌러서 태우기" : session.gameOver ? "게임 오버" : "농부가 반대편"}</small></button>`;
       }).join("") || '<span class="river-empty">비어 있음</span>'}</div>
     </section>`;
   };
   const selected = passenger ? ITEM_BY_ID.get(passenger) : null;
   const direction = state.farmer === "L" ? "오른쪽" : "왼쪽";
-  el.scene.innerHTML = `${bank("L")}<div class="river-channel"><span class="river-name">강</span><button class="boat-control" id="boat-control" type="button" aria-label="${selected ? `${selected.label}과 함께` : "농부 혼자"} ${direction}으로 건너기"><span class="boat-passenger">${selected ? selected.icon : "👨‍🌾"}</span><span class="boat-icon" aria-hidden="true">⛵</span><strong>${direction}으로 이동</strong></button></div>${bank("R")}`;
+  el.scene.innerHTML = `${bank("L")}<div class="river-channel"><span class="river-name">강</span><button class="boat-control" id="boat-control" type="button" ${session.gameOver ? "disabled" : ""} aria-label="${selected ? `${selected.label}과 함께` : "농부 혼자"} ${direction}으로 건너기"><span class="boat-passenger">${selected ? selected.icon : "👨‍🌾"}</span><span class="boat-icon" aria-hidden="true">⛵</span><strong>${direction}으로 이동</strong></button></div>${bank("R")}`;
   el.count.textContent = `${session.history.length}회`;
   el.instruction.textContent = selected
     ? `${selected.label}이(가) 배에 탔습니다. 가운데 배를 눌러 ${direction}으로 이동하세요.`
@@ -89,7 +91,8 @@ function feedback(kind, title, message) {
 function addHistory(entry) {
   if (el.history.querySelector(".empty-row")) el.history.innerHTML = "";
   const row = document.createElement("tr");
-  row.innerHTML = `<th scope="row">${entry.order}</th><td>${actionLabel(entry.action)}</td><td>${entry.wasVisited ? "이미 본 상태" : stateBadge(entry.to)}</td>`;
+  const result = entry.dangers.length ? `게임 오버 · ${stateBadge(entry.to)}` : entry.wasVisited ? "이미 본 상태" : stateBadge(entry.to);
+  row.innerHTML = `<th scope="row">${entry.order}</th><td>${actionLabel(entry.action)}</td><td>${result}</td>`;
   el.history.appendChild(row);
 }
 
@@ -103,14 +106,14 @@ el.scene.addEventListener("click", (event) => {
   if (!event.target.closest("#boat-control")) return;
   const result = tryRiverMove(session, passenger || "farmer");
   if (!result.ok) {
-    const message = result.dangers?.map((danger) => danger.message).join(" ") || "지금은 함께 탈 수 없습니다.";
-    feedback("incorrect", "이대로 건너면 안전하지 않습니다.", `${message} 다른 대상을 태워 보세요.`);
+    feedback("incorrect", "지금은 함께 탈 수 없습니다.", "농부가 반대편에 있는 대상은 태울 수 없습니다.");
     return;
   }
   passenger = null;
   addHistory(session.history.at(-1));
   render();
-  if (result.solved) finish();
+  if (result.gameOver) gameOver(result.dangers);
+  else if (result.solved) finish();
   else if (result.wasVisited) feedback("incorrect", "이미 보았던 상태입니다.", "안전한 이동이지만 같은 상태로 되돌아왔습니다.");
   else feedback("correct", "안전하게 이동했습니다.", "새로운 상태입니다. 다음 이동을 선택하세요.");
 });
@@ -141,14 +144,23 @@ function finish() {
   el.results.querySelector("h2").focus();
 }
 
+function gameOver(dangers) {
+  el.feedback.hidden = true;
+  el.gameoverMessage.textContent = dangers.map((danger) => danger.message).join(" ");
+  el.gameover.hidden = false;
+  el.gameover.querySelector("h2").focus();
+}
+
 function reset() {
   session.state = RIVER_INITIAL;
   session.history = [];
   session.visitedKeys = new Set([Object.values(RIVER_INITIAL).join("")]);
   session.solved = false;
+  session.gameOver = false;
   passenger = null;
   el.history.innerHTML = '<tr class="empty-row"><td colspan="3">아직 이동한 기록이 없습니다.</td></tr>';
   el.feedback.hidden = true;
+  el.gameover.hidden = true;
   render();
 }
 
@@ -159,9 +171,30 @@ el.restart.addEventListener("click", () => {
   el.play.hidden = false;
   el.play.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
 });
+el.gameoverRestart.addEventListener("click", () => {
+  reset();
+  el.play.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
+});
 el.projector.addEventListener("click", () => {
   const enabled = document.body.classList.toggle("projector-mode");
   el.projector.setAttribute("aria-pressed", String(enabled));
 });
+el.showCannibals?.addEventListener("click", () => {
+  el.cannibalsGame.hidden = false;
+  el.cannibalsGame.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
+});
 
 render();
+
+// ?debug=results 로 접속하면 최적 경로(7수)를 자동으로 진행해 결과 화면으로 바로 건너뛴다.
+// 검토용 지름길일 뿐, 평소 학생 화면에는 영향이 없다.
+if (new URLSearchParams(location.search).get("debug") === "results") {
+  const solved = solveRiverBfs();
+  for (const step of solved.path) {
+    const result = tryRiverMove(session, step.action);
+    addHistory(session.history.at(-1));
+    if (result.solved) finish();
+  }
+  render();
+  el.results.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
+}

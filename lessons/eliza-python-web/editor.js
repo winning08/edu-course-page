@@ -17,6 +17,22 @@ const BUILTINS = new Set([
 const TOKEN_RE =
   /(#[^\n]*)|("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)/g;
 
+// Python은 같은 블록에서 탭과 공백을 섞으면 TabError를 낸다. 붙여넣은 코드나
+// 이전 세션에 남은 코드까지 안전하게 실행되도록 실제 탭을 공백 4칸으로 통일한다.
+export function normalizePythonIndentation(code) {
+  return String(code ?? "").replace(/\t/g, "    ");
+}
+
+function normalizeTextareaIndentation(textarea) {
+  if (!textarea.value.includes("\t")) return;
+  const { selectionStart, selectionEnd, value } = textarea;
+  const tabsBeforeStart = (value.slice(0, selectionStart).match(/\t/g) || []).length;
+  const tabsBeforeEnd = (value.slice(0, selectionEnd).match(/\t/g) || []).length;
+  textarea.value = normalizePythonIndentation(value);
+  textarea.selectionStart = selectionStart + tabsBeforeStart * 3;
+  textarea.selectionEnd = selectionEnd + tabsBeforeEnd * 3;
+}
+
 function escapeHtml(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -130,6 +146,7 @@ export function setupEditor({ textarea, gutter, highlightPane, highlightCode, on
   });
 
   textarea.addEventListener("input", () => {
+    normalizeTextareaIndentation(textarea);
     render();
     onChange?.();
   });
@@ -140,11 +157,11 @@ export function setupEditor({ textarea, gutter, highlightPane, highlightCode, on
   return {
     render,
     setValue(value) {
-      textarea.value = value;
+      textarea.value = normalizePythonIndentation(value);
       render();
     },
     getValue() {
-      return textarea.value;
+      return normalizePythonIndentation(textarea.value);
     },
   };
 }

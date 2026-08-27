@@ -6,6 +6,9 @@ import {
   riverStateKey, isRiverGoal, isRiverInitial,
   riverDanger, isRiverSafe, riverActionOptions, applyRiverAction,
   createRiverSession, tryRiverMove, solveRiverBfs, buildRiverStateSpace,
+  MC_ROLES, MC_INITIAL, MC_GOAL, MC_GROUP_SIZE, MC_BOAT_CAPACITY,
+  mcStateKey, isMcGoal, isMcInitial, mcBank, mcDanger, isMcSafe,
+  mcCrossingOptions, applyMcCrossing, createMcSession, tryMcCrossing, solveMcBfs,
 } from "../lessons/search-bfs-delivery/game-core.js";
 import {
   PUZZLE_GOAL, PUZZLE_START, PUZZLE_INTERACTIVE_ROUND_CAP,
@@ -61,14 +64,17 @@ test("applyRiverAction은 농부와(선택 시) 항목의 둑을 함께 뒤집�
   assert.deepEqual(farmerAlone, { farmer: "L", wolf: "R", sheep: "L", cabbage: "L" });
 });
 
-test("tryRiverMove는 안전하지 않은 행동을 적용하지 않고 이유를 돌려준다", () => {
+test("tryRiverMove는 위험한 행동을 막지 않고 실제로 건너가게 한 뒤 게임 오버로 처리한다", () => {
   const session = createRiverSession();
   const result = tryRiverMove(session, "wolf"); // 농부+늑대만 건너면 양과 양배추가 남아 위험
-  assert.equal(result.ok, false);
-  assert.equal(result.reason, "unsafe");
+  assert.equal(result.ok, true, "위험한 행동도 시도 자체는 막지 않아야 함");
+  assert.equal(result.gameOver, true);
   assert.ok(result.dangers.length > 0);
-  assert.deepEqual(session.state, RIVER_INITIAL, "안전하지 않은 행동은 세션 상태를 바꾸지 않아야 함");
-  assert.equal(session.history.length, 0);
+  assert.deepEqual(session.state, result.state, "위험한 행동도 실제로 세션 상태를 바꿔야 함");
+  assert.notDeepEqual(session.state, RIVER_INITIAL);
+  assert.equal(session.gameOver, true);
+  assert.equal(session.history.length, 1);
+  assert.ok(session.history[0].dangers.length > 0);
 });
 
 test("tryRiverMove는 안전한 행동을 적용하고 방문 이력을 기록한다", () => {
@@ -200,6 +206,112 @@ test("같은 입력에 대해 BFS·DFS 결과는 항상 동일하다(결정론�
   assert.deepEqual(d1.path, d2.path);
 });
 
+// ── 3부: 선교사와 식인종 강 건너기(추가 활동) ────────────────────────────────
+
+test("초기 상태는 모두 왼쪽, 목표 상태는 모두 오른쪽이다(선교사·식인종 각 3명)", () => {
+  assert.deepEqual(MC_INITIAL, { mLeft: MC_GROUP_SIZE, cLeft: MC_GROUP_SIZE, boat: "L" });
+  assert.deepEqual(MC_GOAL, { mLeft: 0, cLeft: 0, boat: "R" });
+  assert.ok(isMcInitial(MC_INITIAL));
+  assert.ok(isMcGoal(MC_GOAL));
+  assert.ok(!isMcGoal(MC_INITIAL));
+  assert.deepEqual(MC_ROLES.map((r) => r.id), ["m", "c"]);
+});
+
+test("어느 한쪽 둑에서든 식인종이 선교사보다 많으면 위험하고, 선교사가 0명이면 안전하다", () => {
+  assert.ok(!isMcSafe({ mLeft: 1, cLeft: 2, boat: "L" }), "왼쪽에 선교사 1명·식인종 2명이면 위험해야 함");
+  assert.ok(isMcSafe({ mLeft: 0, cLeft: 3, boat: "L" }), "선교사가 0명이면 식인종 수와 무관하게 안전해야 함");
+  assert.ok(isMcSafe(MC_INITIAL));
+  assert.ok(isMcSafe(MC_GOAL));
+  const dangers = mcDanger({ mLeft: 1, cLeft: 3, boat: "R" });
+  assert.equal(dangers.length, 1);
+});
+
+test("배 정원(2명) 안에서 만들 수 있는 모든 조합을 만들고, 정원을 넘거나 인원이 없는 쪽은 제외한다", () => {
+  const options = mcCrossingOptions(MC_INITIAL);
+  assert.ok(options.every((o) => o.m + o.c >= 1 && o.m + o.c <= MC_BOAT_CAPACITY));
+  assert.ok(options.some((o) => o.m === 2 && o.c === 0));
+  assert.ok(options.some((o) => o.m === 1 && o.c === 1));
+  assert.ok(options.some((o) => o.m === 0 && o.c === 2));
+  const emptyBankOptions = mcCrossingOptions({ mLeft: 3, cLeft: 3, boat: "R" });
+  assert.equal(emptyBankOptions.length, 0, "배가 있는 쪽에 아무도 없으면 시도할 행동이 없어야 함");
+});
+
+test("applyMcCrossing은 배가 있던 쪽 인원을 반대쪽으로 옮기고 배를 뒤집는다", () => {
+  const afterTwoMissionaries = applyMcCrossing(MC_INITIAL, { m: 2, c: 0 });
+  assert.deepEqual(afterTwoMissionaries, { mLeft: 1, cLeft: 3, boat: "R" });
+  const back = applyMcCrossing(afterTwoMissionaries, { m: 1, c: 0 });
+  assert.deepEqual(back, { mLeft: 2, cLeft: 3, boat: "L" });
+});
+
+test("tryMcCrossing은 위험한 이동을 막지 않고 실제로 건너가게 한 뒤 게임 오버로 처리한다", () => {
+  const session = createMcSession();
+  const unsafe = tryMcCrossing(session, { m: 1, c: 0 });
+  assert.equal(unsafe.ok, true, "위험한 조합도 시도 자체는 막지 않아야 함");
+  assert.equal(unsafe.gameOver, true);
+  assert.ok(unsafe.dangers.length > 0);
+  assert.deepEqual(session.state, unsafe.state, "위험한 이동도 실제로 세션 상태를 바꿔야 함");
+  assert.notDeepEqual(session.state, MC_INITIAL);
+  assert.equal(session.gameOver, true);
+  assert.equal(session.history.length, 1);
+  assert.ok(session.history[0].dangers.length > 0);
+});
+
+test("tryMcCrossing은 안전한 이동은 방문 이력을 기록하고 게임 오버로 처리하지 않는다", () => {
+  const session = createMcSession();
+  const safe = tryMcCrossing(session, { m: 0, c: 2 });
+  assert.equal(safe.ok, true);
+  assert.equal(safe.gameOver, false);
+  assert.equal(safe.wasVisited, false);
+  assert.equal(session.history.length, 1);
+  assert.equal(session.gameOver, false);
+
+  const overCapacity = tryMcCrossing(session, { m: 2, c: 1 });
+  assert.equal(overCapacity.ok, false);
+  assert.equal(overCapacity.reason, "unavailable");
+});
+
+test("solveMcBfs는 안전한 상태만 지나며 고전적인 최적 해인 11번 이동으로 목표에 도달한다", () => {
+  const solved = solveMcBfs();
+  assert.equal(solved.reached, true);
+  assert.equal(solved.moves, 11, "선교사와 식인종 문제의 고전적인 최적 해는 11번 이동");
+  assert.equal(solved.path.length, 11);
+  assert.ok(isMcGoal(solved.path.at(-1).state));
+  for (const step of solved.path) assert.ok(isMcSafe(step.state), `경로의 모든 상태는 안전해야 함: ${mcStateKey(step.state)}`);
+});
+
+test("mcBank은 배 쪽과 반대쪽 인원을 정확히 계산한다", () => {
+  const state = { mLeft: 2, cLeft: 1, boat: "L" };
+  assert.deepEqual(mcBank(state, "L"), { m: 2, c: 1 });
+  assert.deepEqual(mcBank(state, "R"), { m: 1, c: 2 });
+});
+
+test("추가 활동 화면·스크립트는 선교사·식인종 전용 요소를 갖추고 8-퍼즐 내용과 섞이지 않는다", async () => {
+  const [html, js] = await Promise.all([
+    readFile(new URL("index.html", lessonRoot), "utf8"),
+    readFile(new URL("cannibals.js", lessonRoot), "utf8"),
+  ]);
+  assert.match(html, /id="cannibals-game"[^>]*hidden/);
+  assert.match(html, /id="show-cannibals-button"/);
+  assert.match(html, /id="cannibals-scene"/);
+  assert.match(html, /id="cannibals-results"/);
+  assert.match(html, /id="cannibals-gameover" class="gameover-banner" hidden/);
+  assert.match(html, /id="cannibals-gameover-restart"/);
+  assert.match(js, /createMcSession/);
+  assert.match(js, /tryMcCrossing/);
+  assert.match(js, /solveMcBfs/);
+  assert.match(js, /function gameOver/);
+  // 다음 활동 페이저에는 "8-퍼즐" 제목이 정상적으로 등장하므로 html은 코드 식별자만 검사한다.
+  assert.doesNotMatch(js, /8-퍼즐|PUZZLE_|runPuzzle|puzzle-grid/);
+  assert.doesNotMatch(html, /PUZZLE_|runPuzzle|puzzle-grid/);
+});
+
+test("위험한 이동은 막히지 않고 실제로 건너간 뒤 게임 오버 화면으로 이어진다(방지가 아니라 결과로 처리)", async () => {
+  const js = await readFile(new URL("cannibals.js", lessonRoot), "utf8");
+  assert.doesNotMatch(js, /reason === "unsafe"/, "더 이상 위험을 이유로 이동 자체를 거부하지 않아야 함");
+  assert.match(js, /result\.gameOver/);
+  assert.match(js, /el\.gameover\.hidden = false/);
+});
+
 // ── 화면 구조·접근성 ────────────────────────────────────────────────────
 
 test("독립 lesson 페이지와 접근성 장치를 제공한다", async () => {
@@ -218,8 +330,8 @@ test("독립 lesson 페이지와 접근성 장치를 제공한다", async () => 
 
 test("강 건너기 전용 제목과 활동 목록 링크를 제공한다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
-  assert.match(html, /<h1 id="page-title">강 건너기로 만나는 탐색<\/h1>/);
-  assert.match(html, /<title>강 건너기로 만나는 탐색/);
+  assert.match(html, /<h1 id="page-title">문제 해결과 탐색<\/h1>/);
+  assert.match(html, /<title>문제 해결과 탐색/);
   assert.match(html, /href="\.\.\/\.\.\/units\/ai-search\/"/);
 });
 
@@ -237,7 +349,7 @@ test("활동 안내는 현재 상태와 목표 상태만 보여주고 현재 상
   assert.match(html, /농부, 늑대, 양, 양배추 모두 강을 건넌 상태/);
   assert.match(js, /function describeCrossingState/);
   assert.match(js, /el\.currentState\.textContent/);
-  assert.match(html, /각 순간의 모습을 <span class="key-term">상태<\/span>/);
+  assert.match(html, /각 순간의 모습을 <strong>상태<\/strong>/);
 });
 
 test("강 건너기는 별도 이동 버튼 없이 캐릭터를 태우고 배 자체를 눌러 이동한다", async () => {
@@ -250,19 +362,23 @@ test("강 건너기는 별도 이동 버튼 없이 캐릭터를 태우고 배 �
   assert.match(js, /id="boat-control"/);
   assert.match(js, /배에 탑승/);
   assert.match(js, /농부 혼자/);
-  assert.match(js, /이대로 건너면 안전하지 않습니다/);
+  assert.match(js, /function gameOver/);
   assert.match(js, /이미 보았던 상태입니다/);
 });
 
-test("강 건너기 페이지의 화면·스크립트·핵심 로직에는 8-퍼즐 내용이 섞이지 않는다", async () => {
+test("강 건너기 페이지의 화면·스크립트·핵심 로직에는 8-퍼즐 코드가 섞이지 않는다", async () => {
   const [html, js, core] = await Promise.all([
     readFile(new URL("index.html", lessonRoot), "utf8"),
     readFile(new URL("game.js", lessonRoot), "utf8"),
     readFile(new URL("game-core.js", lessonRoot), "utf8"),
   ]);
-  for (const source of [html, js, core]) {
+  // 스크립트·로직에는 8-퍼즐 관련 텍스트·식별자가 전혀 없어야 하지만, 페이지 하단의
+  // "다음 단계" 페이저에는 같은 활동 폴더의 8-퍼즐 이론 실습이 정상적으로 등장하므로 html은 코드 식별자만 검사한다.
+  for (const source of [js, core]) {
     assert.doesNotMatch(source, /8-퍼즐|PUZZLE_|runPuzzle|puzzle-grid/);
   }
+  assert.doesNotMatch(html, /PUZZLE_|runPuzzle|puzzle-grid/);
+  assert.match(html, /href="eight-puzzle-theory\.html"/, "결과 화면에 같은 활동의 8-퍼즐 이론 실습 페이저가 있어야 함");
 });
 
 test("해결 전에는 정답 경로를 숨기고 해결 후 상태와 행동의 경로를 공개한다", async () => {
@@ -283,15 +399,34 @@ test("별도 해답 페이지는 전체 상태 공간 트리와 접근 가능한
     readFile(new URL("solution-tree.html", lessonRoot), "utf8"),
     readFile(new URL("solution-tree.js", lessonRoot), "utf8"),
   ]);
-  assert.match(html, /id="state-space-tree" class="state-tree"/);
+  assert.match(html, /id="state-space-tree" class="graph-zoom-viewport"/);
+  assert.match(html, /class="graph-zoom-controls" data-zoom-for="state-space-tree"/);
   assert.match(html, /id="transition-body"/);
   assert.match(html, /최소비용은 7입니다/);
   assert.match(html, /data-guard-lesson="search-bfs-delivery"/);
   assert.match(js, /buildRiverStateSpace/);
-  assert.match(js, /className = "tree-level"/);
+  assert.match(js, /createElementNS/);
+  assert.match(js, /enableGraphZoom/);
+  assert.match(js, /tree-edge-\$\{child\.status\}/);
+  assert.match(js, /tree-leaf-unsafe/);
+  assert.match(js, /tree-leaf-repeat/);
+  assert.match(js, /edge\.attempted/);
   assert.match(js, /안전하지 않음/);
   const activityHtml = await readFile(new URL("index.html", lessonRoot), "utf8");
   assert.match(activityHtml, /href="solution-tree\.html"/);
+});
+
+test("해답 페이지 범례는 선 스타일뿐 아니라 트리 상자와 같은 배경·테두리 색을 쓰고, 다음 활동 페이저를 제공한다", async () => {
+  const [html, css] = await Promise.all([
+    readFile(new URL("solution-tree.html", lessonRoot), "utf8"),
+    readFile(new URL("solution-tree.css", lessonRoot), "utf8"),
+  ]);
+  assert.match(html, /class="lesson-pager"/);
+  assert.match(html, /8-퍼즐로 보는 맹목적 탐색/);
+  assert.match(html, /class="table-scroll-hint"/);
+  assert.match(css, /\.legend i\.new \{[^}]*background:#f4f7ff/);
+  assert.match(css, /\.legend i\.repeat \{[^}]*background:#f4f5f7/);
+  assert.match(css, /\.legend i\.unsafe \{[^}]*background:#fff5f5/);
 });
 
 test("완료 화면은 학생 비용과 최소비용을 비교하고 다시 도전하기 버튼에 전용 스타일을 적용한다", async () => {
@@ -301,7 +436,7 @@ test("완료 화면은 학생 비용과 최소비용을 비교하고 다시 도�
     readFile(new URL("styles.css", lessonRoot), "utf8"),
   ]);
   assert.match(html, /id="river-cost-result"/);
-  assert.match(html, /id="river-restart" class="primary-action"/);
+  assert.match(html, /id="river-restart" class="text-action"/);
   assert.match(js, /studentCost === minimumCost/);
   assert.match(js, /<strong>최소비용<\/strong>/);
   assert.match(js, /더 적은 비용으로 해결하는 방법이 있을 것 같습니다/);

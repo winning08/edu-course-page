@@ -85,7 +85,7 @@ test("교차 출처 격리는 실제 서비스워커 제어까지 기다리고 �
 
 test("python-runner.js는 Worker.terminate()로 무한 루프를 안전하게 중지하고, SharedArrayBuffer는 cross-origin isolated일 때만 사용한다", async () => {
   const runner = await read("python-runner.js");
-  assert.match(runner, /new Worker\(new URL\("\.\/worker\.js".*\{ type: "module" \}\)/);
+  assert.match(runner, /new Worker\(new URL\("\.\/worker\.js\?v=\d+".*\{ type: "module" \}\)/);
   assert.match(runner, /worker\.terminate\(\)/);
   assert.match(runner, /window\.crossOriginIsolated === true/);
   assert.match(runner, /typeof SharedArrayBuffer !== "undefined"/);
@@ -100,7 +100,13 @@ test("입력 기능 준비 전에는 실행을 막고 학생이 직접 다시 �
   assert.match(app, /runtimeCanRun/);
   assert.match(app, /retryElizaInputSetup/);
   assert.match(app, /onLoadError[\s\S]*runtimeRetryButton\.hidden = false/);
-  assert.match(app, /if \(window\.crossOriginIsolated\) runner\.preload\(\)/);
+  assert.match(app, /if \(window\.crossOriginIsolated\) \{[\s\S]*runner\.preload\(\)/);
+});
+
+test("입력 기능이 준비된 브라우저에서는 Pyodide 다운로드 중에도 실행 버튼을 활성화한다", async () => {
+  const app = await read("app.js");
+  assert.match(app, /let runtimeCanRun = window\.crossOriginIsolated === true/);
+  assert.match(app, /if \(window\.crossOriginIsolated\) \{\s*setRunningUI\(false\);/);
 });
 
 test("app.js는 코드·학번·이름을 탭 단위 sessionStorage에 저장하고, GAS_ENDPOINT가 비어 있으면 제출 버튼을 비활성화한다", async () => {
@@ -294,7 +300,7 @@ test("data/activity-groups.json의 group.path·children.path가 가리키는 ind
 });
 
 test("highlightPython은 파이썬 키워드·내장함수·문자열·주석·숫자를 정확히 토큰화한다", async () => {
-  const { highlightPython } = await import("../lessons/eliza-python-web/editor.js");
+  const { highlightPython, normalizePythonIndentation } = await import("../lessons/eliza-python-web/editor.js");
   const code = `# 주석
 while True:
     msg = input("나: ")
@@ -311,6 +317,16 @@ while True:
   assert.match(highlighted, /<span class="tok-builtin">print<\/span>/);
   assert.match(highlighted, /<span class="tok-number">123<\/span>/);
   assert.match(highlighted, /<span class="tok-keyword">break<\/span>/);
+  assert.equal(normalizePythonIndentation("while True:\n\tif True:\n\t\tbreak"), "while True:\n    if True:\n        break");
+});
+
+test("기본 코드와 편집기는 실제 탭 문자를 공백 4칸으로 통일해 TabError를 예방한다", async () => {
+  const [app, editor] = await Promise.all([read("app.js"), read("editor.js")]);
+  const starterMatch = app.match(/const STARTER_CODE = `([\s\S]*?)`;/);
+  assert.ok(starterMatch, "STARTER_CODE를 찾지 못했습니다");
+  assert.doesNotMatch(starterMatch[1], /\t/);
+  assert.match(editor, /replace\(\/\\t\/g, "    "\)/);
+  assert.match(editor, /normalizeTextareaIndentation\(textarea\)/);
 });
 
 test("로컬 Pyodide 런타임은 외부 네트워크 없이 로드되고 starter_code와 example_code를 실행할 수 있다", async () => {

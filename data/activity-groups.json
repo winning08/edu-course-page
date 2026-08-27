@@ -125,7 +125,7 @@
       "id": "ai-search",
       "order": 3,
       "title": "인공지능과 탐색",
-      "description": "늑대·양·양배추 강 건너기와 8-퍼즐로 상태·간선 개념과 맹목적 탐색을 익히고, 학교 배달 로봇 지도에서 균일 비용 탐색·A* 탐색을 실행하며 완전성·최적성·효율로 알고리즘을 비교합니다.",
+      "description": "늑대·양·양배추 강 건너기와 8-퍼즐로 상태·간선 개념과 맹목적 탐색을 익히고, 학교 곳곳을 오가는 균일 비용 탐색·A* 탐색을 실행하며 완전성·최적성·효율로 알고리즘을 비교합니다.",
       "path": "units/ai-search/",
       "status": "published",
       "active": false,
@@ -133,7 +133,7 @@
         {
           "id": "search-bfs-delivery",
           "order": 1,
-          "title": "강 건너기로 만나는 탐색",
+          "title": "문제 해결과 탐색",
           "path": "lessons/search-bfs-delivery/",
           "duration": 12,
           "difficulty": "입문",
@@ -155,24 +155,24 @@
         {
           "id": "search-cost-delivery",
           "order": 3,
-          "title": "눈이 내리면? 가장 싼 길 찾기",
+          "title": "매점까지 가장 빠르게 가기",
           "path": "lessons/search-cost-delivery/",
-          "duration": 20,
+          "duration": 15,
           "difficulty": "보통",
           "status": "published",
           "active": false,
-          "objective": "칸마다 이동 비용이 다를 때, 균일 비용 탐색이 지금까지 든 비용 g(n)이 가장 작은 곳부터 넓혀가며 실제로 가장 싼 경로를 찾는다는 것을 체험한다."
+          "objective": "장소마다 이동 비용이 다를 때, 균일 비용 탐색이 지금까지 든 비용 g(n)이 가장 작은 곳부터 오픈 리스트로 넓혀가며 실제로 가장 빠른 길을 찾는다는 것을 체험한다."
         },
         {
           "id": "search-astar-delivery",
           "order": 4,
-          "title": "목표를 어림짐작하기: A* 탐색",
+          "title": "8-퍼즐로 익히는 A* 탐색",
           "path": "lessons/search-astar-delivery/",
-          "duration": 22,
+          "duration": 25,
           "difficulty": "보통",
           "status": "published",
           "active": false,
-          "objective": "목표까지 남은 거리를 어림짐작한 휴리스틱 h(n)을 더한 f(n)=g(n)+h(n) 기준으로 A*가 더 적은 칸을 열어보고도 최적 경로를 찾는 것을 확인하고, 세 알고리즘의 완전성·최적성·효율을 비교한다."
+          "objective": "교과서의 8-퍼즐 예시와 새로운 문제에서 g(n), h(n), f(n)을 비교하며 A* 탐색이 다음 상태를 선택하는 원리를 체험한다."
         }
       ]
     }

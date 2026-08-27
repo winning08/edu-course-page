@@ -27,7 +27,9 @@ test("BFS 상태는 초기 상태부터 깊이별 한 줄로 누적된다", asyn
     readFile(new URL("game.js", lessonRoot), "utf8"),
     readFile(new URL("styles.css", lessonRoot), "utf8"),
   ]);
-  assert.match(html, /초기 상태부터 층별로 넓혀 보기/);
+  assert.match(html, /초기 상태부터 깊이별로 넓혀 보기/);
+  assert.doesNotMatch(html, /층/);
+  assert.doesNotMatch(js, /층/);
   assert.match(js, /function createInitialLevel/);
   assert.match(js, /function candidateLevel/);
   assert.match(js, /function expandState/);

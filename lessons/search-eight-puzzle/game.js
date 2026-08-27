@@ -23,7 +23,7 @@ const el = {
 // 새로고침·뒤로가기에도 진행 상태가 이상해지지 않도록 sessionStorage(같은 탭 한정)에만 저장한다.
 const STEP_STORAGE_KEY = "search-eight-puzzle:step:v1";
 const STEP_TOTAL = 3;
-const STEP_LABELS = { 1: "직접 맞추기", 2: "BFS 층별 관찰", 3: "결과 정리" };
+const STEP_LABELS = { 1: "직접 맞추기", 2: "BFS 깊이별 관찰", 3: "결과 정리" };
 
 const stepEl = {
   panels: { 1: document.querySelector('[data-step-panel="1"]'), 2: document.querySelector('[data-step-panel="2"]'), 3: document.querySelector('[data-step-panel="3"]') },
@@ -185,7 +185,7 @@ function candidateLevel(round) {
   level = document.createElement("section");
   level.className = "search-level is-current";
   level.dataset.depth = String(round.depth);
-  level.innerHTML = `<div class="level-label"><strong>${round.depth}층</strong><span>숫자판을 눌러 추가</span></div><div class="level-states"></div>`;
+  level.innerHTML = `<div class="level-label"><strong>트리의 깊이 ${round.depth}</strong><span>숫자판을 눌러 추가</span></div><div class="level-states"></div>`;
   el.levels.appendChild(level);
   level.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "nearest" });
   return level;
@@ -213,9 +213,9 @@ function expandState(card) {
 function showRound() {
   const round = bfs.rounds[roundIndex];
   revealed = false;
-  el.label.textContent = `활동 02-2 · BFS ${round.depth}층 탐색`;
+  el.label.textContent = `활동 02-2 · BFS 트리의 깊이 ${round.depth} 탐색`;
   el.bar.style.width = `${Math.round(((roundIndex + 1) / bfs.rounds.length) * 100)}%`;
-  el.badge.textContent = `${round.depth}층`;
+  el.badge.textContent = `깊이 ${round.depth}`;
   el.note.textContent = `${round.frontierBefore.length}개 숫자판을 차례로 눌러 다음 상태를 확인하세요.`;
   const parentLevel = el.levels.querySelector(`[data-depth="${round.depth - 1}"]`);
   parentLevel?.classList.add("is-current");
@@ -255,9 +255,9 @@ function revealRound() {
   currentLevel.classList.add("is-revealed");
   el.feedback.hidden = false;
   el.feedback.className = "step-feedback correct";
-  el.feedback.innerHTML = `<strong>${round.depth}층 확인 완료</strong><p>새 상태 ${newCount}개를 남기고, 이미 본 상태 ${duplicateCount}개는 제외했습니다.${round.containsGoal ? " 목표 상태도 찾았습니다." : ""}</p>`;
+  el.feedback.innerHTML = `<strong>트리의 깊이 ${round.depth} 확인 완료</strong><p>새 상태 ${newCount}개를 남기고, 이미 본 상태 ${duplicateCount}개는 제외했습니다.${round.containsGoal ? " 목표 상태도 찾았습니다." : ""}</p>`;
   el.reveal.hidden = true;
-  el.next.textContent = round.containsGoal || roundIndex === bfs.rounds.length - 1 ? "결과 보기 →" : "다음 층 보기 →";
+  el.next.textContent = round.containsGoal || roundIndex === bfs.rounds.length - 1 ? "결과 보기 →" : "다음 깊이 보기 →";
   el.next.hidden = false;
   el.next.focus();
 }
@@ -270,7 +270,7 @@ function buildResults() {
   el.feedback.hidden = true;
   el.results.hidden = false;
   el.summary.textContent = `BFS는 ${stats.bfsOpened}개 상태를 확인하고 ${stats.bfsMoves}번 이동하는 최소 경로를 찾았습니다.`;
-  el.dfs.textContent = `BFS는 가까운 층을 모두 확인하므로 최소 이동을 보장합니다. 같은 순서로 깊게 들어가는 DFS는 이 예에서 ${stats.dfsMoves}번 이동한 뒤 목표에 도착해 최소 이동을 보장하지 못했습니다.`;
+  el.dfs.textContent = `BFS는 가까운 깊이를 모두 확인하므로 최소 이동을 보장합니다. 같은 순서로 깊게 들어가는 DFS는 이 예에서 ${stats.dfsMoves}번 이동한 뒤 목표에 도착해 최소 이동을 보장하지 못했습니다.`;
   el.path.innerHTML = "";
   puzzlePathSteps(bfs).forEach((step, index, steps) => {
     const item = document.createElement("li");
