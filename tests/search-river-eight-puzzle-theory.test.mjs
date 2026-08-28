@@ -98,6 +98,8 @@ test("숫자 개수 퀴즈 정답을 맞힌 뒤에만 상태 선택 활동이 �
   assert.match(html, /id="number-tree-lab" class="number-tree-lab" hidden/);
   assert.match(js, /answer !== 88/);
   assert.match(js, /numberTreeLab\.hidden = false/);
+  const beforeQuiz = html.slice(0, html.indexOf('id="count-answer-quiz"'));
+  assert.doesNotMatch(beforeQuiz, /88개/);
 });
 
 test("부분 트리 완성 후 다른 경로도 동일하게 탐색함을 설명하고 88개 경우의 수를 별도로 제시한다", async () => {

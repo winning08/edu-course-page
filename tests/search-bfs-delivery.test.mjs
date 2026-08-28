@@ -335,6 +335,15 @@ test("강 건너기 전용 제목과 활동 목록 링크를 제공한다", asyn
   assert.match(html, /href="\.\.\/\.\.\/units\/ai-search\/"/);
 });
 
+test("강 건너기 완료 전에도 8-퍼즐 이론 실습으로 이동할 수 있다", async () => {
+  const html = await readFile(new URL("index.html", lessonRoot), "utf8");
+  const playStart = html.indexOf('id="river-play"');
+  const resultsStart = html.indexOf('id="river-results"');
+  const earlyLink = html.indexOf('class="lesson-pager river-theory-entry"');
+  assert.ok(earlyLink > playStart && earlyLink < resultsStart);
+  assert.match(html.slice(earlyLink, resultsStart), /href="eight-puzzle-theory\.html"/);
+});
+
 test("활동 안내는 현재 상태와 목표 상태만 보여주고 현재 상태를 이동마다 갱신한다", async () => {
   const [html, js] = await Promise.all([
     readFile(new URL("index.html", lessonRoot), "utf8"),
