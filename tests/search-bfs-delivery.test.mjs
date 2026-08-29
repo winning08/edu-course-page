@@ -338,12 +338,12 @@ test("강 건너기 전용 제목과 활동 목록 링크를 제공한다", asyn
 test("강 건너기 첫 화면 위에 1·2·3 학습 흐름을 보여주고 2단계로 이동할 수 있다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
   const introStart = html.indexOf('class="intro"');
-  const flowStart = html.indexOf('class="learning-flow river-learning-flow"');
+  const flowStart = html.indexOf('class="learning-flow"');
   const gameStart = html.indexOf('id="river-game"');
   assert.ok(flowStart > introStart && flowStart < gameStart);
-  assert.match(html.slice(flowStart, gameStart), /<span>1<\/span><strong>강 건너기 체험<\/strong>/);
+  assert.match(html.slice(flowStart, gameStart), /href="index\.html"[^>]*aria-current="page"><span>1<\/span><strong>강 건너기 체험<\/strong>/);
   assert.match(html.slice(flowStart, gameStart), /href="eight-puzzle-theory\.html"><span>2<\/span><strong>8-퍼즐로 이론 정리<\/strong>/);
-  assert.match(html.slice(flowStart, gameStart), /<span>3<\/span><strong>심화 문제\(숫자 퀴즈\)<\/strong>/);
+  assert.match(html.slice(flowStart, gameStart), /href="number-count-search\.html"><span>3<\/span><strong>심화 문제\(숫자 퀴즈\)<\/strong>/);
   assert.doesNotMatch(html, /river-theory-entry/);
 });
 

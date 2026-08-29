@@ -6,6 +6,8 @@ const MOVES = puzzleMoves(START);
 const moveByKey = new Map(MOVES.map((move) => [puzzleKey(move.state), move]));
 const made = new Map();
 const connected = new Set();
+const editorBoards = Array.from({ length: 4 }, () => Array(9).fill(null));
+let treeBuilderShown = false;
 
 function boardLabel(board) {
   return board.map((number) => number || "빈칸").join(", ");
@@ -53,36 +55,109 @@ function smallState(move, { button = false } = {}) {
   return item;
 }
 
-function renderMaker() {
-  const board = document.getElementById("maker-board");
-  board.replaceChildren(createBoard(START, { interactive: true }));
-  board.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => makeState(Number(button.dataset.tileIndex))));
+function editorStatuses() {
+  const firstValidIndex = new Map();
+  return editorBoards.map((board, index) => {
+    const entered = board.filter((value) => value !== null);
+    if (new Set(entered).size !== entered.length) return { type: "invalid", label: "숫자 중복", message: "같은 숫자는 한 숫자판에 한 번만 입력할 수 있습니다." };
+    if (entered.length < 8) return { type: "incomplete", label: "작성 중", message: `${8 - entered.length}개의 숫자를 더 입력하세요.` };
+    if (entered.length === 9) return { type: "invalid", label: "빈칸 필요", message: "실제 빈칸으로 사용할 한 칸은 비워 두세요." };
+    const state = board.map((value) => value === null ? 0 : value);
+    const key = puzzleKey(state);
+    if (key === puzzleKey(START)) return { type: "invalid", label: "다시 확인", message: "초기 상태가 아니라 한 번 움직인 다음 상태를 만드세요." };
+    const move = moveByKey.get(key);
+    if (!move) return { type: "invalid", label: "다시 확인", message: "초기 상태에서 빈칸을 한 번 움직여 만든 상태가 아닙니다." };
+    if (firstValidIndex.has(key)) return { type: "duplicate", label: "중복 상태", message: `상태 후보 ${firstValidIndex.get(key) + 1}과 같습니다.` };
+    firstValidIndex.set(key, index);
+    return { type: "valid", label: "완성", message: `빈칸 ${move.dirLabel} 상태가 맞습니다.`, move, state };
+  });
 }
 
-function makeState(tileIndex) {
-  const next = START.slice();
-  const blankIndex = next.indexOf(0);
-  [next[blankIndex], next[tileIndex]] = [next[tileIndex], next[blankIndex]];
-  const key = puzzleKey(next);
-  const move = moveByKey.get(key);
-  if (!move) return;
-  const feedback = document.getElementById("maker-feedback");
-  if (made.has(key)) {
-    feedback.textContent = `빈칸 ${move.dirLabel} 상태는 이미 만들었습니다. 다른 숫자를 움직여 보세요.`;
-    return;
-  }
-  made.set(key, move);
-  const list = document.getElementById("made-states");
-  list.querySelector(".empty-message")?.remove();
-  list.appendChild(smallState(move));
+function setEditorCell(slotIndex, cellIndex, value, moveNext = false) {
+  editorBoards[slotIndex][cellIndex] = value;
+  renderEditors();
+  const nextEmpty = moveNext ? editorBoards[slotIndex].findIndex((digit, index) => index > cellIndex && digit === null) : -1;
+  const targetIndex = nextEmpty >= 0 ? nextEmpty : cellIndex;
+  const cell = document.querySelector(`[data-slot-index="${slotIndex}"] [data-cell-index="${targetIndex}"]`);
+  cell?.focus();
+}
+
+function renderEditors() {
+  const container = document.getElementById("candidate-editors");
+  const statuses = editorStatuses();
+  const allComplete = statuses.every((status) => status.type === "valid");
+  made.clear();
+  container.replaceChildren();
+
+  statuses.forEach((status, slotIndex) => {
+    const board = editorBoards[slotIndex];
+    if (status.type === "valid") made.set(puzzleKey(status.state), status.move);
+    const card = document.createElement("article");
+    card.className = `candidate-editor is-${status.type}`;
+    card.dataset.slotIndex = String(slotIndex);
+    card.setAttribute("aria-labelledby", `candidate-title-${slotIndex}`);
+
+    const header = document.createElement("div");
+    header.className = "candidate-editor-head";
+    header.innerHTML = `<h4 id="candidate-title-${slotIndex}">상태 후보 ${slotIndex + 1}</h4><span>${status.label}</span>`;
+
+    const grid = document.createElement("div");
+    grid.className = "editor-grid";
+    grid.setAttribute("role", "grid");
+    grid.setAttribute("aria-label", `상태 후보 ${slotIndex + 1} 숫자판`);
+    board.forEach((digit, cellIndex) => {
+      const cell = document.createElement("input");
+      const inferredBlank = status.type === "valid" && digit === null;
+      const displayedValue = inferredBlank ? 0 : digit;
+      const changed = displayedValue !== null && displayedValue !== START[cellIndex];
+      cell.type = "text";
+      cell.inputMode = "numeric";
+      cell.maxLength = 1;
+      cell.pattern = "[1-8]";
+      cell.disabled = allComplete;
+      cell.className = `editor-cell${digit === null && !inferredBlank ? " is-unfilled" : ""}${inferredBlank ? " is-blank" : ""}${changed ? " is-changed" : ""}`;
+      cell.dataset.cellIndex = String(cellIndex);
+      cell.setAttribute("role", "gridcell");
+      cell.setAttribute("aria-label", `${Math.floor(cellIndex / 3) + 1}행 ${(cellIndex % 3) + 1}열, ${inferredBlank ? "빈칸" : digit === null ? "입력하지 않음" : `숫자 ${digit}`}`);
+      cell.value = digit === null ? "" : String(digit);
+      cell.addEventListener("input", (event) => {
+        const raw = event.target.value.replace(/[^1-8]/g, "").slice(-1);
+        if (event.target.value && !raw) document.getElementById("maker-feedback").textContent = "숫자 1부터 8까지만 입력하세요. 빈칸은 아무것도 입력하지 않습니다.";
+        setEditorCell(slotIndex, cellIndex, raw ? Number(raw) : null, Boolean(raw));
+      });
+      grid.appendChild(cell);
+    });
+
+    const footer = document.createElement("div");
+    footer.className = "candidate-editor-footer";
+    const feedback = document.createElement("p");
+    feedback.textContent = status.message;
+    const reset = document.createElement("button");
+    reset.type = "button";
+    reset.textContent = "이 판 초기화";
+    reset.disabled = allComplete;
+    reset.addEventListener("click", () => {
+      editorBoards[slotIndex] = Array(9).fill(null);
+      renderEditors();
+      document.getElementById("maker-feedback").textContent = `상태 후보 ${slotIndex + 1}의 입력을 모두 지웠습니다.`;
+    });
+    footer.append(feedback, reset);
+    card.append(header, grid, footer);
+    container.appendChild(card);
+  });
+
   document.getElementById("made-count").textContent = `${made.size} / 4`;
-  feedback.textContent = `빈칸 ${move.dirLabel} 상태를 만들었습니다. ${4 - made.size}개 남았습니다.`;
-  if (made.size === MOVES.length) showTreeBuilder();
+  if (allComplete && !treeBuilderShown) {
+    treeBuilderShown = true;
+    document.getElementById("maker-feedback").textContent = "서로 다른 다음 상태 4개를 모두 완성했습니다. 이제 상태를 탐색 트리에 연결하세요.";
+    showTreeBuilder();
+  }
 }
 
 function showTreeBuilder() {
   const section = document.getElementById("tree-section");
   const candidates = document.getElementById("tree-candidates");
+  candidates.replaceChildren();
   MOVES.forEach((move) => {
     const candidate = smallState(move, { button: true });
     candidate.setAttribute("aria-pressed", "false");
@@ -111,17 +186,27 @@ function connectState(candidate, move) {
     complete.hidden = false;
     complete.tabIndex = -1;
     complete.focus();
-    document.getElementById("advanced-count-activity").hidden = false;
   }
 }
 
-place("theory-start", START);
-place("theory-goal", GOAL);
-renderMaker();
-document.getElementById("maker-reset").addEventListener("click", () => {
-  renderMaker();
-  document.getElementById("maker-feedback").textContent = "초기 상태로 돌아왔습니다. 빈칸 옆의 숫자를 누르세요.";
-});
+if (document.getElementById("candidate-editors")) {
+  place("theory-start", START);
+  place("theory-goal", GOAL);
+  renderEditors();
+  document.getElementById("maker-reset-all").addEventListener("click", () => {
+  editorBoards.forEach((_, index) => { editorBoards[index] = Array(9).fill(null); });
+  treeBuilderShown = false;
+  connected.clear();
+  document.getElementById("tree-section").hidden = true;
+  document.getElementById("tree-candidates").replaceChildren();
+  document.getElementById("tree-children").replaceChildren();
+  document.getElementById("tree-progress").textContent = "0 / 4개 연결";
+  document.getElementById("tree-depth-preview").hidden = true;
+  document.getElementById("tree-complete").hidden = true;
+  renderEditors();
+  document.getElementById("maker-feedback").textContent = "네 숫자판의 입력을 모두 지웠습니다.";
+  });
+}
 
 const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const EXCLUDE_REASON = {

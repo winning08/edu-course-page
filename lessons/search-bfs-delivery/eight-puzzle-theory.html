@@ -9,10 +9,10 @@
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../assets/fonts.css">
   <link rel="stylesheet" href="../shared/lab-base.css">
-  <link rel="stylesheet" href="eight-puzzle-theory.css?v=2026082702">
+  <link rel="stylesheet" href="eight-puzzle-theory.css?v=2026082801">
   <link rel="stylesheet" href="../../assets/guard.css">
   <script type="module" src="../../assets/group-guard.js" onerror="document.documentElement.setAttribute('data-guard','blocked')"></script>
-  <script type="module" src="eight-puzzle-theory.js?v=2026082702"></script>
+  <script type="module" src="eight-puzzle-theory.js?v=2026082801"></script>
 </head>
 <body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-bfs-delivery">
   <a class="skip-link" href="#theory-title">이론 실습으로 바로가기</a>
@@ -26,7 +26,7 @@
         <div class="intro-copy"><p>강 건너기와 8-퍼즐은 모양은 다르지만, <strong>현재 모습에서 가능한 행동을 하며 목표를 찾는 문제</strong>라는 같은 구조를 갖습니다.</p><dl><div><dt>방법</dt><dd>이론 실습</dd></div><div><dt>시간</dt><dd>8분</dd></div><div><dt>핵심</dt><dd>상태·행동</dd></div></dl></div>
       </section>
 
-      <ol class="learning-flow" aria-label="학습 흐름"><li class="done"><span>1</span><strong>강 건너기 체험</strong></li><li class="current"><span>2</span><strong>8-퍼즐로 이론 정리</strong></li><li><span>3</span><strong>심화 문제(숫자 퀴즈)</strong></li></ol>
+      <nav aria-label="문제 해결과 탐색 활동 단계"><ol class="learning-flow"><li class="done"><a href="index.html"><span>1</span><strong>강 건너기 체험</strong></a></li><li class="current"><a href="eight-puzzle-theory.html" aria-current="page"><span>2</span><strong>8-퍼즐로 이론 정리</strong></a></li><li><a href="number-count-search.html"><span>3</span><strong>심화 문제(숫자 퀴즈)</strong></a></li></ol></nav>
 
       <section class="theory-card" aria-labelledby="theory-title">
         <div class="card-head"><span>이론 실습</span><strong>문제 해결과 탐색</strong></div>
@@ -40,7 +40,15 @@
 
         <section class="step-section" aria-labelledby="state-title"><span class="step-number">1</span><div><h3 id="state-title">초기 상태와 목표 상태를 확인하세요</h3><div class="endpoints"><div><strong>초기 상태</strong><div id="theory-start"></div></div><span aria-hidden="true">→ 탐색 →</span><div><strong>목표 상태</strong><div id="theory-goal"></div></div></div></div></section>
 
-        <section class="step-section" aria-labelledby="action-title"><span class="step-number">2</span><div><h3 id="action-title">가능한 다음 상태를 직접 만들어 보세요</h3><p>빈칸과 맞닿은 숫자를 누르면 숫자가 빈칸으로 이동합니다. 초기 상태에서 만들 수 있는 <strong>서로 다른 상태 4개</strong>를 모두 찾으세요.</p><div class="state-maker"><div><p class="maker-label">조작할 초기 상태</p><div id="maker-board" class="maker-board" role="group" aria-label="다음 상태를 만들 8-퍼즐"></div><button id="maker-reset" class="maker-reset" type="button">초기 상태로</button></div><div class="made-panel"><div class="made-heading"><strong>내가 만든 상태</strong><span id="made-count">0 / 4</span></div><div id="made-states" class="made-states"><p class="empty-message">숫자판을 움직이면 여기에 상태가 기록됩니다.</p></div></div></div><p id="maker-feedback" class="maker-feedback" aria-live="polite">빈칸 옆의 숫자를 누르세요.</p></div></section>
+        <section class="step-section" aria-labelledby="action-title"><span class="step-number">2</span><div><h3 id="action-title">가능한 다음 상태 4개를 직접 완성해 보세요</h3><p>비어 있는 네 숫자판에 <strong>숫자 1~8과 빈칸을 직접 입력</strong>하여, 초기 상태에서 빈칸을 한 번 움직였을 때 만들어지는 서로 다른 상태 4개를 완성하세요.</p>
+          <div class="keyboard-entry-guide" role="note">
+            <div><strong>키보드로 입력</strong><span>각 숫자판에 1~8을 한 번씩 입력하고, 실제 빈칸으로 사용할 한 칸은 비워 두세요.</span></div>
+            <button id="maker-reset-all" class="maker-reset" type="button">네 판 모두 비우기</button>
+          </div>
+          <div id="candidate-editors" class="candidate-editors" aria-label="다음 상태 후보 숫자판 4개"></div>
+          <div class="maker-summary"><span>완성된 서로 다른 상태</span><strong id="made-count">0 / 4</strong></div>
+          <p id="maker-feedback" class="maker-feedback" aria-live="polite">첫 번째 칸부터 숫자 1~8을 입력하세요. 숫자를 입력하면 다음 칸으로 이동합니다.</p>
+        </div></section>
 
         <section id="tree-section" class="step-section tree-section" aria-labelledby="tree-title" hidden><span class="step-number">3</span><div><h3 id="tree-title">만든 상태로 탐색 트리를 구성하세요</h3><p>아래의 상태 카드를 하나씩 눌러 초기 상태 아래에 연결하세요. 네 개를 모두 연결하면 탐색 트리의 깊이 1이 완성됩니다.</p><div id="tree-candidates" class="tree-candidates" aria-label="트리에 추가할 상태"></div>
           <div class="tree-builder">
@@ -58,130 +66,8 @@
             </div>
           </div>
           <p id="tree-progress" class="tree-progress">0 / 4개 연결</p>
-          <div id="tree-complete" class="key-point" hidden><strong>탐색 트리 깊이 1 완성</strong><p>한 상태에서 가능한 행동을 하면 여러 다음 상태가 만들어집니다. 이 관계를 트리로 넓혀 가며 목표를 찾는 과정이 <strong>탐색</strong>입니다. 방금 만든 상태에서 또 행동을 하면, 트리의 깊이는 2, 3으로 계속 늘어납니다.</p></div>
+          <div id="tree-complete" class="key-point" hidden><strong>탐색 트리 깊이 1 완성</strong><p>한 상태에서 가능한 행동을 하면 여러 다음 상태가 만들어집니다. 이 관계를 트리로 넓혀 가며 목표를 찾는 과정이 <strong>탐색</strong>입니다. 방금 만든 상태에서 또 행동을 하면, 트리의 깊이는 2, 3으로 계속 늘어납니다.</p><a class="next-activity-button" href="number-count-search.html">다음 활동 · 숫자 개수 세기 →</a></div>
         </div></section>
-      </section>
-
-      <section id="advanced-count-activity" class="advanced-count-card" aria-labelledby="advanced-count-title" hidden>
-        <div class="advanced-count-head">
-          <div>
-            <p class="section-label">다음 활동 · 부분 상태 공간 탐색</p>
-            <h2 id="advanced-count-title">숫자 개수 세기</h2>
-          </div>
-          <span class="badge-tag">부분 탐색 트리</span>
-        </div>
-        <div class="advanced-problem">
-          <p>다음 조건을 만족하는 세 자리 자연수의 개수를 구하시오.</p>
-          <ol>
-            <li><span>(가)</span> 백의 자리의 수, 십의 자리의 수, 일의 자리의 수 중 7의 개수는 1개이다.</li>
-            <li><span>(나)</span> 백의 자리의 수와 일의 자리의 수의 곱을 2로 나눈 나머지는 1이다.</li>
-          </ol>
-        </div>
-        <div class="search-connection">
-          <strong>부분 탐색 트리(Partial Search Tree)로 경로 체험하기</strong>
-          <p>전체 상태를 한꺼번에 그리지 않고, 학생이 선택한 <strong>단 하나의 경로</strong>를 따라가며 부분 트리를 만듭니다.</p>
-        </div>
-        <details class="count-hint">
-          <summary>조건 (나)를 어떻게 해석할까요?</summary>
-          <p>두 자리 숫자의 곱을 2로 나눈 나머지가 1이 되려면 백의 자리와 일의 자리가 모두 <strong>홀수</strong>(1, 3, 5, 7, 9)여야 합니다. 세 자리 자연수이므로 백의 자리는 0이 될 수 없습니다.</p>
-        </details>
-
-        <form id="count-answer-quiz" class="count-answer-quiz">
-          <label for="count-answer"><strong>먼저 답을 예상해 보세요</strong><span>조건을 만족하는 세 자리 자연수는 모두 몇 개일까요?</span></label>
-          <div class="count-answer-row">
-            <input id="count-answer" type="number" inputmode="numeric" min="1" max="999" required aria-describedby="count-answer-feedback">
-            <span aria-hidden="true">개</span>
-            <button type="submit">정답 확인</button>
-          </div>
-          <p id="count-answer-feedback" class="count-answer-feedback" aria-live="polite">답을 맞히면 상태를 선택하며 탐색할 수 있습니다.</p>
-        </form>
-
-        <div id="number-tree-lab" class="number-tree-lab" hidden>
-          <div class="number-tree-status">
-            <div><span>현재 탐색 깊이</span><strong id="number-tree-depth">0</strong></div>
-            <div><span>현재 경로 상태</span><strong id="number-current-state">_ _ _</strong></div>
-            <div><span>전체 목표 상태 수</span><strong>88개</strong></div>
-          </div>
-
-          <div class="active-path-strip" aria-label="현재 탐색 경로">
-            <span class="path-label">현재 탐색 경로</span>
-            <div id="active-path-display" class="path-nodes" aria-live="polite">
-              <span class="path-node is-active">초기 상태 [ _ _ _ ]</span>
-            </div>
-          </div>
-
-          <div id="partial-tree-lab" class="partial-tree-lab">
-            <!-- Step 1: 7's position branch selection -->
-            <div id="step-branch-select" class="tree-step-card">
-              <div class="step-card-head">
-                <span class="depth-badge">깊이 1</span>
-                <h4>조건 (가) · 7의 위치 가지 선택</h4>
-              </div>
-              <p class="step-guide">7이 들어갈 자리(가지 1, 2, 3) 중 하나를 선택하세요.</p>
-              <div class="branch-cards-grid" id="branch-cards-container"></div>
-            </div>
-
-            <!-- Step 2: First undetermined slot (Single digit choice) -->
-            <div id="step-slot1-select" class="tree-step-card" hidden>
-              <div class="step-card-head">
-                <span class="depth-badge">깊이 2</span>
-                <h4 id="slot1-heading">십의 자리 숫자 선택 (0~9 중 유효 숫자 1개)</h4>
-              </div>
-              <p class="step-guide">조건을 만족하는 유효한 숫자 하나를 누르면 해당 숫자의 경로로 다음 깊이에 진입합니다. 잘못된 숫자는 X와 이유가 표시됩니다.</p>
-              <div id="slot1-digit-grid" class="digit-grid" aria-label="첫 번째 자리 후보 숫자 선택"></div>
-            </div>
-
-            <!-- Step 3: Second undetermined slot (All valid goal states) -->
-            <div id="step-slot2-select" class="tree-step-card" hidden>
-              <div class="step-card-head">
-                <span class="depth-badge">깊이 3</span>
-                <h4 id="slot2-heading">일의 자리 모든 목표 상태 완성</h4>
-                <span id="slot2-progress-badge" class="slot-progress-badge">0 / 4개 발견</span>
-              </div>
-              <p class="step-guide">현재 경로에서 가능한 일의 자리 유효 숫자를 모두 찾아 목표 상태들을 완성하세요.</p>
-              <div id="slot2-digit-grid" class="digit-grid" aria-label="두 번째 자리 후보 숫자 선택"></div>
-            </div>
-
-            <!-- Partial Search Tree Visualizer -->
-            <div id="partial-tree-viewer" class="partial-tree-viewer" aria-label="부분 탐색 트리 다이어그램">
-              <div class="viewer-header">
-                <div class="viewer-title-box">
-                  <span class="depth-badge">부분 탐색 트리</span>
-                  <h4>부분 탐색 트리 · 현재 선택한 경로만 표시</h4>
-                </div>
-                <span class="tree-disclaimer-tag">※ 전체 탐색 트리가 아닙니다</span>
-              </div>
-              <div id="partial-tree-graph" class="partial-tree-graph" aria-live="polite"></div>
-            </div>
-          </div>
-
-          <p id="number-tree-feedback" class="count-feedback" aria-live="polite">7의 위치를 선택하여 첫 번째 분기 상태를 만드세요.</p>
-        </div>
-
-        <div id="count-solution" class="count-solution" hidden>
-          <div class="solution-header">
-            <strong>부분 탐색 트리 완성 ➜ 전체 88개 경우의 수로 확장</strong>
-            <p id="solution-path-summary">방금 만든 부분 트리는 학생이 선택한 단 하나의 경로에서 파생된 결과입니다. 다른 모든 경로도 동일한 규칙으로 탐색하여 전체 경우의 수를 계산합니다.</p>
-          </div>
-          <div class="solution-grid">
-            <div class="solution-item">
-              <span class="item-title">백의 자리가 7 (7 _ _)</span>
-              <strong>1 × 9 × 4 = 36개</strong>
-              <small>십의 자리 9가지(7 제외) × 일의 자리 4가지(홀수 1,3,5,9)</small>
-            </div>
-            <div class="solution-item">
-              <span class="item-title">십의 자리가 7 (_ 7 _)</span>
-              <strong>4 × 1 × 4 = 16개</strong>
-              <small>백의 자리 4가지(홀수 1,3,5,9) × 일의 자리 4가지(홀수 1,3,5,9)</small>
-            </div>
-            <div class="solution-item">
-              <span class="item-title">일의 자리가 7 (_ _ 7)</span>
-              <strong>4 × 9 × 1 = 36개</strong>
-              <small>백의 자리 4가지(홀수 1,3,5,9) × 십의 자리 9가지(7 제외)</small>
-            </div>
-          </div>
-          <p class="solution-total">모든 가지의 합: <strong>36 + 16 + 36 = 88</strong></p>
-        </div>
       </section>
 
       <nav class="lesson-pager" aria-label="활동 이동"><a href="index.html"><em>이전</em><strong>강 건너기 다시 보기</strong></a></nav>

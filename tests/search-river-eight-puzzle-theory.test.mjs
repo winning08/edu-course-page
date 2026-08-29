@@ -11,6 +11,22 @@ test("8-퍼즐 이론 실습은 강 건너기 활동 폴더에 속한다", async
   assert.match(theory, /문제 해결과 탐색 · 이론/);
 });
 
+test("강 건너기부터 숫자 퀴즈까지 모든 페이지 상단에서 세 독립 활동을 클릭해 이동할 수 있다", async () => {
+  const [river, theory, count] = await Promise.all([
+    readFile(new URL("index.html", root), "utf8"),
+    readFile(new URL("eight-puzzle-theory.html", root), "utf8"),
+    readFile(new URL("number-count-search.html", root), "utf8"),
+  ]);
+  for (const html of [river, theory, count]) {
+    assert.match(html, /강 건너기 체험/);
+    assert.match(html, /8-퍼즐로 이론 정리/);
+    assert.match(html, /심화 문제\(숫자 퀴즈\)/);
+  }
+  assert.match(river, /href="number-count-search\.html"/);
+  assert.match(theory, /href="number-count-search\.html"/);
+  assert.match(count, /aria-current="page"/);
+});
+
 test("교과서 예시로 상태·행동·탐색 트리의 깊이를 설명한다", async () => {
   const [html, js] = await Promise.all([readFile(new URL("eight-puzzle-theory.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.js", root), "utf8")]);
   assert.match(html, /초기 상태와 목표 상태/);
@@ -31,24 +47,31 @@ test("트리 구성 단계는 깊이 0·1·2 행을 각각 깊이 표시와 함�
   assert.match(js, /document\.getElementById\("tree-depth-preview"\)\.hidden = false/);
 });
 
-test("학생이 다음 상태 4개를 직접 만들고 카드를 눌러 탐색 트리를 구성한다", async () => {
+test("학생이 숫자를 입력해 다음 상태 4개를 직접 완성한 뒤 탐색 트리를 구성한다", async () => {
   const [html, js] = await Promise.all([readFile(new URL("eight-puzzle-theory.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.js", root), "utf8")]);
-  assert.match(html, /id="maker-board"/);
+  assert.match(html, /키보드로 입력/);
+  assert.match(html, /id="candidate-editors"/);
+  assert.match(html, /id="maker-reset-all"/);
   assert.match(html, /서로 다른 상태 4개/);
   assert.match(html, /id="tree-candidates"/);
   assert.match(html, /id="tree-children"/);
-  assert.match(js, /function makeState\(tileIndex\)/);
-  assert.match(js, /if \(made\.size === MOVES\.length\) showTreeBuilder\(\)/);
+  assert.match(js, /const editorBoards = Array\.from\(\{ length: 4 \}, \(\) => Array\(9\)\.fill\(null\)\)/);
+  assert.match(html, /비어 있는 네 숫자판/);
+  assert.match(js, /function setEditorCell\(slotIndex, cellIndex, value, moveNext = false\)/);
+  assert.match(js, /function editorStatuses\(\)/);
+  assert.match(js, /같은 숫자는 한 숫자판에 한 번만 입력/);
+  assert.match(js, /실제 빈칸으로 사용할 한 칸은 비워/);
+  assert.match(js, /상태 후보 .*과 같습니다/);
+  assert.match(js, /allComplete && !treeBuilderShown/);
   assert.match(js, /function connectState\(candidate, move\)/);
   assert.match(js, /if \(connected\.size === MOVES\.length\)/);
 });
 
-test("8-퍼즐 이론 다음에 단일 경로를 따라가는 부분 탐색 트리와 88개 목표 상태 확장이 있다", async () => {
-  const [html, js] = await Promise.all([readFile(new URL("eight-puzzle-theory.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.js", root), "utf8")]);
-  assert.ok(html.indexOf('id="advanced-count-title"') > html.indexOf('id="tree-section"'));
+test("독립된 숫자 퀴즈 페이지에 단일 경로 부분 탐색 트리와 88개 목표 상태 확장이 있다", async () => {
+  const [html, theory, js] = await Promise.all([readFile(new URL("number-count-search.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.js", root), "utf8")]);
   assert.match(html, /<span>3<\/span><strong>심화 문제\(숫자 퀴즈\)<\/strong>/);
-  assert.match(html, /id="advanced-count-activity"[^>]*hidden/);
-  assert.match(js, /document\.getElementById\("advanced-count-activity"\)\.hidden = false/);
+  assert.match(html, /id="advanced-count-activity"/);
+  assert.match(theory, /href="number-count-search\.html">다음 활동 · 숫자 개수 세기/);
   assert.match(html, /백의 자리가 7/);
   assert.match(html, /십의 자리가 7/);
   assert.match(html, /일의 자리가 7/);
@@ -69,7 +92,7 @@ test("8-퍼즐 이론 다음에 단일 경로를 따라가는 부분 탐색 트�
 
 test("부분 탐색 트리는 단일 경로와 직하위 분기만 표시하며 오개념 방지 문구를 갖춘다", async () => {
   const [html, js, css] = await Promise.all([
-    readFile(new URL("eight-puzzle-theory.html", root), "utf8"),
+    readFile(new URL("number-count-search.html", root), "utf8"),
     readFile(new URL("eight-puzzle-theory.js", root), "utf8"),
     readFile(new URL("eight-puzzle-theory.css", root), "utf8"),
   ]);
@@ -93,7 +116,7 @@ test("부분 탐색 트리는 단일 경로와 직하위 분기만 표시하며 
 });
 
 test("숫자 개수 퀴즈 정답을 맞힌 뒤에만 상태 선택 활동이 열린다", async () => {
-  const [html, js] = await Promise.all([readFile(new URL("eight-puzzle-theory.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.js", root), "utf8")]);
+  const [html, js] = await Promise.all([readFile(new URL("number-count-search.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.js", root), "utf8")]);
   assert.match(html, /id="count-answer-quiz"/);
   assert.match(html, /id="number-tree-lab" class="number-tree-lab" hidden/);
   assert.match(js, /answer !== 88/);
@@ -103,7 +126,7 @@ test("숫자 개수 퀴즈 정답을 맞힌 뒤에만 상태 선택 활동이 �
 });
 
 test("부분 트리 완성 후 다른 경로도 동일하게 탐색함을 설명하고 88개 경우의 수를 별도로 제시한다", async () => {
-  const [html, js] = await Promise.all([readFile(new URL("eight-puzzle-theory.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.js", root), "utf8")]);
+  const [html, js] = await Promise.all([readFile(new URL("number-count-search.html", root), "utf8"), readFile(new URL("eight-puzzle-theory.js", root), "utf8")]);
   assert.match(html, /id="count-solution"/);
   assert.match(html, /id="solution-path-summary"/);
   assert.match(js, /numberBranches/);
