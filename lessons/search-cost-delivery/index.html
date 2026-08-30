@@ -5,7 +5,7 @@
   <script>document.documentElement.setAttribute("data-guard", "pending");</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="학교 안 여러 장소를 연결한 그래프에서, 균일 비용 탐색이 지금까지 든 비용 g(n)이 가장 작은 장소부터 오픈 리스트·닫힌 리스트로 넓혀가며 가장 빠른 길을 찾는 과정을 직접 예측해 보는 활동">
-  <title>매점까지 가장 빠르게 가기 | 인공지능과 탐색</title>
+  <title>균일 비용 탐색으로 가장 빠른 길 찾기 | 인공지능과 탐색</title>
   <link rel="stylesheet" href="../../assets/fonts.css">
   <link rel="stylesheet" href="../shared/lab-base.css">
   <link rel="stylesheet" href="../shared/search-grid.css">
@@ -35,7 +35,7 @@
     <section class="intro" aria-labelledby="page-title">
       <div>
         <p class="eyebrow">맹목적 탐색 · 활동 03</p>
-        <h1 id="page-title">매점까지 가장 빠르게 가기</h1>
+        <h1 id="page-title">균일 비용 탐색으로 가장 빠른 길 찾기</h1>
       </div>
       <div class="intro-copy">
         <p>사람은 지도를 한눈에 보고 빠른 길을 비교할 수 있습니다. 컴퓨터는 어떻게 같은 답을 찾을까요? 먼저 집에서 학교까지 가는 길을 직접 고른 뒤, 균일 비용 탐색이 <b>g(n)</b>이 가장 작은 곳부터 답을 찾는 과정을 확인합니다.</p>
@@ -53,7 +53,7 @@
 
     <section id="human-challenge" class="transition human-challenge" aria-labelledby="human-title">
       <p class="eyebrow">문제 1 · 직접 찾아보기</p>
-      <h2 id="human-title" tabindex="-1">집에서 학교까지 가는 최소 비용은?</h2>
+      <h2 id="human-title" tabindex="-1">집에서 학교까지 가장 적게 걸리는 시간은?</h2>
       <p>선 위의 숫자는 각 길을 지나가는 데 걸리는 시간(분)입니다. 모든 길은 양방향으로 이동할 수 있습니다. 집에서 학교까지 가는 데 필요한 가장 적은 시간을 구하시오.</p>
       <div class="commute-map" role="img" aria-label="모든 길은 양방향이다. 집에서 골목, 공원, 횡단보도, 도서관, 버스 정류장, 언덕을 거쳐 학교로 이어지는 길과 각 구간의 이동 시간">
         <svg viewBox="0 0 800 430" aria-hidden="true">
@@ -86,7 +86,7 @@
         </svg>
       </div>
       <form class="commute-answer" id="commute-answer" novalidate>
-        <label for="commute-cost">목적지까지 가는 최소 비용</label>
+        <label for="commute-cost">학교까지 걸리는 가장 짧은 시간</label>
         <div class="commute-answer-row">
           <input id="commute-cost" name="commute-cost" type="number" min="0" step="1" inputmode="numeric" autocomplete="off" required aria-describedby="commute-unit">
           <span id="commute-unit">분</span>

@@ -471,7 +471,7 @@ el.commuteAnswer.addEventListener("submit", (event) => {
   el.commuteFeedback.hidden = false;
   if (enteredCost === "") {
     el.commuteFeedback.className = "step-feedback incorrect";
-    el.commuteFeedback.innerHTML = `<strong>비용을 입력하세요.</strong><p>지도에서 집부터 학교까지 이어지는 길의 시간을 더해 보세요.</p>`;
+    el.commuteFeedback.innerHTML = `<strong>시간을 입력하세요.</strong><p>지도에서 집부터 학교까지 이어지는 길의 시간을 더해 보세요.</p>`;
     el.commuteCost.focus();
     return;
   }

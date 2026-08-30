@@ -78,7 +78,7 @@ test("집에서 학교까지의 사람용 도전 뒤에 UCS 활동이 열리고,
     readFile(new URL("practice.js", lessonRoot), "utf8"),
   ]);
   assert.match(html, /id="human-challenge"/);
-  assert.match(html, /집에서 학교까지 가는 최소 비용은/);
+  assert.match(html, /집에서 학교까지 가장 적게 걸리는 시간은/);
   assert.match(html, /id="commute-cost"[^>]*type="number"/);
   assert.doesNotMatch(html, /data-cost=/);
   assert.match(html, /id="ucs-concept" class="concept-bridge" hidden/);
