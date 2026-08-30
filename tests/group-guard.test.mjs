@@ -10,7 +10,6 @@ async function loadGroups() {
 }
 
 const GROUP_PAGES = {
-  "ai-vocabulary": ["units/ai-vocabulary/index.html", "lessons/ai-keyword-bingo/index.html"],
   "ai-learning": ["units/ai-learning/index.html", "lessons/ai-inference-ripeness/index.html", "lessons/ai-signal-noise/index.html", "lessons/ai-biased-data/index.html"],
   "ai-evaluation": ["units/ai-evaluation/index.html", "lessons/turing-test-questions/index.html", "lessons/arc-puzzle-challenge/index.html", "lessons/turing-vs-arc-compare/index.html"],
 };
@@ -112,7 +111,6 @@ test("ai-evaluation 그룹의 활동 3개는 모두 active=true다(개별 활동
 
 test("모든 활동 페이지(<body>)는 data-guard-lesson으로 자기 자신의 child id를 선언한다", async () => {
   const LESSON_PAGE_TO_ID = {
-    "lessons/ai-keyword-bingo/index.html": "ai-keyword-bingo",
     "lessons/ai-inference-ripeness/index.html": "ai-inference-ripeness",
     "lessons/ai-signal-noise/index.html": "ai-signal-noise",
     "lessons/ai-biased-data/index.html": "ai-biased-data",
