@@ -182,7 +182,7 @@
           "duration": 15,
           "difficulty": "보통",
           "status": "published",
-          "active": false,
+          "active": true,
           "objective": "장소마다 이동 비용이 다를 때, 균일 비용 탐색이 지금까지 든 비용 g(n)이 가장 작은 곳부터 오픈 리스트로 넓혀가며 실제로 가장 빠른 길을 찾는다는 것을 체험한다."
         },
         {
@@ -193,7 +193,7 @@
           "duration": 25,
           "difficulty": "보통",
           "status": "published",
-          "active": false,
+          "active": true,
           "objective": "교과서의 8-퍼즐 예시와 새로운 문제에서 g(n), h(n), f(n)을 비교하며 A* 탐색이 다음 상태를 선택하는 원리를 체험한다."
         }
       ]

@@ -1,4 +1,4 @@
-// 연습 섹션: 정점 7~10개짜리 무작위 그래프를 만들어 같은 균일 비용 탐색(UCS) 상호작용을
+// 연습 섹션: 첫 연습에 알맞은 정점 5~6개짜리 무작위 그래프를 만들어 같은 균일 비용 탐색(UCS) 상호작용을
 // 반복 연습할 수 있게 한다. 위쪽의 안내된 활동(game.js)과 같은 그래프 렌더링·상호작용 엔진을
 // 그대로 재사용하되, 라운드 진행 상태는 이 섹션만의 것으로 완전히 분리해 둔다.
 import { runUcsGraphTrace, pathCostFor, nodeLabel, generateRandomGraph } from "../shared/search-graph-lab.js?v=2026082401";
@@ -398,7 +398,7 @@ if (el.section) {
   }
 
   function newPracticeGraph() {
-    graph = generateRandomGraph({ minNodes: 7, maxNodes: 10 });
+    graph = generateRandomGraph({ minNodes: 5, maxNodes: 6 });
     trace = runUcsGraphTrace(graph);
     rounds = buildRounds(trace);
     el.results.hidden = true;

@@ -4,6 +4,21 @@ import { buildRounds, checkPickAnswer, checkDupAnswer, summarize, pathLabel, FEW
 
 const $ = (selector) => document.querySelector(selector);
 const el = {
+  humanChallenge: $("#human-challenge"),
+  commuteAnswer: $("#commute-answer"),
+  commuteCost: $("#commute-cost"),
+  commuteFeedback: $("#commute-feedback"),
+  continueToUcs: $("#continue-to-ucs"),
+  complexChallenge: $("#complex-challenge"),
+  complexGraph: $("#complex-graph"),
+  complexAnswer: $("#complex-answer"),
+  complexCost: $("#complex-cost"),
+  complexFeedback: $("#complex-feedback"),
+  startComputerMethod: $("#start-computer-method"),
+  methodTransition: $("#method-transition"),
+  beginUcsProblem: $("#begin-ucs-problem"),
+  costProgress: $("#cost-progress"),
+  ucsConcept: $("#ucs-concept"),
   predictGraph: $("#predict-graph"),
   predictChoice: $("#predict-choice"),
   predictResult: $("#predict-result"),
@@ -17,6 +32,7 @@ const el = {
   traceGraph: $("#trace-graph"),
   listPanel: $("#list-panel"),
   candidatePrompt: $("#candidate-prompt"),
+  costChoiceSummary: $("#cost-choice-summary"),
   nextStep: $("#next-step"),
   stepFeedback: $("#step-feedback"),
   closeAction: $("#close-action"),
@@ -49,6 +65,54 @@ let interactionPhase = "pick";
 let pendingCandidates = new Map();
 // 지금 답해야 하는 중복 상태 하나(있으면). round.dupChildren[0]과 같다.
 let pendingDup = null;
+let pickAttempts = 0;
+let ucsProblemStarted = false;
+let ucsExperimentStarted = false;
+
+function updateCostProgress(stage) {
+  for (const item of el.costProgress.querySelectorAll("li")) {
+    const itemStage = Number(item.dataset.stage);
+    item.classList.toggle("is-current", itemStage === stage);
+    item.classList.toggle("is-complete", itemStage < stage);
+    if (itemStage === stage) item.setAttribute("aria-current", "step");
+    else item.removeAttribute("aria-current");
+  }
+}
+
+function showCostStage(stage) {
+  el.humanChallenge.hidden = true;
+  el.complexChallenge.hidden = true;
+  el.methodTransition.hidden = true;
+  el.ucsConcept.hidden = true;
+  el.predictView.hidden = true;
+  el.experiment.hidden = true;
+
+  let target;
+  if (stage === 1) {
+    el.humanChallenge.hidden = false;
+    target = el.humanChallenge;
+  } else if (stage === 2) {
+    el.complexChallenge.hidden = false;
+    target = el.complexChallenge;
+  } else if (ucsExperimentStarted) {
+    el.experiment.hidden = false;
+    target = el.experiment;
+  } else if (ucsProblemStarted) {
+    el.ucsConcept.hidden = false;
+    el.predictView.hidden = false;
+    target = el.ucsConcept;
+  } else {
+    el.methodTransition.hidden = false;
+    target = el.methodTransition;
+  }
+  updateCostProgress(stage);
+  target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+}
+
+el.costProgress.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-go-stage]");
+  if (button) showCostStage(Number(button.dataset.goStage));
+});
 
 function prevClosedFor(index) {
   return index === 0 ? [] : rounds[index - 1].closedAfter;
@@ -180,6 +244,7 @@ function showRound(index) {
   interactionPhase = "pick";
   pendingCandidates = new Map();
   pendingDup = null;
+  pickAttempts = 0;
   const round = rounds[index];
   roundState = initRoundState(round);
   updateStageLabel(round);
@@ -192,6 +257,9 @@ function showRound(index) {
   el.dupQuestion.hidden = true;
   el.dupQuestion.innerHTML = "";
   el.nextStep.hidden = true;
+
+  const comparison = round.pickCandidates.map((candidate) => `${nodeLabel(candidate.id)} g(n)=${candidate.g}`).join(" · ");
+  el.costChoiceSummary.innerHTML = `<span>현재 후보 비교</span><strong>${comparison}</strong>`;
 
   el.candidatePrompt.textContent = round.pickCandidates.length > 1
     ? "그래프에서 g(n)이 가장 작은 상태를 클릭하세요."
@@ -269,20 +337,21 @@ function handleDupChoice(insertChosen) {
 function handlePick(clickedId) {
   const round = rounds[currentRoundIndex];
   const outcome = checkPickAnswer(round, clickedId);
-  const resultMarks = { [clickedId]: outcome.correct ? "correct" : "incorrect" };
-  if (!outcome.correct) resultMarks[round.expandedId] = "correct";
-  interactionPhase = "close";
-  renderFromRoundState({ interactiveIds: [round.expandedId], interactiveVerb: "닫힌 리스트로 옮기기", resultMarks });
-
   el.stepFeedback.hidden = false;
-  el.stepFeedback.classList.add(outcome.correct ? "correct" : "incorrect");
-  el.stepFeedback.innerHTML = outcome.correct
-    ? `<strong>정답이에요.</strong><p>${nodeLabel(round.expandedId)}은(는) 오픈 리스트에서 g=${round.g}로 가장 작았습니다.</p>`
-    : `<strong>다시 확인해 볼까요.</strong><p>실제로 다음에 확장된 상태는 <b>${nodeLabel(round.expandedId)}</b>(g=${round.g})입니다. 초록 테두리로 표시했어요.</p>`;
+  el.stepFeedback.className = "step-feedback";
+  if (!outcome.correct) {
+    pickAttempts += 1;
+    el.stepFeedback.classList.add("incorrect");
+    el.stepFeedback.innerHTML = pickAttempts === 1
+      ? `<strong>한 번 더 비교해 보세요.</strong><p>오픈 리스트에 있는 모든 g(n) 중 가장 작은 값을 찾으면 됩니다.</p>`
+      : `<strong>힌트</strong><p><b>${round.g}</b>보다 큰 값은 다음 상태가 될 수 없습니다.</p>`;
+    renderFromRoundState({ interactiveIds: round.pickCandidates.map((c) => c.id), interactiveVerb: "다시 선택하기", resultMarks: { [clickedId]: "incorrect" } });
+    return;
+  }
 
-  el.closeAction.hidden = false;
-  el.closeAction.innerHTML = `<p>이제 그래프에서 <strong>${nodeLabel(round.expandedId)}</strong>을(를) 다시 클릭해 닫힌 리스트로 옮기세요.</p>`;
-  el.candidatePrompt.textContent = `${nodeLabel(round.expandedId)}을(를) 클릭해 닫힌 리스트로 옮기세요.`;
+  el.stepFeedback.classList.add("correct");
+  el.stepFeedback.innerHTML = `<strong>정답이에요.</strong><p>${nodeLabel(round.expandedId)}의 g(n)=${round.g}이 가장 작으므로 이 상태를 확정합니다.</p>`;
+  handleClose();
 }
 
 function handleClose() {
@@ -384,23 +453,151 @@ function renderResults() {
 el.predictChoice.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-path]");
   if (!button || button.disabled) return;
-  const fewerHopsCost = pathCostFor(FEWER_HOPS_PATH);
-  const optimalCost = trace.pathCost;
-  const chosenCost = button.dataset.path === "fewer-hops" ? fewerHopsCost : optimalCost;
-  const correct = chosenCost === Math.min(fewerHopsCost, optimalCost);
   [...el.predictChoice.children].forEach((b) => {
     b.disabled = true;
     b.setAttribute("aria-pressed", String(b === button));
   });
   el.predictResult.hidden = false;
   el.predictResult.className = "step-feedback";
-  el.predictResult.classList.add(correct ? "correct" : "incorrect");
-  el.predictResult.innerHTML = `<strong>${correct ? "맞아요." : "실제로는 달랐어요."}</strong><p>정문 → 중앙현관 → 매점(2번 이동)은 ${fewerHopsCost}분, 정문 → 운동장 → 급식실 → 매점(3번 이동)은 ${optimalCost}분입니다. 이동 횟수가 적다고 항상 빠른 건 아니에요 — 이제부터 균일 비용 탐색이 어떻게 이 사실을 스스로 찾아내는지 한 걸음씩 확인합니다.</p>`;
+  el.predictResult.classList.add("correct");
+  el.predictResult.innerHTML = `<strong>예측을 저장했습니다.</strong><p>아직 어느 길이 정답인지는 공개하지 않습니다. 균일 비용 탐색으로 직접 확인해 보세요.</p>`;
   el.startUcsButton.hidden = false;
   el.startUcsButton.focus();
 });
 
+el.commuteAnswer.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const enteredCost = el.commuteCost.value.trim();
+  el.commuteFeedback.hidden = false;
+  if (enteredCost === "") {
+    el.commuteFeedback.className = "step-feedback incorrect";
+    el.commuteFeedback.innerHTML = `<strong>비용을 입력하세요.</strong><p>지도에서 집부터 학교까지 이어지는 길의 시간을 더해 보세요.</p>`;
+    el.commuteCost.focus();
+    return;
+  }
+  const correct = Number(enteredCost) === 11;
+  el.commuteFeedback.className = `step-feedback ${correct ? "correct" : "incorrect"}`;
+  if (!correct) {
+    el.commuteFeedback.innerHTML = `<strong>정답이 아닙니다.</strong><p>다시 풀어보세요.</p>`;
+    el.commuteCost.select();
+    el.continueToUcs.hidden = true;
+  } else {
+    el.commuteFeedback.innerHTML = `<strong>가장 빠른 길을 찾았습니다.</strong><p>집 → 공원 → 도서관 → 언덕 → 학교는 3 + 3 + 2 + 3 = <b>11분</b>입니다. 가장 곧아 보이는 길이 반드시 가장 빠르지는 않습니다.</p>`;
+    el.commuteCost.disabled = true;
+    el.commuteAnswer.querySelector('button[type="submit"]').hidden = true;
+    el.continueToUcs.hidden = false;
+    el.continueToUcs.focus();
+  }
+});
+
+el.continueToUcs.addEventListener("click", () => {
+  el.humanChallenge.hidden = true;
+  el.complexChallenge.hidden = false;
+  updateCostProgress(2);
+  el.complexChallenge.querySelector("h2").focus();
+  el.complexChallenge.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+});
+
+el.startComputerMethod.addEventListener("click", () => {
+  el.complexChallenge.hidden = true;
+  el.methodTransition.hidden = false;
+  updateCostProgress(3);
+  el.methodTransition.querySelector("h2").focus();
+  el.methodTransition.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+});
+
+el.beginUcsProblem.addEventListener("click", () => {
+  ucsProblemStarted = true;
+  el.methodTransition.hidden = true;
+  el.ucsConcept.hidden = false;
+  el.predictView.hidden = false;
+  el.ucsConcept.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+});
+
+el.complexAnswer.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (el.complexCost.value.trim() === "") {
+    el.complexFeedback.hidden = false;
+    el.complexFeedback.className = "step-feedback incorrect";
+    el.complexFeedback.innerHTML = `<strong>예상 비용을 입력하세요.</strong><p>정확히 계산하지 못해도 괜찮습니다. 현재 생각한 값을 적어 보세요.</p>`;
+    el.complexCost.focus();
+    return;
+  }
+  const correct = Number(el.complexCost.value) === 11;
+  el.complexFeedback.hidden = false;
+  el.complexFeedback.className = `step-feedback ${correct ? "correct" : "incorrect"}`;
+  if (correct) {
+    el.complexFeedback.innerHTML = `<strong>정답입니다.</strong><p>정답을 찾았지만 모든 경로를 빠짐없이 비교했는지 확신하기는 쉽지 않습니다. 이제 컴퓨터가 같은 문제를 해결하는 규칙을 알아봅시다.</p>`;
+    el.complexCost.disabled = true;
+    el.complexAnswer.querySelector('button[type="submit"]').hidden = true;
+    el.startComputerMethod.hidden = false;
+    el.startComputerMethod.focus();
+  } else {
+    el.complexFeedback.innerHTML = `<strong>정답이 아닙니다.</strong><p>다시 풀어보세요.</p>`;
+    el.complexCost.select();
+    el.startComputerMethod.hidden = true;
+  }
+});
+
+function renderComplexGraph() {
+  const ns = "http://www.w3.org/2000/svg";
+  const cols = 6;
+  const rows = 4;
+  const places = [
+    ["집", "🏠"], ["골목", "🛣️"], ["놀이터", "🛝"], ["약국", "💊"], ["정류장", "🚏"], ["카페", "☕"],
+    ["편의점", "🏪"], ["공원", "🌳"], ["병원", "🏥"], ["은행", "🏦"], ["우체국", "📮"], ["소방서", "🚒"],
+    ["시장", "🧺"], ["도서관", "📚"], ["체육관", "🏟️"], ["주민센터", "🏢"], ["마트", "🛒"], ["경찰서", "🚓"],
+    ["육교", "🌉"], ["광장", "⛲"], ["학원", "✏️"], ["주차장", "🅿️"], ["문구점", "📒"], ["학교", "🏫"],
+  ];
+  const nodes = Array.from({ length: cols * rows }, (_, index) => ({
+    id: index,
+    x: 70 + (index % cols) * 150,
+    y: 70 + Math.floor(index / cols) * 125,
+  }));
+  const edges = [];
+  const addEdge = (a, b) => edges.push({ a, b, cost: ((a * 7 + b * 3) % 9) + 1 });
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols - 1; col += 1) addEdge(row * cols + col, row * cols + col + 1);
+  }
+  for (let row = 0; row < rows - 1; row += 1) {
+    for (let col = 0; col < cols; col += 1) addEdge(row * cols + col, (row + 1) * cols + col);
+  }
+  for (let row = 0; row < rows - 1; row += 1) {
+    for (let col = 0; col < cols - 1; col += 1) {
+      if ((row + col) % 2 === 0) addEdge(row * cols + col, (row + 1) * cols + col + 1);
+    }
+  }
+  addEdge(1, 8);
+  addEdge(15, 22);
+  for (const edge of edges) {
+    const a = nodes[edge.a];
+    const b = nodes[edge.b];
+    const line = document.createElementNS(ns, "line");
+    line.setAttribute("x1", a.x); line.setAttribute("y1", a.y); line.setAttribute("x2", b.x); line.setAttribute("y2", b.y);
+    line.setAttribute("class", "complex-edge");
+    el.complexGraph.appendChild(line);
+    const cost = document.createElementNS(ns, "text");
+    cost.setAttribute("x", (a.x + b.x) / 2); cost.setAttribute("y", (a.y + b.y) / 2 - 7);
+    cost.setAttribute("class", "complex-cost"); cost.textContent = edge.cost;
+    el.complexGraph.appendChild(cost);
+  }
+  for (const node of nodes) {
+    const group = document.createElementNS(ns, "g");
+    group.setAttribute("class", `complex-node${node.id === 0 ? " is-start" : ""}${node.id === nodes.length - 1 ? " is-goal" : ""}`);
+    group.setAttribute("transform", `translate(${node.x} ${node.y})`);
+    const circle = document.createElementNS(ns, "circle"); circle.setAttribute("r", "25");
+    const icon = document.createElementNS(ns, "text");
+    icon.setAttribute("class", "complex-node-icon"); icon.textContent = places[node.id][1];
+    const label = document.createElementNS(ns, "text");
+    label.setAttribute("class", "complex-node-label"); label.setAttribute("y", "39"); label.textContent = places[node.id][0];
+    group.append(circle, icon, label); el.complexGraph.appendChild(group);
+  }
+}
+
+renderComplexGraph();
+
 el.startUcsButton.addEventListener("click", () => {
+  ucsExperimentStarted = true;
   el.predictView.hidden = true;
   el.experiment.hidden = false;
   showRound(0);
