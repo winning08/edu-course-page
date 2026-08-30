@@ -8,8 +8,10 @@ const repoRoot = fileURLToPath(new URL("../", import.meta.url));
 
 const HTML_FILES = [
   "index.html",
+  "units/ai-vocabulary/index.html",
   "units/ai-evaluation/index.html",
   "units/ai-learning/index.html",
+  "lessons/ai-keyword-bingo/index.html",
   "lessons/turing-test-questions/index.html",
   "lessons/arc-puzzle-challenge/index.html",
   "lessons/turing-vs-arc-compare/index.html",
@@ -24,6 +26,7 @@ const CSS_FILES = [
   "assets/fonts.css",
   "lessons/shared/lab-base.css",
   "lessons/ai-inference-ripeness/styles.css",
+  "lessons/ai-keyword-bingo/styles.css",
   "lessons/ai-signal-noise/styles.css",
   "lessons/ai-biased-data/styles.css",
   "lessons/arc-puzzle-challenge/styles.css",
@@ -100,6 +103,7 @@ test("의도적인 monospace(고정폭 숫자·단축키 표시)는 그대로 �
   for (const file of [
     "lessons/shared/lab-base.css",
     "lessons/ai-inference-ripeness/styles.css",
+    "lessons/ai-keyword-bingo/styles.css",
   ]) {
     const css = await readFile(path.join(repoRoot, file), "utf8");
     assert.match(css, /font-family:\s*ui-monospace,\s*monospace/, `${file}의 monospace 지정이 사라짐`);

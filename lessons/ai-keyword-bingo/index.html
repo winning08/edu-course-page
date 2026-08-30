@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="인공지능 핵심 용어 25개를 종이 빙고판에 옮겨 적고, 교사가 화면에서 중복 없이 무작위로 추첨해 진행하는 활동">
+  <title>인공지능 핵심 용어 빙고 | 인공지능 용어 빙고</title>
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/fonts.css">
+  <link rel="stylesheet" href="../shared/lab-base.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../assets/guard.css">
+  <script type="module" src="../../assets/group-guard.js"></script>
+  <script type="module" src="game.js"></script>
+</head>
+<body data-guard-scope="page" data-guard-group="ai-vocabulary" data-guard-lesson="ai-keyword-bingo">
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+  <div id="guard-blocked" class="guard-panel">
+    <h1>아직 준비 중인 활동입니다</h1>
+    <p>이 활동은 현재 준비 중입니다. 곧 열릴 예정이니 잠시 후 다시 확인해 주세요.</p>
+    <a class="guard-home-link" href="../../">← 전체 활동지 홈으로 돌아가기</a>
+  </div>
+  <div id="guard-content">
+  <header class="topbar">
+    <a class="back-link" href="../../units/ai-vocabulary/">← 활동 목록</a>
+    <div class="module-title"><span>수업 01</span><strong>인공지능 용어 빙고</strong></div>
+    <button id="fullscreen-toggle" class="utility-button" type="button" aria-pressed="false">전체화면</button>
+  </header>
+
+  <main id="main-content">
+    <section id="prep-view" aria-labelledby="prep-title">
+      <p class="eyebrow">1단계 · 빙고판 준비</p>
+      <h1 id="prep-title">종이 빙고판에 아래 25개 용어를 자유롭게 옮겨 적으세요</h1>
+      <p class="prep-instructions">인쇄한 5×5 빙고판의 25칸에 순서와 상관없이 아래 25개 용어를 하나씩 옮겨 적어 주세요. 다 적었으면 아래 목록에서 확인 체크를 해도 좋아요(선택 사항이며 점수와 관련 없습니다). 모두 준비되면 선생님이 "추첨 시작"을 눌러 화면에 용어를 하나씩 무작위로 띄웁니다.</p>
+      <p class="prep-progress" aria-live="polite"><strong id="prep-progress-count">0</strong>&nbsp;/ 25 확인함</p>
+      <button id="print-board-button" type="button">학생용 빈 빙고판 인쇄하기</button>
+
+      <ul class="term-grid" id="term-grid">
+        <li class="term-card"><label><input type="checkbox" id="term-check-0" data-term="인공지능"><span class="term-index">01</span><span>인공지능</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-1" data-term="머신러닝"><span class="term-index">02</span><span>머신러닝</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-2" data-term="딥러닝"><span class="term-index">03</span><span>딥러닝</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-3" data-term="수치형 데이터"><span class="term-index">04</span><span>수치형 데이터</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-4" data-term="범주형 데이터"><span class="term-index">05</span><span>범주형 데이터</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-5" data-term="결측치"><span class="term-index">06</span><span>결측치</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-6" data-term="이상치"><span class="term-index">07</span><span>이상치</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-7" data-term="데이터 편향성"><span class="term-index">08</span><span>데이터 편향성</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-8" data-term="데이터 시각화"><span class="term-index">09</span><span>데이터 시각화</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-9" data-term="튜링 테스트"><span class="term-index">10</span><span>튜링 테스트</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-10" data-term="인공 신경망"><span class="term-index">11</span><span>인공 신경망</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-11" data-term="지도 학습"><span class="term-index">12</span><span>지도 학습</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-12" data-term="비지도 학습"><span class="term-index">13</span><span>비지도 학습</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-13" data-term="강화 학습"><span class="term-index">14</span><span>강화 학습</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-14" data-term="회귀"><span class="term-index">15</span><span>회귀</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-15" data-term="분류"><span class="term-index">16</span><span>분류</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-16" data-term="군집화"><span class="term-index">17</span><span>군집화</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-17" data-term="정확도"><span class="term-index">18</span><span>정확도</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-18" data-term="선형 회귀 모델"><span class="term-index">19</span><span>선형 회귀 모델</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-19" data-term="오차 함수"><span class="term-index">20</span><span>오차 함수</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-20" data-term="분류 모델"><span class="term-index">21</span><span>분류 모델</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-21" data-term="결정 트리"><span class="term-index">22</span><span>결정 트리</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-22" data-term="KNN 알고리즘"><span class="term-index">23</span><span>KNN 알고리즘</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-23" data-term="군집 모델"><span class="term-index">24</span><span>군집 모델</span></label></li>
+        <li class="term-card"><label><input type="checkbox" id="term-check-24" data-term="K-평균 군집화"><span class="term-index">25</span><span>K-평균 군집화</span></label></li>
+      </ul>
+
+      <button id="start-draw-button" type="button">추첨 시작 <span aria-hidden="true">→</span></button>
+    </section>
+
+    <div id="confirm-start-overlay" class="confirm-overlay" hidden>
+      <div class="confirm-panel" role="alertdialog" aria-modal="true" aria-labelledby="confirm-start-title" aria-describedby="confirm-start-copy">
+        <h2 id="confirm-start-title">추첨을 시작할까요?</h2>
+        <p id="confirm-start-copy">추첨을 시작하면 준비 화면으로 돌아가지 않습니다. 학생들이 빙고판에 25개 용어를 모두 옮겨 적었는지 확인한 뒤 시작해 주세요.</p>
+        <div class="confirm-actions">
+          <button id="confirm-start-cancel" type="button">취소</button>
+          <button id="confirm-start-ok" type="button">시작하기</button>
+        </div>
+      </div>
+    </div>
+
+    <section id="draw-view" hidden aria-labelledby="draw-title">
+      <h2 id="draw-title" class="sr-only">추첨 화면</h2>
+      <div class="draw-status">
+        <span id="draw-count" aria-live="polite">0 / 25</span>
+      </div>
+      <div class="draw-announce">
+        <p id="draw-current" class="draw-current is-placeholder" tabindex="-1" aria-live="polite" aria-atomic="true">아래 "다음 뽑기"를 누르거나, 용어판에서 용어를 직접 클릭해 첫 용어를 뽑아 주세요</p>
+      </div>
+      <ul class="term-board" id="term-board" aria-label="용어 25개 전체 목록. 아직 뽑히지 않은 용어를 클릭하면 그 용어를 직접 뽑을 수 있습니다. 뽑힌 용어는 강조 표시되고 몇 번째로 뽑혔는지 함께 안내합니다."></ul>
+      <div class="draw-controls">
+        <button id="draw-next-button" type="button">다음 뽑기 <span class="shortcut-help">Enter / Space</span></button>
+        <button id="draw-undo-button" type="button" disabled>바로 전 취소</button>
+        <button id="draw-reset-button" type="button" disabled>전체 초기화</button>
+      </div>
+    </section>
+
+    <div id="reset-confirm-overlay" class="confirm-overlay" hidden>
+      <div class="confirm-panel" role="alertdialog" aria-modal="true" aria-labelledby="reset-confirm-title" aria-describedby="reset-confirm-copy">
+        <h2 id="reset-confirm-title">전체 초기화할까요?</h2>
+        <p id="reset-confirm-copy">지금까지 뽑은 기록이 모두 사라지고 처음부터 다시 추첨합니다.</p>
+        <div class="confirm-actions">
+          <button id="reset-confirm-cancel" type="button">취소</button>
+          <button id="reset-confirm-ok" type="button">초기화</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="lesson-pager" aria-label="다른 화면으로 이동">
+      <a href="../../units/ai-vocabulary/"><em>활동 목록</em><strong>← 활동지 목록으로</strong></a>
+    </nav>
+  </main>
+  <footer><span>정보 · 인공지능 기초</span><span>용어 익히기 · 빙고 추첨</span></footer>
+
+  <div id="printable-board" aria-hidden="true">
+    <p class="board-print-title">인공지능 핵심 용어 빙고판</p>
+    <p class="board-print-name">이름: <span class="board-print-blank"></span></p>
+    <div class="board-print-grid" id="board-print-grid"></div>
+  </div>
+  </div>
+</body>
+</html>
