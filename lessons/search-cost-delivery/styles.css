@@ -24,6 +24,7 @@
 .commute-edges path { fill:none; stroke:#9aa5b5; stroke-width:5; stroke-linecap:round; }
 .commute-costs text { fill:#172033; paint-order:stroke; stroke:#fff; stroke-width:8px; stroke-linejoin:round; font-size:19px; font-weight:800; text-anchor:middle; }
 .commute-nodes circle { fill:#fff; stroke:#58677c; stroke-width:3; }
+.commute-nodes .is-start circle { fill:#eaf0ff; stroke:var(--accent); }
 .commute-nodes .is-goal circle { fill:#e3f5ec; stroke:#147a59; }
 .commute-nodes text { fill:#172033; font-size:15px; font-weight:750; text-anchor:middle; dominant-baseline:middle; }
 .commute-nodes text.node-icon { font-size:21px; font-weight:400; }
@@ -45,7 +46,7 @@
 .complex-node text { fill:#172033; text-anchor:middle; dominant-baseline:middle; }
 .complex-node text.complex-node-icon { font-size:18px; }
 .complex-node text.complex-node-label { paint-order:stroke; stroke:#fff; stroke-width:5px; stroke-linejoin:round; font-size:12px; font-weight:800; }
-.complex-node.is-start circle { fill:#fff4d9; stroke:#a66800; }
+.complex-node.is-start circle { fill:#eaf0ff; stroke:var(--accent); }
 .complex-node.is-start text.complex-node-icon,.complex-node.is-goal text.complex-node-icon { font-size:20px; }
 .complex-node.is-goal circle { fill:#e3f5ec; stroke:#147a59; }
 .complex-observation { max-width:780px; margin:1rem auto; padding:1rem 1.2rem; text-align:left; background:#f7f8fb; border-left:3px solid var(--accent); }

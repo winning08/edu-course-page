@@ -8,6 +8,18 @@ const lessonRoot = new URL("../lessons/search-cost-delivery/", import.meta.url);
 const trace = runUcsGraphTrace();
 const rounds = buildRounds(trace);
 
+test("집인 초기 상태는 파란색, 학교인 목표 상태는 초록색으로 구분한다", async () => {
+  const [html, css] = await Promise.all([
+    readFile(new URL("index.html", lessonRoot), "utf8"),
+    readFile(new URL("styles.css", lessonRoot), "utf8"),
+  ]);
+  assert.match(html, /<g class="is-start" transform="translate\(70 215\)">/);
+  assert.match(html, /<g class="is-goal" transform="translate\(720 215\)">/);
+  assert.match(css, /\.commute-nodes \.is-start circle\s*\{[^}]*fill:#eaf0ff;[^}]*stroke:var\(--accent\);/);
+  assert.match(css, /\.complex-node\.is-start circle\s*\{[^}]*fill:#eaf0ff;[^}]*stroke:var\(--accent\);/);
+  assert.match(css, /\.commute-nodes \.is-goal circle\s*\{[^}]*fill:#e3f5ec;[^}]*stroke:#147a59;/);
+});
+
 test("라운드는 트레이스의 확장 단계 수(5)만큼 만들어지고, 마지막 라운드만 목표 상태다", () => {
   assert.equal(rounds.length, 5);
   assert.ok(rounds.slice(0, -1).every((r) => !r.isGoal));
