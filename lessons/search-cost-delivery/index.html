@@ -5,17 +5,17 @@
   <script>document.documentElement.setAttribute("data-guard", "pending");</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="학교 안 여러 장소를 연결한 그래프에서, 균일 비용 탐색이 지금까지 든 비용 g(n)이 가장 작은 장소부터 오픈 리스트·닫힌 리스트로 넓혀가며 가장 빠른 길을 찾는 과정을 직접 예측해 보는 활동">
-  <title>매점까지 가장 빠르게 가기 | 인공지능과 탐색</title>
+  <title>균일 비용 탐색으로 가장 빠른 길 찾기 | 인공지능과 탐색</title>
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../assets/fonts.css">
   <link rel="stylesheet" href="../shared/lab-base.css">
   <link rel="stylesheet" href="../shared/search-grid.css">
   <link rel="stylesheet" href="../shared/search-graph.css?v=2026082401">
-  <link rel="stylesheet" href="styles.css?v=2026082403">
+  <link rel="stylesheet" href="styles.css?v=2026082901">
   <link rel="stylesheet" href="../../assets/guard.css">
   <script type="module" src="../../assets/group-guard.js"></script>
-  <script type="module" src="game.js?v=2026082404"></script>
-  <script type="module" src="practice.js?v=2026082401"></script>
+  <script type="module" src="game.js?v=2026082901"></script>
+  <script type="module" src="practice.js?v=2026082801"></script>
 </head>
 <body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-cost-delivery">
   <a class="skip-link" href="#experiment">실험으로 바로가기</a>
@@ -36,26 +36,121 @@
     <section class="intro" aria-labelledby="page-title">
       <div>
         <p class="eyebrow">맹목적 탐색 · 활동 03</p>
-        <h1 id="page-title">매점까지 가장 빠르게 가기</h1>
+        <h1 id="page-title">균일 비용 탐색으로 가장 빠른 길 찾기</h1>
       </div>
       <div class="intro-copy">
-        <p>밤새 눈이 내려 학교 안 곳곳을 오가는 시간이 달라졌습니다. 정문에서 매점까지 가는 길은 여러 갈래인데, 갈림길마다 걸리는 시간(분)이 다릅니다. 이번엔 균일 비용 탐색이 지금까지 든 비용 <b>g(n)</b>이 가장 작은 곳부터 오픈 리스트·닫힌 리스트로 넓혀가며 실제로 가장 빠른 길을 찾는 과정을 확인합니다.</p>
-        <dl><div><dt>단계</dt><dd>예측 → 균일 비용 탐색 확장 5단계 → 결과</dd></div><div><dt>난이도</dt><dd>보통</dd></div></dl>
+        <p>사람은 지도를 한눈에 보고 빠른 길을 비교할 수 있습니다. 컴퓨터는 어떻게 같은 답을 찾을까요? 먼저 집에서 학교까지 가는 길을 직접 고른 뒤, 균일 비용 탐색이 <b>g(n)</b>이 가장 작은 곳부터 답을 찾는 과정을 확인합니다.</p>
+        <dl><div><dt>단계</dt><dd>사람의 판단 → 균일 비용 탐색 → 결과</dd></div><div><dt>난이도</dt><dd>보통</dd></div></dl>
       </div>
     </section>
 
-    <div class="concept-bridge">
+    <nav class="cost-progress" aria-label="활동 진행 단계">
+      <ol id="cost-progress">
+        <li class="is-current" data-stage="1" aria-current="step"><button type="button" data-go-stage="1"><span>1</span><strong>직접 찾아보기</strong></button></li>
+        <li data-stage="2"><button type="button" data-go-stage="2"><span>2</span><strong>복잡한 지도 도전</strong></button></li>
+        <li data-stage="3"><button type="button" data-go-stage="3"><span>3</span><strong>균일 비용 탐색</strong></button></li>
+      </ol>
+    </nav>
+
+    <section id="human-challenge" class="transition human-challenge" aria-labelledby="human-title">
+      <p class="eyebrow">문제 1 · 직접 찾아보기</p>
+      <h2 id="human-title" tabindex="-1">집에서 학교까지 가장 적게 걸리는 시간은?</h2>
+      <p>선 위의 숫자는 각 길을 지나가는 데 걸리는 시간(분)입니다. 모든 길은 양방향으로 이동할 수 있습니다. 집에서 학교까지 가는 데 필요한 가장 적은 시간을 구하시오.</p>
+      <div class="commute-map" role="img" aria-label="모든 길은 양방향이다. 집에서 골목, 공원, 횡단보도, 도서관, 버스 정류장, 언덕을 거쳐 학교로 이어지는 길과 각 구간의 이동 시간">
+        <svg viewBox="0 0 800 430" aria-hidden="true">
+          <g class="commute-edges">
+            <path d="M70 215 L210 80"/><path d="M70 215 L210 340"/>
+            <path d="M210 80 L385 80"/><path d="M210 80 L390 215"/>
+            <path d="M210 340 L390 215"/><path d="M210 340 L390 350"/>
+            <path d="M385 80 L565 95"/><path d="M390 215 L565 95"/>
+            <path d="M390 215 L720 215"/><path d="M390 215 L390 350"/>
+            <path d="M390 350 L720 215"/><path d="M565 95 L720 215"/>
+          </g>
+          <g class="commute-costs">
+            <text x="126" y="133">4</text><text x="126" y="303">3</text>
+            <text x="298" y="70">5</text><text x="292" y="137">4</text>
+            <text x="292" y="282">3</text><text x="300" y="356">5</text>
+            <text x="475" y="77">3</text><text x="478" y="143">4</text>
+            <text x="555" y="205">6</text><text x="405" y="285">2</text>
+            <text x="562" y="301">3</text><text x="650" y="139">5</text>
+          </g>
+          <g class="commute-nodes">
+            <g transform="translate(70 215)"><circle r="40"/><text class="node-icon" y="-10">🏠</text><text y="17">집</text></g>
+            <g transform="translate(210 80)"><circle r="40"/><text class="node-icon" y="-10">🛣️</text><text y="17">골목</text></g>
+            <g transform="translate(210 340)"><circle r="40"/><text class="node-icon" y="-10">🌳</text><text y="17">공원</text></g>
+            <g transform="translate(385 80)"><circle r="45"/><text class="node-icon" y="-13">🚦</text><text y="14">횡단보도</text></g>
+            <g transform="translate(390 215)"><circle r="45"/><text class="node-icon" y="-11">📚</text><text y="17">도서관</text></g>
+            <g transform="translate(565 95)"><circle r="45"/><text class="node-icon" y="-13">🚌</text><text y="14">버스정류장</text></g>
+            <g transform="translate(390 350)"><circle r="40"/><text class="node-icon" y="-10">⛰️</text><text y="17">언덕</text></g>
+            <g class="is-goal" transform="translate(720 215)"><circle r="44"/><text class="node-icon" y="-11">🏫</text><text y="17">학교</text></g>
+          </g>
+        </svg>
+      </div>
+      <form class="commute-answer" id="commute-answer" novalidate>
+        <label for="commute-cost">학교까지 걸리는 가장 짧은 시간</label>
+        <div class="commute-answer-row">
+          <input id="commute-cost" name="commute-cost" type="number" min="0" step="1" inputmode="numeric" autocomplete="off" required aria-describedby="commute-unit">
+          <span id="commute-unit">분</span>
+          <button type="submit">답 확인하기</button>
+          <button id="continue-to-ucs" type="button" class="stage-next commute-next" hidden>다음 문제 <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+      <div id="commute-feedback" class="step-feedback" aria-live="polite" hidden></div>
+    </section>
+
+    <section id="complex-challenge" class="transition complex-challenge" aria-labelledby="complex-title" hidden>
+      <p class="eyebrow">문제 2 · 복잡한 지도 도전</p>
+      <h2 id="complex-title" tabindex="-1">이번에도 가장 적게 걸리는 시간을 바로 찾을 수 있을까?</h2>
+      <p>장소 24개와 길 48개가 연결되어 있습니다. 모든 길은 양방향입니다. 집에서 학교까지 가는 데 필요한 가장 짧은 시간을 예상해 보세요.</p>
+      <div class="commute-map complex-map" role="img" aria-label="집에서 학교까지 공원, 병원, 도서관, 마트 등 장소 24개와 길 48개가 복잡하게 연결된 지도">
+        <svg id="complex-graph" viewBox="0 0 900 520" aria-hidden="true"></svg>
+      </div>
+      <form class="commute-answer" id="complex-answer" novalidate>
+        <label for="complex-cost">학교까지 걸리는 가장 짧은 시간 예상하기</label>
+        <div class="commute-answer-row">
+          <input id="complex-cost" name="complex-cost" type="number" min="0" step="1" inputmode="numeric" autocomplete="off" required aria-describedby="complex-unit">
+          <span id="complex-unit">분</span>
+          <button type="submit">예상 제출하기</button>
+        </div>
+      </form>
+      <div id="complex-feedback" class="step-feedback" aria-live="polite" hidden></div>
+      <div class="complex-observation">
+        <strong>사람이 한눈에 비교하기 어려워졌습니다.</strong>
+        <p>컴퓨터도 지도를 보고 곧바로 정답을 아는 것은 아닙니다. 대신 어떤 장소부터 확인할지 정하는 규칙을 사용합니다.</p>
+      </div>
+      <button id="start-computer-method" type="button" class="stage-next" hidden>균일 비용 탐색 알아보기 <span aria-hidden="true">→</span></button>
+    </section>
+
+    <section id="method-transition" class="transition method-transition" aria-labelledby="method-transition-title" hidden>
+      <p class="eyebrow">문제 3으로 이동</p>
+      <h2 id="method-transition-title" tabindex="-1">사람의 계산에서 컴퓨터의 탐색으로</h2>
+      <div class="story-bridge">
+        <span class="story-icon" aria-hidden="true">🏫 → 🛒</span>
+        <div>
+          <p>두 문제의 정답을 찾았지만, 복잡한 지도에서는 모든 경로를 빠짐없이 비교했는지 확신하기 어려웠습니다.</p>
+          <p>이제 학교에 도착했습니다. 쉬는 시간에 <strong>정문에서 매점까지</strong> 가장 빠른 길을 컴퓨터가 찾게 해 봅시다.</p>
+        </div>
+      </div>
+      <div class="method-rule">
+        <span>컴퓨터가 사용할 한 가지 규칙</span>
+        <strong>지금까지 든 비용이 가장 작은 장소부터 차례대로 확인한다.</strong>
+      </div>
+      <button id="begin-ucs-problem" type="button" class="stage-next">문제 3 시작하기 <span aria-hidden="true">→</span></button>
+    </section>
+
+    <div id="ucs-concept" class="concept-bridge" hidden>
       <p class="concept-bridge-label">균일 비용 탐색(Uniform Cost Search)이란</p>
       <ul class="concept-steps">
         <li>① 초기 상태가 목표 상태이면 바로 마칩니다.</li>
         <li>② 초기 상태에서 갈 수 있는 간선을 따라 자식 상태를 만들어 오픈 리스트에 넣습니다.</li>
         <li>③ 오픈 리스트에서 누적 비용 <b>g(n)</b>이 가장 작은 상태를 다음 순서로 선택합니다.</li>
+        <li>비용이 같은 상태가 여러 개라면 이 활동에서는 이름순으로 먼저 선택합니다.</li>
         <li>④ 선택된 상태가 목표인지 확인합니다 — 목표면 끝내고, 아니면 자식 상태를 만들어 오픈 리스트에 넣은 뒤 다시 ③으로 돌아갑니다.</li>
       </ul>
     </div>
 
-    <section id="predict-view" class="transition" aria-labelledby="predict-title">
-      <p class="eyebrow">먼저 예측하기</p>
+    <section id="predict-view" class="transition" aria-labelledby="predict-title" hidden>
+      <p class="eyebrow">문제 3 · 균일 비용 탐색</p>
       <h2 id="predict-title" tabindex="-1">정문에서 매점까지, 어느 길이 더 빠를까요?</h2>
       <p>아래 그래프에서 선 위의 숫자는 눈이 쌓인 뒤 그 구간을 이동하는 데 걸리는 시간(분)입니다.</p>
       <div class="graph-panel">
@@ -106,6 +201,7 @@
             <div class="list-panel-block" data-list-kind="closed"><span>닫힌 리스트</span><ul data-list="closed"></ul></div>
           </div>
           <p class="candidate-prompt" id="candidate-prompt">그래프에서 g(n)이 가장 작은 상태를 클릭하세요.</p>
+          <div id="cost-choice-summary" class="cost-choice-summary" aria-live="polite"></div>
           <div id="step-feedback" class="step-feedback" aria-live="polite" hidden></div>
           <div id="close-action" class="list-action" hidden aria-live="polite"></div>
           <div id="children-reveal" class="children-reveal" aria-live="polite"></div>
@@ -162,7 +258,7 @@
       <div class="sample-head">
         <div><span class="sample-id">연습 문제</span><h2 id="practice-title" tabindex="-1">새로운 그래프에서 다시 풀어보기</h2></div>
         <div class="practice-head-actions">
-          <p>정점 7~10개짜리 무작위 그래프가 매번 새로 나옵니다. 🚩 시작에서 🏁 목표까지 같은 방식으로 직접 풀어보세요.</p>
+          <p>정점 5~6개의 새 그래프가 나옵니다. 🚩 시작에서 🏁 목표까지 직접 풀어보세요.</p>
           <button id="practice-new-graph" type="button" class="practice-new-graph-btn">새 문제 만들기 <span aria-hidden="true">↻</span></button>
         </div>
       </div>

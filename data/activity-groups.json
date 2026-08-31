@@ -155,7 +155,7 @@
         {
           "id": "search-cost-delivery",
           "order": 3,
-          "title": "매점까지 가장 빠르게 가기",
+          "title": "균일 비용 탐색으로 가장 빠른 길 찾기",
           "path": "lessons/search-cost-delivery/",
           "duration": 15,
           "difficulty": "보통",

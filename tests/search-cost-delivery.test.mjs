@@ -70,3 +70,38 @@ test("균일 비용 탐색의 정의와 g(n) 표기, 오픈 리스트·닫힌 �
   assert.match(html, /닫힌 리스트/);
   assert.match(html, /맹목적 탐색\(무정보 탐색, uninformed search\)/);
 });
+
+test("집에서 학교까지의 사람용 도전 뒤에 UCS 활동이 열리고, 기존 문제의 정답은 탐색 전에 공개하지 않는다", async () => {
+  const [html, js, practiceJs] = await Promise.all([
+    readFile(new URL("index.html", lessonRoot), "utf8"),
+    readFile(new URL("game.js", lessonRoot), "utf8"),
+    readFile(new URL("practice.js", lessonRoot), "utf8"),
+  ]);
+  assert.match(html, /id="human-challenge"/);
+  assert.match(html, /집에서 학교까지 가장 적게 걸리는 시간은/);
+  assert.match(html, /id="commute-cost"[^>]*type="number"/);
+  assert.doesNotMatch(html, /data-cost=/);
+  assert.match(html, /id="ucs-concept" class="concept-bridge" hidden/);
+  assert.match(html, /id="complex-challenge"/);
+  assert.match(html, /id="method-transition"/);
+  assert.match(html, /사람의 계산에서 컴퓨터의 탐색으로/);
+  assert.match(html, /직접 찾아보기/);
+  assert.match(html, /복잡한 지도 도전/);
+  assert.match(html, /data-go-stage="1"/);
+  assert.match(html, /data-go-stage="2"/);
+  assert.match(html, /data-go-stage="3"/);
+  assert.match(html, /균일 비용 탐색/);
+  assert.match(html, /장소 24개와 길 48개/);
+  assert.match(js, /아직 어느 길이 정답인지는 공개하지 않습니다/);
+  assert.match(js, /한 번 더 비교해 보세요/);
+  assert.match(js, /정답이 아닙니다/);
+  assert.match(html, /id="complex-cost"[^>]*type="number"/);
+  assert.match(html, /이번에도 가장 적게 걸리는 시간을 바로 찾을 수 있을까/);
+  assert.match(html, /학교까지 걸리는 가장 짧은 시간 예상하기/);
+  assert.match(js, /정답입니다/);
+  assert.match(js, /el\.continueToUcs\.hidden = true/);
+  assert.match(js, /el\.startComputerMethod\.hidden = true/);
+  assert.match(js, /\["편의점", "🏪"\]/);
+  assert.match(js, /\["학교", "🏫"\]/);
+  assert.match(practiceJs, /minNodes: 5, maxNodes: 6/);
+});
