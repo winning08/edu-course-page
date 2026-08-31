@@ -96,6 +96,8 @@ test("집에서 학교까지의 사람용 도전 뒤에 UCS 활동이 열리고,
   assert.match(js, /한 번 더 비교해 보세요/);
   assert.match(js, /정답이 아닙니다/);
   assert.match(html, /id="complex-cost"[^>]*type="number"/);
+  assert.match(html, /이번에도 가장 적게 걸리는 시간을 바로 찾을 수 있을까/);
+  assert.match(html, /학교까지 걸리는 가장 짧은 시간 예상하기/);
   assert.match(js, /정답입니다/);
   assert.match(js, /el\.continueToUcs\.hidden = true/);
   assert.match(js, /el\.startComputerMethod\.hidden = true/);

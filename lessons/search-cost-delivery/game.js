@@ -519,7 +519,7 @@ el.complexAnswer.addEventListener("submit", (event) => {
   if (el.complexCost.value.trim() === "") {
     el.complexFeedback.hidden = false;
     el.complexFeedback.className = "step-feedback incorrect";
-    el.complexFeedback.innerHTML = `<strong>예상 비용을 입력하세요.</strong><p>정확히 계산하지 못해도 괜찮습니다. 현재 생각한 값을 적어 보세요.</p>`;
+    el.complexFeedback.innerHTML = `<strong>예상 시간을 입력하세요.</strong><p>정확히 계산하지 못해도 괜찮습니다. 현재 생각한 시간을 분 단위로 적어 보세요.</p>`;
     el.complexCost.focus();
     return;
   }
