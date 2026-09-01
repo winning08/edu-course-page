@@ -55,6 +55,11 @@ test("02-1을 완료하기 전에는 02-2로 넘어갈 수 없고, 완료 시 �
   assert.match(gameJs, /function maxUnlockedStep/);
   assert.match(gameJs, /if \(stepState\.step2Done\) return 3;/);
   assert.match(gameJs, /if \(stepState\.step1Done\) return 2;/);
+  const completeHandler = gameJs.match(/document\.addEventListener\("eight-puzzle:play-complete", \(\) => \{([\s\S]*?)\n\}\);/);
+  assert.ok(completeHandler, "8-퍼즐 완료 이벤트 처리기를 찾을 수 없음");
+  assert.match(completeHandler[1], /markStep1Done\(\)/);
+  assert.doesNotMatch(completeHandler[1], /goToStep\(2\)/, "완성 즉시 자동으로 2단계로 이동하면 안 됨");
+  assert.match(gameJs, /stepEl\.goto2\?\.addEventListener\("click", \(\) => goToStep\(2\)\)/);
 });
 
 test("BFS 층별 관찰(02-2)의 누적 상태 로직은 그대로 보존된다", async () => {

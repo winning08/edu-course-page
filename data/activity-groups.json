@@ -51,7 +51,7 @@
       "description": "마트 과일 선별 AI를 직접 학습시키고 시험하며 입력 정보, 관계없는 정보, 편향된 데이터 같은 인공지능 기초 개념을 순서대로 체험합니다.",
       "path": "units/ai-learning/",
       "status": "published",
-      "active": true,
+      "active": false,
       "children": [
         {
           "id": "ai-inference-ripeness",
@@ -160,7 +160,7 @@
           "duration": 15,
           "difficulty": "보통",
           "status": "published",
-          "active": true,
+          "active": false,
           "objective": "장소마다 이동 비용이 다를 때, 균일 비용 탐색이 지금까지 든 비용 g(n)이 가장 작은 곳부터 오픈 리스트로 넓혀가며 실제로 가장 빠른 길을 찾는다는 것을 체험한다."
         },
         {
@@ -171,7 +171,7 @@
           "duration": 25,
           "difficulty": "보통",
           "status": "published",
-          "active": true,
+          "active": false,
           "objective": "교과서의 8-퍼즐 예시와 새로운 문제에서 g(n), h(n), f(n)을 비교하며 A* 탐색이 다음 상태를 선택하는 원리를 체험한다."
         }
       ]

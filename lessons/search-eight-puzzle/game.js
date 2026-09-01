@@ -309,7 +309,6 @@ stepEl.next.addEventListener("click", () => goToStep(stepState.step + 1));
 stepEl.goto2?.addEventListener("click", () => goToStep(2));
 document.addEventListener("eight-puzzle:play-complete", () => {
   markStep1Done();
-  goToStep(2);
 });
 
 placeGrid(el.start, PUZZLE_START, "medium");

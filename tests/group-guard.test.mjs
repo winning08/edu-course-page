@@ -22,12 +22,14 @@ test("모든 group은 명시적인 active boolean 필드를 갖는다", async ()
   }
 });
 
-test("모든 활동지와 개별 활동을 활성화한다", async () => {
+test("AI 학습 활동지와 맹목적 탐색 이후 활동을 비활성화한다", async () => {
   const data = await loadGroups();
   for (const group of data.groups) {
-    assert.equal(group.active, true, `${group.id} 활동지가 active=true여야 함`);
+    const shouldGroupBeActive = group.id !== "ai-learning";
+    assert.equal(group.active, shouldGroupBeActive, `${group.id} 활동지의 active 상태가 공개 범위와 일치해야 함`);
     for (const child of group.children) {
-      assert.equal(child.active, true, `${child.id} 활동이 active=true여야 함`);
+      const shouldBeActive = !["search-cost-delivery", "search-astar-delivery"].includes(child.id);
+      assert.equal(child.active, shouldBeActive, `${child.id} 활동의 active 상태가 공개 범위와 일치해야 함`);
     }
   }
 });
