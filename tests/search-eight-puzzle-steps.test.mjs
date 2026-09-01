@@ -27,12 +27,13 @@ test("02-1·02-2·02-3은 한 번에 하나만 보이는 단계 패널로 나뉜
   assert.ok(html.indexOf('id="puzzle-results"') > resultsPanelStart);
 });
 
-test("접근 가능한 단계 탭(stepper)이 있고 잠긴 단계는 disabled로 표시된다", async () => {
+test("접근 가능한 단계 탭이 있고 2단계만 진행 전 잠기며 3단계 결과 정리는 항상 열린다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
   assert.match(html, /<nav class="step-tabs" aria-label="8-퍼즐 활동 단계">/);
   assert.match(html, /data-step-tab="1"[^>]*aria-current="step"/);
   assert.match(html, /data-step-tab="2"[^>]*disabled/);
-  assert.match(html, /data-step-tab="3"[^>]*disabled/);
+  assert.doesNotMatch(html.match(/<button[^>]*data-step-tab="3"[^>]*>/)?.[0] ?? "", /disabled/);
+  assert.match(html, /id="results-pending"/);
 });
 
 test("하단에 이전/다음 단계 버튼과 현재 단계 표시가 있다", async () => {
@@ -80,6 +81,9 @@ test("결과(02-3)는 BFS 완료 시 자동으로 다음 단계로 넘어가며 
   // 새로고침으로 되돌아와도(결정론적 BFS/DFS 계산 결과이므로) 결과 화면을 조용히 다시 만들 수 있다.
   assert.match(gameJs, /if \(stepState\.step2Done\) buildResults\(\);/);
   assert.match(gameJs, /goToStep\(stepState\.step, \{ focus: false \}\);/);
+  assert.match(gameJs, /const unlocked = n === 3 \|\| n <= max;/);
+  assert.match(gameJs, /const target = requested === 3 \? 3 : Math\.min\(requested, maxUnlockedStep\(\)\);/);
+  assert.match(gameJs, /el\.resultsPending\.hidden = true;/);
 });
 
 test("단계 진행 상태는 세션 한정(sessionStorage)으로만 저장되고 다른 저장소는 쓰지 않는다", async () => {

@@ -15,7 +15,7 @@ const el = {
   start: $("#start-grid"), goal: $("#goal-grid"), label: $("#round-label"), bar: $("#progress-bar"),
   badge: $("#round-badge"), title: $("#round-title"), note: $("#round-note"), levels: $("#search-levels"),
   reveal: $("#reveal-round"), next: $("#next-round"),
-  feedback: $("#round-feedback"), trace: $("#trace-panel"), results: $("#puzzle-results"),
+  feedback: $("#round-feedback"), trace: $("#trace-panel"), results: $("#puzzle-results"), resultsPending: $("#results-pending"),
   summary: $("#puzzle-summary"), path: $("#path-list"), dfs: $("#dfs-summary"), projector: $("#projector-toggle"),
 };
 
@@ -86,7 +86,7 @@ function maxUnlockedStep() {
 function renderStepNav() {
   const max = maxUnlockedStep();
   [1, 2, 3].forEach((n) => {
-    const unlocked = n <= max;
+    const unlocked = n === 3 || n <= max;
     stepEl.tabs[n].disabled = !unlocked;
     stepEl.tabs[n].setAttribute("aria-current", n === stepState.step ? "step" : "false");
     stepEl.tabs[n].setAttribute("aria-label", unlocked ? `${n}단계 ${STEP_LABELS[n]}` : `${n}단계 ${STEP_LABELS[n]}, 아직 잠겨 있음`);
@@ -104,7 +104,8 @@ function renderStepNav() {
 }
 
 function goToStep(step, { focus = true } = {}) {
-  const target = Math.min(Math.max(step, 1), maxUnlockedStep());
+  const requested = Math.min(Math.max(step, 1), STEP_TOTAL);
+  const target = requested === 3 ? 3 : Math.min(requested, maxUnlockedStep());
   stepState.step = target;
   saveStepState();
   [1, 2, 3].forEach((n) => { stepEl.panels[n].hidden = n !== target; });
@@ -268,6 +269,7 @@ function buildResults() {
   el.reveal.hidden = true;
   el.next.hidden = true;
   el.feedback.hidden = true;
+  el.resultsPending.hidden = true;
   el.results.hidden = false;
   el.summary.textContent = `BFS는 ${stats.bfsOpened}개 상태를 확인하고 ${stats.bfsMoves}번 이동하는 최소 경로를 찾았습니다.`;
   el.dfs.textContent = `BFS는 가까운 깊이를 모두 확인하므로 최소 이동을 보장합니다. 같은 순서로 깊게 들어가는 DFS는 이 예에서 ${stats.dfsMoves}번 이동한 뒤 목표에 도착해 최소 이동을 보장하지 못했습니다.`;
