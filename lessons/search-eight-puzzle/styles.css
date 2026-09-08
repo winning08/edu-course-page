@@ -58,6 +58,7 @@
 .reference-eyebrow { margin:0; color:var(--accent); font:750 .68rem var(--font-sans); letter-spacing:.12em; }
 .reference-title { margin:.35rem 0 0; font-weight:720; font-size:.94rem; }
 .reference-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1rem; margin-top:.9rem; }
+.intro-reference-actions { margin-top:1rem; }
 .reference-button { display:inline-flex; align-items:center; gap:.4rem; min-height:44px; padding:.55rem 1rem; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:4px; font-weight:750; text-decoration:none; }
 .reference-button:hover { background:var(--accent-dark); }
 .step-tabs { margin:0 0 1.3rem; }

@@ -63,6 +63,14 @@ test("02-1을 완료하기 전에는 02-2로 넘어갈 수 없고, 완료 시 �
   assert.match(gameJs, /stepEl\.goto2\?\.addEventListener\("click", \(\) => goToStep\(2\)\)/);
 });
 
+test("BFS·DFS 외부 연습문제는 활동 완료 전 소개 영역에서 바로 열 수 있다", async () => {
+  const html = await readFile(new URL("index.html", lessonRoot), "utf8");
+  const link = 'href="https://kankanssam.github.io/Uninformed_Search/"';
+  assert.equal(html.split(link).length - 1, 1, "외부 연습문제 링크는 한 번만 제공해야 함");
+  assert.ok(html.indexOf(link) < html.indexOf('class="step-tabs"'), "외부 링크가 활동 단계보다 먼저 보여야 함");
+  assert.match(html, /BFS·DFS 연습문제 바로 열기/);
+});
+
 test("BFS 층별 관찰(02-2)의 누적 상태 로직은 그대로 보존된다", async () => {
   const gameJs = await readFile(new URL("game.js", lessonRoot), "utf8");
   assert.match(gameJs, /function createInitialLevel/);

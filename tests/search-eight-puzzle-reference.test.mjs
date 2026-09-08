@@ -4,11 +4,10 @@ import test from "node:test";
 
 const lessonRoot = new URL("../lessons/search-eight-puzzle/", import.meta.url);
 
-test("02-3 설명 블록의 순서는 경로 목록 → 참고자료 → 알고리즘 비교 → 함께 생각해 보기이다", async () => {
+test("02-3 설명 블록의 순서는 경로 목록 → 알고리즘 비교 → 함께 생각해 보기이다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
   const markers = [
     ['id="path-list"', "경로 목록"],
-    ['class="reference-box"', "참고자료"],
     ['<p class="result-note-eyebrow">알고리즘 비교</p>', "알고리즘 비교"],
     ['<h3>함께 생각해 보기</h3>', "함께 생각해 보기"],
   ];
@@ -47,20 +46,21 @@ test("다음 활동(search-cost-delivery) 링크가 남아 있지 않다", async
   assert.doesNotMatch(html, /href="\.\.\/search-cost-delivery\/"/);
 });
 
-test("참고자료는 iframe 없이 링크 전용의 짧은 카드로 구성되고, 통일 카드(result-block)에는 속하지 않는다", async () => {
+test("외부 연습문제는 결과 카드가 아니라 상단 소개 영역의 링크 버튼으로 제공한다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
-  assert.match(html, /<div class="reference-box">/);
-  assert.doesNotMatch(html, /<div class="reference-box result-block">/);
+  const linkPosition = html.indexOf('href="https://kankanssam.github.io/Uninformed_Search/"');
+  const stepsPosition = html.indexOf('class="step-tabs"');
+  assert.ok(linkPosition >= 0 && linkPosition < stepsPosition, "외부 연습문제 링크가 활동 단계보다 먼저 보여야 합니다");
+  assert.doesNotMatch(html, /class="reference-box/);
   assert.doesNotMatch(html, /<details/);
   assert.doesNotMatch(html, /<summary/);
   assert.doesNotMatch(html, /<iframe/);
   assert.doesNotMatch(html, /reference-frame|reference-loading|reference-body/);
 });
 
-test("참고자료 카드는 라벨·제목·실행 사이트 열기 버튼만 유지하고, 안내문·GitHub 저장소 링크는 제거되었다", async () => {
+test("상단 바로가기 버튼은 실행 사이트만 새 탭으로 열고 GitHub 저장소 링크는 제공하지 않는다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
-  assert.match(html, /<p class="reference-eyebrow">참고자료<\/p>/);
-  assert.match(html, /<p class="reference-title">8-퍼즐 BFS·DFS 시뮬레이터\(외부 사이트\)<\/p>/);
+  assert.match(html, /BFS·DFS 연습문제 바로 열기/);
   assert.doesNotMatch(html, /reference-notice/);
   assert.doesNotMatch(html, /reference-link/);
   assert.doesNotMatch(html, /GitHub 저장소 보기/);
