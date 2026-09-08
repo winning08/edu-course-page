@@ -77,6 +77,8 @@
 .next-step-link:hover { background:var(--accent-dark); }
 .next-step-link--outline { color:var(--accent); background:#fff; }
 .next-step-link--outline:hover { background:#f2f5ff; border-color:var(--accent-dark); }
+.intro-actions { display:flex; margin-top:1rem; }
+.intro-actions .next-step-link { flex:0 1 auto; }
 @media(max-width:520px){ .next-step { flex-direction:column; } .next-step-link { flex:1 1 auto; width:100%; } }
 
 .reveal-box { max-width:720px; margin:1.4rem auto; padding:1.2rem 1.4rem; text-align:left; background:#f2f5ff; border-left:3px solid var(--accent); }

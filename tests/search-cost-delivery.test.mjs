@@ -8,6 +8,14 @@ const lessonRoot = new URL("../lessons/search-cost-delivery/", import.meta.url);
 const trace = runUcsGraphTrace();
 const rounds = buildRounds(trace);
 
+test("외부 연습문제 사이트는 활동 완료 전 소개 영역에서 바로 열 수 있다", async () => {
+  const html = await readFile(new URL("index.html", lessonRoot), "utf8");
+  const link = 'href="https://kankanssam.github.io/uniform_cost/"';
+  assert.equal(html.split(link).length - 1, 1, "외부 연습문제 링크는 한 번만 제공해야 함");
+  assert.ok(html.indexOf(link) < html.indexOf('class="cost-progress"'), "외부 링크가 활동 진행 단계보다 먼저 보여야 함");
+  assert.match(html, /연습문제 사이트 바로 열기/);
+});
+
 test("집인 초기 상태는 파란색, 학교인 목표 상태는 초록색으로 구분한다", async () => {
   const [html, css] = await Promise.all([
     readFile(new URL("index.html", lessonRoot), "utf8"),
