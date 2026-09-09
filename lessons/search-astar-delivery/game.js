@@ -1,9 +1,9 @@
-import { NODES, nodeLabel, runAStarGraphTrace, runUcsGraphTrace, HEURISTICS } from "../shared/search-graph-lab.js?v=2026090902";
+import { NODES, nodeLabel, runAStarGraphTrace, runUcsGraphTrace, HEURISTICS } from "../shared/search-graph-lab.js?v=2026090908";
 import { renderGraphDiagram, renderListPanel, enableGraphZoom } from "../shared/search-graph-ui.js?v=2026090907";
 import {
   buildMapRounds, checkMapPickAnswer, checkMapDupAnswer, summarizeMap, mapPathLabel,
   NEW_GOAL_STATE, NEW_START, solveAstar, checkChoice,
-} from "./game-core.js?v=2026090902";
+} from "./game-core.js?v=2026090908";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -663,7 +663,7 @@ $("#warmup-form").addEventListener("submit", (event) => {
   event.preventDefault();
   const hInput = $("#warmup-h");
   const fInput = $("#warmup-f");
-  const correct = Number(hInput.value) === 12 && Number(fInput.value) === 12;
+  const correct = Number(hInput.value) === 11 && Number(fInput.value) === 11;
   const form = event.currentTarget;
   form.classList.remove("correct", "incorrect");
   form.classList.add(correct ? "correct" : "incorrect");
@@ -671,7 +671,7 @@ $("#warmup-form").addEventListener("submit", (event) => {
   feedback.hidden = false;
   feedback.className = `trace-feedback ${correct ? "correct" : "incorrect"}`;
   if (correct) {
-    feedback.innerHTML = "<strong>맞았습니다.</strong> 정문에서 매점까지의 어림값은 12이므로 h(n)=12이고, f(n)=g(n)+h(n)=0+12=12입니다.";
+    feedback.innerHTML = "<strong>맞았습니다.</strong> 정문에서 매점까지의 어림값은 11이므로 h(n)=11이고, f(n)=g(n)+h(n)=0+11=11입니다.";
     $$("#warmup-form input, #warmup-form button").forEach((control) => { control.disabled = true; });
     const start = $("#start-textbook");
     start.disabled = false;
