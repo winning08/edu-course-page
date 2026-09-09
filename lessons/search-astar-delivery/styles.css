@@ -5,6 +5,9 @@ main { width:min(1180px, calc(100% - 2rem)); margin:0 auto 5rem; }
 .hero { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(330px,.8fr); gap:clamp(2rem,5vw,5rem); align-items:center; padding:clamp(3rem,7vw,6rem) 0 2.5rem; }
 .hero h1 { max-width:none; margin:.4rem 0 1rem; color:#121a2d; font-size:clamp(1.5rem,4vw,3.1rem); line-height:1.1; letter-spacing:-.03em; white-space:nowrap; }
 .hero-copy { max-width:650px; margin:0; color:#536077; font-size:clamp(1rem,1.7vw,1.22rem); line-height:1.75; }
+.hero-actions { display:flex; flex-wrap:wrap; gap:.75rem; margin-top:1.25rem; }
+.practice-site-link { display:inline-flex; align-items:center; gap:.45rem; padding:.8rem 1.05rem; color:#fff; background:var(--astar); border:1px solid var(--astar); border-radius:8px; font-weight:750; text-decoration:none; }
+.practice-site-link:hover { background:var(--astar-dark); border-color:var(--astar-dark); }
 .formula-card { padding:1.45rem; color:#fff; background:linear-gradient(145deg,#263d99,#4568e8); border-radius:18px; box-shadow:0 18px 45px rgba(36,58,146,.2); }
 .formula-card>span { display:block; margin-bottom:.35rem; color:#dce3ff; font-size:.78rem; font-weight:700; }
 .formula-card>strong { display:block; margin-bottom:1.1rem; font-size:clamp(1.8rem,4vw,2.8rem); letter-spacing:-.04em; }

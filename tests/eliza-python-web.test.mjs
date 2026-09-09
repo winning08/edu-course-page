@@ -295,6 +295,14 @@ test("units/ai-history/index.html은 두 활동을 01/02 순서로 lessons/ 폴�
   assert.match(html, /data-lesson-card="eliza-python-web"/);
 });
 
+test("인공지능의 이해 첫 화면에서 외부 퀴즈 사이트를 바로 열 수 있다", async () => {
+  const html = await readFile(new URL("units/ai-history/index.html", repoRoot), "utf8");
+  const quizUrl = "https://kankanssam.github.io/AI_history/";
+  assert.equal(html.split(quizUrl).length - 1, 1);
+  assert.match(html, /class="group-external-link"[^>]+target="_blank"[^>]+rel="noopener"/);
+  assert.match(html, /퀴즈 사이트 바로 열기/);
+});
+
 test("data/activity-groups.json의 group.path·children.path가 가리키는 index.html이 실제로 존재한다(회귀 방지)", async () => {
   assert.ok(await fileExists(new URL("lessons/eliza-python-web/index.html", repoRoot)));
 });
