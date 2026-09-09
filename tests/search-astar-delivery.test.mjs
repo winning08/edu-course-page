@@ -11,11 +11,12 @@ const lessonRoot = new URL("../lessons/search-astar-delivery/", import.meta.url)
 
 test("A* 연습문제 사이트를 활동 완료 전 첫 화면에서 바로 열 수 있다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
-  const practiceUrl = "https://kankanssam.github.io/uniform_cost/";
+  const practiceUrl = "https://kankanssam.github.io/Astar/";
   assert.equal(html.split(practiceUrl).length - 1, 1);
+  assert.doesNotMatch(html, /kankanssam\.github\.io\/uniform_cost/);
   assert.ok(html.indexOf(practiceUrl) < html.indexOf('class="stage-nav"'));
   assert.match(html, /class="practice-site-link"[^>]+target="_blank"[^>]+rel="noopener"/);
-  assert.match(html, /연습문제 사이트 바로 열기/);
+  assert.match(html, /A\* 연습문제 사이트 바로 열기/);
 });
 
 test("학교 지도 A* 트레이스는 3단계와 같은 경로를 더 적은 상태로 찾는다", () => {
