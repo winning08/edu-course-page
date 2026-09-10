@@ -92,10 +92,12 @@ test("지도 예시 뒤에 3단계 핵심 정리를 거쳐 4단계 8-퍼즐로 �
   assert.match(html, /<html lang="ko">/);
   assert.match(html, /활동 1 · 교과서 예시 따라가기/);
   assert.match(html, /href="\.\.\/search-cost-delivery\/"/);
-  assert.match(html, /data-view="recap"><b>3<\/b><span>핵심 정리/);
+  assert.match(html, /data-view="recap"><b>3<\/b><span>A\* 선택 기준/);
   assert.match(html, /data-view="new"><b>4<\/b><span>8-퍼즐/);
   assert.match(html, /data-view="result"><b>5<\/b><span>최종 정리/);
-  assert.match(html, /3단계 · 지도 활동 핵심 정리/);
+  assert.match(html, /3단계 · A\* 선택 기준/);
+  assert.match(html, /8-퍼즐로 가기 전에 A\*의 선택 기준을 정리해 봅시다/);
+  assert.doesNotMatch(html, /핵심 정리/);
   assert.match(html, /4단계 · 새로운 문제에 적용하기/);
   assert.match(js, /finishMapTrace\(\)[\s\S]*?showView\("recap"\)/);
   assert.match(js, /mapEl\.continueButton\.addEventListener\("click", \(\) => showView\("new"\)\)/);
