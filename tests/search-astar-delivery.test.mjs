@@ -96,11 +96,15 @@ test("지도 예시의 결과 화면 자체를 3단계로 보여준 뒤 4단계 
   assert.match(html, /data-view="new"><b>4<\/b><span>8-퍼즐/);
   assert.match(html, /data-view="result"><b>5<\/b><span>최종 정리/);
   assert.match(html, /3단계 · 지도 활동 결과/);
-  assert.match(html, /<h2 id="recap-title"[^>]*>같은 지도, 같은 길, 더 적은 확인<\/h2>/);
+  assert.match(html, /id="recap-waiting" class="recap-waiting"/);
+  assert.match(html, /2단계 지도를 마치면 결과가 나타납니다/);
+  assert.match(html, /data-next="textbook">2단계 교과서 예시로 돌아가기/);
+  assert.match(html, /<h2 id="recap-result-title"[^>]*>같은 지도, 같은 길, 더 적은 확인<\/h2>/);
   assert.doesNotMatch(html, /8-퍼즐로 가기 전에 A\*의 선택 기준을 정리해 봅시다/);
   assert.doesNotMatch(html, /recap-takeaway-grid/);
   assert.match(html, /4단계 · 새로운 문제에 적용하기/);
   assert.match(js, /finishMapTrace\(\)[\s\S]*?showView\("recap"\)/);
+  assert.match(js, /\$\("#recap-waiting"\)\.hidden = true/);
   assert.match(js, /mapEl\.continueButton\.addEventListener\("click", \(\) => showView\("new"\)\)/);
   assert.match(html, /새 후보마다 g\(n\)만 제공합니다/);
   assert.match(html, /f\(n\) = g\(n\) \+ h\(n\)/);

@@ -414,9 +414,11 @@ function renderMapSummary() {
 
 function finishMapTrace() {
   mapEl.traceView.hidden = true;
+  $("#recap-waiting").hidden = true;
   mapEl.summary.hidden = false;
   renderMapSummary();
   showView("recap");
+  $("#recap-result-title").focus();
 }
 
 mapEl.continueButton.addEventListener("click", () => showView("new"));
@@ -594,6 +596,7 @@ function resetAll() {
   Object.assign(puzzle, { step: 0, correct: 0, answered: false, calcVerified: false, lastPicked: null });
   renderPuzzleTrace();
   mapEl.traceView.hidden = false;
+  $("#recap-waiting").hidden = false;
   mapEl.summary.hidden = true;
   showMapRound(0);
   $("#warmup-form").reset();

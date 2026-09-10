@@ -41,6 +41,7 @@ main { width:min(1180px, calc(100% - 2rem)); margin:0 auto 5rem; }
 #map-next-step { display:inline-flex; align-items:center; gap:.5rem; min-height:48px; padding:.65rem 1.2rem; color:#fff; background:var(--astar); border:1px solid var(--astar); border-radius:4px; font-weight:750; }
 #map-next-step:hover:not(:disabled) { background:var(--astar-dark); }
 .map-summary { margin-top:1.5rem; padding:1.4rem; background:var(--astar-soft); border:1px solid #c7d1ff; border-radius:14px; }
+.recap-waiting { max-width:760px; margin:clamp(2rem,6vw,5rem) auto; padding:clamp(1.4rem,4vw,2.4rem); text-align:center; background:#f7f9fd; border:1px solid #d7deec; border-radius:14px; }.recap-waiting h2 { margin:.45rem 0 .8rem; color:#182139; font-size:clamp(1.65rem,3vw,2.35rem); }.recap-waiting>p:last-of-type { color:#59667d; line-height:1.7; }.recap-waiting .primary-action { margin:1.5rem auto 0; }
 .map-summary h2,.map-summary h3 { margin:.3rem 0 .6rem; color:#182139; font-size:clamp(1.65rem,3vw,2.45rem); letter-spacing:-.035em; }
 .map-summary .primary-action { margin-top:1.2rem; }
 .map-summary-actions { display:flex; flex-wrap:wrap; gap:.8rem; margin-top:1.2rem; }
