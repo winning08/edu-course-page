@@ -57,7 +57,7 @@
       <nav class="stage-nav" aria-label="활동 진행 단계">
         <button type="button" data-view="intro" aria-current="step"><b>1</b><span>방법 알아보기</span></button>
         <button type="button" data-view="textbook"><b>2</b><span>교과서 예시</span></button>
-        <button type="button" data-view="recap"><b>3</b><span>A* 선택 기준</span></button>
+        <button type="button" data-view="recap"><b>3</b><span>탐색 결과</span></button>
         <button type="button" data-view="new"><b>4</b><span>8-퍼즐</span></button>
         <button type="button" data-view="result"><b>5</b><span>최종 정리</span></button>
       </nav>
@@ -345,21 +345,9 @@
       </section>
 
       <section id="recap-view" class="lesson-view" aria-labelledby="recap-title" hidden>
-        <div class="section-heading">
-          <p class="eyebrow">3단계 · A* 선택 기준</p>
-          <h2 id="recap-title" tabindex="-1">8-퍼즐로 가기 전에 A*의 선택 기준을 정리해 봅시다</h2>
-          <p>지도에서 사용한 세 값을 구분하면, 문제가 8-퍼즐로 바뀌어도 같은 원리로 다음 상태를 선택할 수 있습니다.</p>
-        </div>
-        <div class="takeaway-grid recap-takeaway-grid">
-          <article><span>지금까지 실제 비용</span><strong>g(n)</strong><p>시작 상태에서 현재 상태까지 든 누적 비용</p></article>
-          <i aria-hidden="true">+</i>
-          <article><span>앞으로 들 비용의 어림값</span><strong>h(n)</strong><p>현재 상태에서 목표까지 남았다고 추정한 비용</p></article>
-          <i aria-hidden="true">=</i>
-          <article class="accent"><span>다음 상태 선택 기준</span><strong>f(n)</strong><p>g(n)+h(n)이 가장 작은 상태를 먼저 확인</p></article>
-        </div>
         <div id="map-summary" class="map-summary" hidden>
-          <p class="eyebrow">지도 활동 결과</p>
-          <h3>같은 지도, 같은 길, 더 적은 확인</h3>
+          <p class="eyebrow">3단계 · 지도 활동 결과</p>
+          <h2 id="recap-title" tabindex="-1">같은 지도, 같은 길, 더 적은 확인</h2>
           <p id="map-summary-text"></p>
           <div class="stat-compare" id="map-compare"></div>
           <div class="map-summary-actions">
