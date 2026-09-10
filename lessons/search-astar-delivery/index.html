@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="styles.css?v=2026090905">
   <link rel="stylesheet" href="../../assets/guard.css">
   <script type="module" src="../../assets/group-guard.js"></script>
-  <script type="module" src="game.js?v=2026091001"></script>
+  <script type="module" src="game.js?v=2026091002"></script>
   <script type="module" src="practice.js?v=2026091001"></script>
   <script type="module" src="broken-demo.js?v=2026090907"></script>
 </head>
@@ -348,8 +348,12 @@
         <div id="map-summary" class="map-summary">
           <p class="eyebrow">3단계 · 지도 활동 결과</p>
           <h2 id="recap-result-title" tabindex="-1">같은 지도, 같은 길, 더 적은 확인</h2>
-          <p id="map-summary-text"></p>
-          <div class="stat-compare" id="map-compare"></div>
+          <p id="map-summary-text">A* 탐색은 정문 → 운동장 → 급식실 → 매점 경로(비용 12)를 찾는 데 4개 상태만 확인했습니다. 3단계의 균일 비용 탐색은 같은 지도에서 같은 경로를 찾는 데 5개 상태를 확인했습니다. 목표까지 남은 거리를 어림잡은 h(n) 덕분에 1개 상태를 더 적게 확인한 것입니다.</p>
+          <div class="stat-compare" id="map-compare">
+            <div class="stat-block"><span>3단계 균일 비용 탐색이 확인한 상태 수</span><strong>5개</strong></div>
+            <div class="stat-block"><span>이번 A* 탐색이 확인한 상태 수</span><strong>4개</strong></div>
+            <div class="stat-block"><span>덜 확인한 상태 수</span><strong>1개</strong></div>
+          </div>
           <div class="map-summary-actions">
             <button id="map-show-practice" type="button" class="secondary-action" data-next="textbook">다른 지도로 더 연습하기 <span aria-hidden="true">→</span></button>
             <button id="map-show-broken" type="button" class="secondary-action" data-next="textbook">h(n)이 틀리면 어떻게 될까요? <span aria-hidden="true">→</span></button>

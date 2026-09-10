@@ -99,6 +99,10 @@ test("지도 예시의 결과 화면 자체를 3단계로 보여준 뒤 4단계 
   assert.match(html, /id="map-summary" class="map-summary">/);
   assert.doesNotMatch(html, /id="recap-waiting"/);
   assert.match(html, /<h2 id="recap-result-title"[^>]*>같은 지도, 같은 길, 더 적은 확인<\/h2>/);
+  assert.match(html, /A\* 탐색은 정문 → 운동장 → 급식실 → 매점 경로\(비용 12\)를 찾는 데 4개 상태만 확인했습니다/);
+  assert.match(html, /3단계 균일 비용 탐색이 확인한 상태 수<\/span><strong>5개/);
+  assert.match(html, /이번 A\* 탐색이 확인한 상태 수<\/span><strong>4개/);
+  assert.match(html, /덜 확인한 상태 수<\/span><strong>1개/);
   assert.doesNotMatch(html, /8-퍼즐로 가기 전에 A\*의 선택 기준을 정리해 봅시다/);
   assert.doesNotMatch(html, /recap-takeaway-grid/);
   assert.match(html, /4단계 · 새로운 문제에 적용하기/);
