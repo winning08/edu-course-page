@@ -11,9 +11,9 @@ const lessonRoot = new URL("../lessons/search-astar-delivery/", import.meta.url)
 
 test("A* 연습문제 사이트를 활동 완료 전 첫 화면에서 바로 열 수 있다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
-  const practiceUrl = "https://kankanssam.github.io/Astar/";
+  const practiceUrl = "https://ivymso13.github.io/edu-course-page/lessons/search-astar-practice/";
   assert.equal(html.split(practiceUrl).length - 1, 1);
-  assert.doesNotMatch(html, /kankanssam\.github\.io\/uniform_cost/);
+  assert.doesNotMatch(html, /kankanssam\.github\.io\/(?:uniform_cost|Astar)\//);
   assert.ok(html.indexOf(practiceUrl) < html.indexOf('class="stage-nav"'));
   assert.match(html, /class="practice-site-link"[^>]+target="_blank"[^>]+rel="noopener"/);
   assert.match(html, /A\* 연습문제 사이트 바로 열기/);
