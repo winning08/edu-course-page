@@ -97,6 +97,11 @@ test("지도 예시의 결과 화면 자체를 3단계로 보여준 뒤 4단계 
   assert.match(html, /data-view="result"><b>5<\/b><span>최종 정리/);
   assert.match(html, /3단계 · 지도 활동 결과/);
   assert.match(html, /id="map-summary" class="map-summary">/);
+  const recapStart = html.indexOf('id="recap-view"');
+  const recapEnd = html.indexOf('id="new-view"');
+  assert.ok(recapStart < html.indexOf('id="map-practice-view"') && html.indexOf('id="map-practice-view"') < recapEnd);
+  assert.ok(recapStart < html.indexOf('id="map-broken-view"') && html.indexOf('id="map-broken-view"') < recapEnd);
+  assert.doesNotMatch(html, /id="map-show-(?:practice|broken)"[^>]+data-next="textbook"/);
   assert.doesNotMatch(html, /id="recap-waiting"/);
   assert.match(html, /<h2 id="recap-result-title"[^>]*>같은 지도, 같은 길, 더 적은 확인<\/h2>/);
   assert.match(html, /A\* 탐색은 정문 → 운동장 → 급식실 → 매점 경로\(비용 12\)를 찾는 데 4개 상태만 확인했습니다/);

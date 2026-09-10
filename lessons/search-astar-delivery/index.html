@@ -172,6 +172,25 @@
           </div>
         </div>
 
+      </section>
+
+      <section id="recap-view" class="lesson-view" aria-label="3단계 탐색 결과" hidden>
+        <div id="map-summary" class="map-summary">
+          <p class="eyebrow">3단계 · 지도 활동 결과</p>
+          <h2 id="recap-result-title" tabindex="-1">같은 지도, 같은 길, 더 적은 확인</h2>
+          <p id="map-summary-text">A* 탐색은 정문 → 운동장 → 급식실 → 매점 경로(비용 12)를 찾는 데 4개 상태만 확인했습니다. 3단계의 균일 비용 탐색은 같은 지도에서 같은 경로를 찾는 데 5개 상태를 확인했습니다. 목표까지 남은 거리를 어림잡은 h(n) 덕분에 1개 상태를 더 적게 확인한 것입니다.</p>
+          <div class="stat-compare" id="map-compare">
+            <div class="stat-block"><span>3단계 균일 비용 탐색이 확인한 상태 수</span><strong>5개</strong></div>
+            <div class="stat-block"><span>이번 A* 탐색이 확인한 상태 수</span><strong>4개</strong></div>
+            <div class="stat-block"><span>덜 확인한 상태 수</span><strong>1개</strong></div>
+          </div>
+          <div class="map-summary-actions">
+            <button id="map-show-practice" type="button" class="secondary-action">다른 지도로 더 연습하기 <span aria-hidden="true">→</span></button>
+            <button id="map-show-broken" type="button" class="secondary-action">h(n)이 틀리면 어떻게 될까요? <span aria-hidden="true">→</span></button>
+            <button id="map-continue" class="primary-action" type="button">새 문제(8-퍼즐) 풀어보기 <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+
         <div id="map-practice-view" hidden>
           <div class="section-heading practice-heading">
             <p class="eyebrow">연습 문제 · 새로운 학교 지도</p>
@@ -340,24 +359,6 @@
 
             <p class="broken-explain">운동장의 h(n)=10은 매점과 직접 연결된 간선이 없어 그럴듯해 보였지만, 실제 최단 거리(운동장→급식실→매점=5)보다 큰(admissible하지 않은) 값이었습니다. h(n) 하나라도 실제 남은 비용보다 크면, f(n)=g(n)+h(n)을 정확히 계산해도 A*가 지름길을 놔두고 더 비싼 길로 돌아갈 수 있습니다.</p>
             <button id="map-broken-again" type="button" class="secondary-action">다시 해보기 <span aria-hidden="true">↻</span></button>
-          </div>
-        </div>
-      </section>
-
-      <section id="recap-view" class="lesson-view" aria-label="3단계 탐색 결과" hidden>
-        <div id="map-summary" class="map-summary">
-          <p class="eyebrow">3단계 · 지도 활동 결과</p>
-          <h2 id="recap-result-title" tabindex="-1">같은 지도, 같은 길, 더 적은 확인</h2>
-          <p id="map-summary-text">A* 탐색은 정문 → 운동장 → 급식실 → 매점 경로(비용 12)를 찾는 데 4개 상태만 확인했습니다. 3단계의 균일 비용 탐색은 같은 지도에서 같은 경로를 찾는 데 5개 상태를 확인했습니다. 목표까지 남은 거리를 어림잡은 h(n) 덕분에 1개 상태를 더 적게 확인한 것입니다.</p>
-          <div class="stat-compare" id="map-compare">
-            <div class="stat-block"><span>3단계 균일 비용 탐색이 확인한 상태 수</span><strong>5개</strong></div>
-            <div class="stat-block"><span>이번 A* 탐색이 확인한 상태 수</span><strong>4개</strong></div>
-            <div class="stat-block"><span>덜 확인한 상태 수</span><strong>1개</strong></div>
-          </div>
-          <div class="map-summary-actions">
-            <button id="map-show-practice" type="button" class="secondary-action" data-next="textbook">다른 지도로 더 연습하기 <span aria-hidden="true">→</span></button>
-            <button id="map-show-broken" type="button" class="secondary-action" data-next="textbook">h(n)이 틀리면 어떻게 될까요? <span aria-hidden="true">→</span></button>
-            <button id="map-continue" class="primary-action" type="button">새 문제(8-퍼즐) 풀어보기 <span aria-hidden="true">→</span></button>
           </div>
         </div>
       </section>
