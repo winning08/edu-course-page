@@ -12,7 +12,7 @@ const lessonRoot = new URL("../lessons/search-astar-delivery/", import.meta.url)
 test("A* 연습문제 사이트를 활동 완료 전 첫 화면에서 바로 열 수 있다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
   const practiceUrl = "https://ivymso13.github.io/edu-course-page/lessons/search-astar-practice/";
-  assert.equal(html.split(practiceUrl).length - 1, 1);
+  assert.equal(html.split(practiceUrl).length - 1, 2);
   assert.doesNotMatch(html, /kankanssam\.github\.io\/(?:uniform_cost|Astar)\//);
   assert.ok(html.indexOf(practiceUrl) < html.indexOf('class="stage-nav"'));
   assert.match(html, /class="practice-site-link"[^>]+target="_blank"[^>]+rel="noopener"/);
@@ -113,15 +113,22 @@ test("학교 지도의 휴리스틱값은 3단계 그래프의 간선 비용과 
   assert.match(js, /gate: "a", lobby: "b", yard: "c", cafeteria: "d", store: "e"/);
 });
 
-test("그래프 노드에는 h(n)만 항상 보이고, g(n)은 그 상태로 이어지는 간선 위에 뜨며, 선택은 간선을 클릭해서 한다", async () => {
-  const js = await readFile(new URL("game.js", lessonRoot), "utf8");
+test("그래프 노드에는 h(n), 간선에는 구간 비용이 보이고 누적 g(n)은 선택 설명과 목록에서 확인한다", async () => {
+  const [html, js, practiceJs] = await Promise.all([
+    readFile(new URL("index.html", lessonRoot), "utf8"),
+    readFile(new URL("game.js", lessonRoot), "utf8"),
+    readFile(new URL("practice.js", lessonRoot), "utf8"),
+  ]);
   // 노드: h(n)만, 방문 여부와 무관하게 항상.
   assert.match(js, /const H_LABELS = Object\.fromEntries\(NODES\.map\(\(n\) => \[n\.id, `h=\$\{HEURISTICS\[n\.id\]\}`\]\)\);/);
   assert.match(js, /gById: H_LABELS/);
   assert.doesNotMatch(js, /metricLabel: "f"/);
-  // 간선: g(n)을 보여주고, 오픈 리스트로 이어지는 간선은 pick:true로 클릭 가능해야 한다.
-  assert.match(js, /edgesOverride\.push\(\{\s*a: parentId, b: childId, displayValue: g, pick: true,/);
-  assert.match(js, /edgesOverride\.push\(\{ a: parentId, b: childId, cost: `g=\$\{g\}` \}\)/);
+  // 간선: 구간 비용을 보여주고, 선택 설명에는 누적 g(n)도 제공해야 한다.
+  assert.match(js, /a: parentId, b: childId, displayValue: g, displayText: `\$\{cost\}`, pick: true,/);
+  assert.match(js, /edgesOverride\.push\(\{ a: parentId, b: childId, cost: `\$\{cost\}` \}\)/);
+  assert.match(js, /간선 값 \$\{cost\}, 누적 g=\$\{g\}/);
+  assert.match(practiceJs, /displayValue: g, displayText: `\$\{cost\}`, pick: true/);
+  assert.match(html, /파란 원=실제 간선 값\(클릭\)/);
   assert.match(js, /pick: true, displayValue: c\.g,/);
   // 클릭 처리는 노드가 아니라 .is-pickable(간선 포함) 전체를 대상으로 한다.
   assert.match(js, /event\.target\.closest\("\.is-pickable"\)/);
