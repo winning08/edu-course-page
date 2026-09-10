@@ -12,7 +12,7 @@ const lessonRoot = new URL("../lessons/search-astar-delivery/", import.meta.url)
 test("A* 연습문제 사이트를 활동 완료 전 첫 화면에서 바로 열 수 있다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
   const practiceUrl = "https://ivymso13.github.io/edu-course-page/lessons/search-astar-practice/";
-  assert.equal(html.split(practiceUrl).length - 1, 2);
+  assert.equal(html.split(practiceUrl).length - 1, 1);
   assert.doesNotMatch(html, /kankanssam\.github\.io\/(?:uniform_cost|Astar)\//);
   assert.ok(html.indexOf(practiceUrl) < html.indexOf('class="stage-nav"'));
   assert.match(html, /class="practice-site-link"[^>]+target="_blank"[^>]+rel="noopener"/);
@@ -83,20 +83,29 @@ test("misplacedTiles는 목표와 다른 숫자 타일 수를 센다(빈칸 제�
   assert.equal(misplacedTiles(NEW_START), misplacedTiles(NEW_START, NEW_GOAL_STATE));
 });
 
-test("지도 예시·8-퍼즐 새 문제·3단계 연결·접근성 장치를 제공한다", async () => {
-  const [html, css] = await Promise.all([
+test("지도 예시 뒤에 3단계 핵심 정리를 거쳐 4단계 8-퍼즐로 이동한다", async () => {
+  const [html, css, js] = await Promise.all([
     readFile(new URL("index.html", lessonRoot), "utf8"),
     readFile(new URL("styles.css", lessonRoot), "utf8"),
+    readFile(new URL("game.js", lessonRoot), "utf8"),
   ]);
   assert.match(html, /<html lang="ko">/);
   assert.match(html, /활동 1 · 교과서 예시 따라가기/);
   assert.match(html, /href="\.\.\/search-cost-delivery\/"/);
-  assert.match(html, /활동 2 · 새로운 문제에 적용하기/);
+  assert.match(html, /data-view="recap"><b>3<\/b><span>핵심 정리/);
+  assert.match(html, /data-view="new"><b>4<\/b><span>8-퍼즐/);
+  assert.match(html, /data-view="result"><b>5<\/b><span>최종 정리/);
+  assert.match(html, /3단계 · 지도 활동 핵심 정리/);
+  assert.match(html, /4단계 · 새로운 문제에 적용하기/);
+  assert.match(js, /finishMapTrace\(\)[\s\S]*?showView\("recap"\)/);
+  assert.match(js, /mapEl\.continueButton\.addEventListener\("click", \(\) => showView\("new"\)\)/);
   assert.match(html, /새 후보마다 g\(n\)만 제공합니다/);
   assert.match(html, /f\(n\) = g\(n\) \+ h\(n\)/);
   assert.match(html, /id="map-trace-graph"/);
   assert.match(html, /id="map-list-panel"/);
   assert.match(html, /id="map-summary"/);
+  assert.doesNotMatch(html, />A\* 자유 연습하기</);
+  assert.match(css, /\.stage-nav \{[^}]*grid-template-columns:repeat\(5,1fr\)/);
   // g(n) 칩을 "a(10)"처럼 이름에 괄호값을 바로 붙여 보여주려면 칩 사이 간격을 없애는
   // list-panel-compact 클래스가 있어야 한다(교과서 예시·연습 문제·잘못된 h(n) 데모 3곳 모두).
   assert.equal((html.match(/class="list-panel list-panel-compact"/g) || []).length, 3);

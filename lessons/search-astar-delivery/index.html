@@ -57,8 +57,9 @@
       <nav class="stage-nav" aria-label="활동 진행 단계">
         <button type="button" data-view="intro" aria-current="step"><b>1</b><span>방법 알아보기</span></button>
         <button type="button" data-view="textbook"><b>2</b><span>교과서 예시</span></button>
-        <button type="button" data-view="new"><b>3</b><span>새 문제</span></button>
-        <button type="button" data-view="result"><b>4</b><span>정리</span></button>
+        <button type="button" data-view="recap"><b>3</b><span>핵심 정리</span></button>
+        <button type="button" data-view="new"><b>4</b><span>8-퍼즐</span></button>
+        <button type="button" data-view="result"><b>5</b><span>최종 정리</span></button>
       </nav>
 
       <section id="intro-view" class="lesson-view" aria-labelledby="intro-title">
@@ -168,19 +169,6 @@
               <thead><tr><th scope="col">순서</th><th scope="col">장소</th><th scope="col">g(n)</th><th scope="col">h(n)</th><th scope="col">f(n)</th></tr></thead>
               <tbody id="map-record-body"><tr class="empty-row"><td colspan="5">아직 확정된 장소가 없습니다.</td></tr></tbody>
             </table>
-          </div>
-        </div>
-
-        <div id="map-summary" class="map-summary" hidden>
-          <p class="eyebrow">지도 활동 완료</p>
-          <h3 tabindex="-1">같은 지도, 같은 길, 더 적은 확인</h3>
-          <p id="map-summary-text"></p>
-          <div class="stat-compare" id="map-compare"></div>
-          <div class="map-summary-actions">
-            <button id="map-show-practice" type="button" class="secondary-action">다른 지도로 더 연습하기 <span aria-hidden="true">→</span></button>
-            <a class="secondary-action" href="https://ivymso13.github.io/edu-course-page/lessons/search-astar-practice/" target="_blank" rel="noopener">A* 자유 연습하기 <span aria-hidden="true">↗</span></a>
-            <button id="map-show-broken" type="button" class="secondary-action">h(n)이 틀리면 어떻게 될까요? <span aria-hidden="true">→</span></button>
-            <button id="map-continue" class="primary-action" type="button">새 문제(8-퍼즐) 풀어보기 <span aria-hidden="true">→</span></button>
           </div>
         </div>
 
@@ -356,9 +344,35 @@
         </div>
       </section>
 
+      <section id="recap-view" class="lesson-view" aria-labelledby="recap-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">3단계 · 지도 활동 핵심 정리</p>
+          <h2 id="recap-title" tabindex="-1">8-퍼즐로 가기 전에 A*의 선택 기준을 정리해 봅시다</h2>
+          <p>지도에서 사용한 세 값을 구분하면, 문제가 8-퍼즐로 바뀌어도 같은 원리로 다음 상태를 선택할 수 있습니다.</p>
+        </div>
+        <div class="takeaway-grid recap-takeaway-grid">
+          <article><span>지금까지 실제 비용</span><strong>g(n)</strong><p>시작 상태에서 현재 상태까지 든 누적 비용</p></article>
+          <i aria-hidden="true">+</i>
+          <article><span>앞으로 들 비용의 어림값</span><strong>h(n)</strong><p>현재 상태에서 목표까지 남았다고 추정한 비용</p></article>
+          <i aria-hidden="true">=</i>
+          <article class="accent"><span>다음 상태 선택 기준</span><strong>f(n)</strong><p>g(n)+h(n)이 가장 작은 상태를 먼저 확인</p></article>
+        </div>
+        <div id="map-summary" class="map-summary" hidden>
+          <p class="eyebrow">지도 활동 결과</p>
+          <h3>같은 지도, 같은 길, 더 적은 확인</h3>
+          <p id="map-summary-text"></p>
+          <div class="stat-compare" id="map-compare"></div>
+          <div class="map-summary-actions">
+            <button id="map-show-practice" type="button" class="secondary-action" data-next="textbook">다른 지도로 더 연습하기 <span aria-hidden="true">→</span></button>
+            <button id="map-show-broken" type="button" class="secondary-action" data-next="textbook">h(n)이 틀리면 어떻게 될까요? <span aria-hidden="true">→</span></button>
+            <button id="map-continue" class="primary-action" type="button">새 문제(8-퍼즐) 풀어보기 <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </section>
+
       <section id="new-view" class="lesson-view" aria-labelledby="new-title" hidden>
         <div class="section-heading">
-          <p class="eyebrow">활동 2 · 새로운 문제에 적용하기</p>
+          <p class="eyebrow">4단계 · 새로운 문제에 적용하기</p>
           <h2 id="new-title" tabindex="-1">A* 탐색 수행하기: 8-퍼즐</h2>
           <p>지도에서는 h(n)이 "매점까지의 직선거리"였습니다. 8-퍼즐에서는 <b>목표 자리와 다른 숫자 타일 수</b>를 h(n)으로 사용합니다. 문제가 바뀌어도 f(n)=g(n)+h(n)이 가장 작은 상태를 고른다는 규칙은 같습니다. 새 후보마다 g(n)만 제공합니다. 목표 상태와 비교해 h(n)을 구하고 f(n)=g(n)+h(n)을 입력한 뒤, 전체 오픈 리스트에서 다음 상태를 선택하세요.</p>
         </div>

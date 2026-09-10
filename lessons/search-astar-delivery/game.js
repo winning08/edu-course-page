@@ -416,7 +416,7 @@ function finishMapTrace() {
   mapEl.traceView.hidden = true;
   mapEl.summary.hidden = false;
   renderMapSummary();
-  mapEl.summary.querySelector("h3").focus();
+  showView("recap");
 }
 
 mapEl.continueButton.addEventListener("click", () => showView("new"));
@@ -687,7 +687,8 @@ $("#restart-button").addEventListener("click", resetAll);
 
 const previewStep = new URLSearchParams(window.location.search).get("preview");
 const isLocalPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-if (isLocalPreview && previewStep === "3") showView("new");
+if (isLocalPreview && previewStep === "3") showView("recap");
+if (isLocalPreview && previewStep === "4") showView("new");
 // ?preview=practice 또는 ?preview=broken이면, 지도 라운드를 처음부터 끝까지 다 풀지 않아도
 // 바로 그 섹션을 볼 수 있게 "교과서 예시" 탭으로만 옮겨 둔다(실제로 열고 시작하는 것은
 // practice.js/broken-demo.js가 각자 같은 preview 값을 보고 스스로 처리한다).
