@@ -26,9 +26,8 @@ const GRAPH_NODES = NODES.map((node) => ({
 const LIST_NODES = NODES.map((node) => ({ ...node, label: NODE_SYMBOLS[node.id] }));
 
 // 그래프에서는 h(n)만 노드 안에 항상 보여준다(장소 고유값이라 방문 전에도 이미 아는 값).
-// g(n)은 그 상태로 "들어오는 간선" 위에 띄운다 — 그 경로를 밟았을 때 든 비용이라는 뜻을
-// 그대로 보여주기 위해서다. 다음 상태를 고르거나 새 후보를 오픈 리스트에 넣는 선택도
-// 이제 노드가 아니라 그 간선(원 안의 g 값)을 클릭해서 한다.
+// 간선의 원에는 그 구간의 비용을 표시하고, 누적 g(n)은 오픈 리스트에서 보여준다.
+// 다음 상태를 고르거나 새 후보를 오픈 리스트에 넣는 선택은 그 상태로 이어지는 간선을 클릭한다.
 const H_LABELS = Object.fromEntries(NODES.map((n) => [n.id, `h=${HEURISTICS[n.id]}`]));
 
 const mapEl = {
@@ -250,10 +249,10 @@ function showMapRound(index) {
   mapEl.nextStep.hidden = true;
 
   const comparison = round.pickCandidates.map((candidate) => `${nodeLabel(candidate.id)} g(n)=${candidate.g}, h(n)=${candidate.h}`).join(" · ");
-  mapEl.costChoiceSummary.innerHTML = `<span>현재 후보 비교</span><strong>${comparison}</strong><p class="cost-choice-hint">f(n)=g(n)+h(n)을 직접 계산해서 가장 작은 곳을 클릭하세요.</p>`;
+  mapEl.costChoiceSummary.innerHTML = `<span>현재 후보 비교</span><strong>${comparison}</strong><p class="cost-choice-hint">f(n)=g(n)+h(n)이 가장 작은 상태를 고릅니다. 같은 값이면 장소 이름순으로 고르세요.</p>`;
 
   mapEl.candidatePrompt.textContent = round.pickCandidates.length > 1
-    ? "그래프에서 f(n)이 가장 작은 간선을 클릭하세요."
+    ? "f(n)이 가장 작은 상태로 이어지는 간선을 클릭하세요. f(n)이 같으면 장소 이름순으로 고릅니다."
     : "오픈 리스트에는 이 상태 하나뿐입니다. 그래프에서 클릭해 확장하세요.";
 }
 
@@ -335,7 +334,7 @@ function handleMapPick(clickedId) {
     mapPickAttempts += 1;
     mapEl.stepFeedback.classList.add("incorrect");
     mapEl.stepFeedback.innerHTML = mapPickAttempts === 1
-      ? `<strong>한 번 더 비교해 보세요.</strong><p>오픈 리스트에 있는 모든 f(n) 중 가장 작은 값을 찾으면 됩니다.</p>`
+      ? `<strong>한 번 더 비교해 보세요.</strong><p>오픈 리스트에서 f(n)이 가장 작은 상태를 찾으세요. 같은 값이 여러 개면 장소 이름순으로 먼저인 상태를 고릅니다.</p>`
       : `<strong>힌트</strong><p><b>${round.f}</b>보다 큰 f(n)은 다음 상태가 될 수 없습니다.</p>`;
     renderFromMapRoundState({ interactiveIds: round.pickCandidates.map((c) => c.id), interactiveVerb: "다시 선택하기", resultMarks: { [clickedId]: "incorrect" } });
     return;

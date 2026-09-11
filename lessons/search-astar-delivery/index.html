@@ -14,9 +14,9 @@
   <link rel="stylesheet" href="styles.css?v=2026090905">
   <link rel="stylesheet" href="../../assets/guard.css">
   <script type="module" src="../../assets/group-guard.js"></script>
-  <script type="module" src="game.js?v=2026091002"></script>
-  <script type="module" src="practice.js?v=2026091001"></script>
-  <script type="module" src="broken-demo.js?v=2026090907"></script>
+  <script type="module" src="game.js?v=2026091101"></script>
+  <script type="module" src="practice.js?v=2026091101"></script>
+  <script type="module" src="broken-demo.js?v=2026091101"></script>
 </head>
 <body data-guard-scope="page" data-guard-group="ai-search" data-guard-lesson="search-astar-delivery">
   <a class="skip-link" href="#activity">활동으로 바로가기</a>
@@ -129,7 +129,7 @@
         <div id="map-trace-view">
           <div class="sample-head">
             <div><span class="sample-id" id="map-step-badge">단계 1</span><h3 id="map-experiment-title" tabindex="-1">다음에 확인할 상태는 어디일까요?</h3></div>
-            <p id="map-step-instruction">아래 그래프에서 각 노드는 h(n)을, 그 상태로 이어지는 간선(원)은 g(n)을 보여줍니다. 오픈 리스트에 있는 상태 중 <strong>g(n)+h(n)인 f(n)이 가장 작은 간선</strong>을 직접 클릭하세요.</p>
+            <p id="map-step-instruction">아래 그래프에서 각 노드는 h(n)을, 간선의 파란 원은 해당 구간의 비용을 보여줍니다. 누적 g(n)은 오픈 리스트에서 확인하고, <strong>f(n)=g(n)+h(n)이 가장 작은 상태로 이어지는 간선</strong>을 클릭하세요. f(n)이 같으면 장소 이름순으로 고릅니다.</p>
           </div>
           <div class="graph-panel">
             <div class="graph-zoom-viewport"><svg id="map-trace-graph" class="graph-diagram"></svg></div>
@@ -226,7 +226,7 @@
                 <div class="list-panel-block" data-list-kind="open"><span>오픈 리스트</span><ul data-list="open"></ul></div>
                 <div class="list-panel-block" data-list-kind="closed"><span>닫힌 리스트</span><ul data-list="closed"></ul></div>
               </div>
-              <p class="candidate-prompt" id="map-practice-prompt">그래프에서 f(n)이 가장 작은 간선을 클릭하세요.</p>
+              <p class="candidate-prompt" id="map-practice-prompt">f(n)이 가장 작은 상태로 이어지는 간선을 클릭하세요. f(n)이 같으면 알파벳순으로 고릅니다.</p>
               <div id="map-practice-cost-choice-summary" class="cost-choice-summary" aria-live="polite"></div>
               <div id="map-practice-feedback" class="step-feedback" aria-live="polite" hidden></div>
               <div id="map-practice-children-reveal" class="children-reveal" aria-live="polite"></div>
@@ -305,7 +305,7 @@
                 <div class="list-panel-block" data-list-kind="open"><span>오픈 리스트</span><ul data-list="open"></ul></div>
                 <div class="list-panel-block" data-list-kind="closed"><span>닫힌 리스트</span><ul data-list="closed"></ul></div>
               </div>
-              <p class="candidate-prompt" id="map-broken-prompt">그래프에서 f(n)이 가장 작은 간선을 클릭하세요.</p>
+              <p class="candidate-prompt" id="map-broken-prompt">f(n)이 가장 작은 상태로 이어지는 간선을 클릭하세요. f(n)이 같으면 장소 이름순으로 고릅니다.</p>
               <div id="map-broken-cost-choice-summary" class="cost-choice-summary" aria-live="polite"></div>
               <div id="map-broken-feedback" class="step-feedback" aria-live="polite" hidden></div>
               <div id="map-broken-children-reveal" class="children-reveal" aria-live="polite"></div>

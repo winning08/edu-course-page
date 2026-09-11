@@ -265,10 +265,10 @@ if (el.section) {
     el.nextStep.hidden = true;
 
     const comparison = round.pickCandidates.map((c) => `${nodeLabel(c.id)} g(n)=${c.g}, h(n)=${c.h}`).join(" · ");
-    el.costChoiceSummary.innerHTML = `<span>현재 후보 비교</span><strong>${comparison}</strong><p class="cost-choice-hint">f(n)=g(n)+h(n)을 직접 계산해서 가장 작은 곳을 클릭하세요.</p>`;
+    el.costChoiceSummary.innerHTML = `<span>현재 후보 비교</span><strong>${comparison}</strong><p class="cost-choice-hint">f(n)=g(n)+h(n)이 가장 작은 상태를 고릅니다. 같은 값이면 장소 이름순으로 고르세요.</p>`;
 
     el.prompt.textContent = round.pickCandidates.length > 1
-      ? "그래프에서 f(n)이 가장 작은 간선을 클릭하세요."
+      ? "f(n)이 가장 작은 상태로 이어지는 간선을 클릭하세요. f(n)이 같으면 장소 이름순으로 고릅니다."
       : "오픈 리스트에는 이 상태 하나뿐입니다. 그래프에서 클릭해 확장하세요.";
   }
 
@@ -348,7 +348,7 @@ if (el.section) {
     el.feedback.className = "step-feedback";
     if (!outcome.correct) {
       el.feedback.classList.add("incorrect");
-      el.feedback.innerHTML = `<strong>다시 확인해 볼까요.</strong><p>오픈 리스트에 있는 모든 f(n) 중 가장 작은 값을 찾으면 됩니다.</p>`;
+      el.feedback.innerHTML = `<strong>다시 확인해 볼까요.</strong><p>오픈 리스트에서 f(n)이 가장 작은 상태를 찾으세요. 같은 값이 여러 개면 장소 이름순으로 먼저인 상태를 고릅니다.</p>`;
       renderFromRoundState({ interactiveIds: round.pickCandidates.map((c) => c.id), interactiveVerb: "다시 선택하기", resultMarks: { [clickedId]: "incorrect" } });
       return;
     }

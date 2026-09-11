@@ -166,7 +166,9 @@ test("그래프 노드에는 h(n), 간선에는 구간 비용이 보이고 누�
   assert.doesNotMatch(js, /function gAndH/);
   assert.doesNotMatch(js, /function gLabel/);
   assert.match(js, /g\(n\)=\$\{candidate\.g\}, h\(n\)=\$\{candidate\.h\}/);
-  assert.match(js, /f\(n\)=g\(n\)\+h\(n\)을 직접 계산해서 가장 작은 곳을 클릭하세요/);
+  assert.match(practiceJs, /같은 값이면 알파벳순으로 고르세요/);
+  assert.match(html, /f\(n\)이 가장 작은 상태로 이어지는 간선을 클릭하세요\. f\(n\)이 같으면 알파벳순으로 고릅니다/);
+  assert.doesNotMatch(html, /f\(n\)이 가장 작은 간선을/);
 });
 
 test("오픈 리스트의 중복 상태는 기존 f(n)과 새 f(n)을 직접 비교해 갱신한다", async () => {
