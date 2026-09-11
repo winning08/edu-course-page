@@ -1,4 +1,4 @@
-// 연습 섹션: 매번 새로운 랜덤 지도에서 같은 A* 탐색(구간 비용이 표시된 간선을 클릭해 상태를 고르고,
+// 연습 섹션: 매번 새로운 랜덤 지도에서 같은 A* 탐색(누적 g(n)이 표시된 간선을 클릭해 상태를 고르고,
 // 노드에서 h(n)을 읽어 f(n)=g(n)+h(n)을 직접 계산하는) 상호작용을 반복 연습한다.
 // 위쪽의 안내된 활동(game.js)과 같은 그래프 렌더링·상호작용 방식을 그대로 쓰되, 그래프와
 // 진행 상태는 이 섹션만의 것으로 완전히 분리해 둔다(교과서 예시 지도를 건드리지 않는다).
@@ -93,11 +93,11 @@ if (el.section) {
       const g = currentG(childId);
       if (interactiveSet.has(childId)) {
         edgesOverride.push({
-          a: parentId, b: childId, displayValue: g, displayText: `${cost}`, pick: true,
+          a: parentId, b: childId, displayValue: g, pick: true,
           pickLabel: `${nodeLabel(childId, graph.nodes)} 간선 값 ${cost}, 누적 g=${g} ${interactiveVerb || "선택하기"}`,
         });
       } else {
-        edgesOverride.push({ a: parentId, b: childId, cost: `${cost}` });
+        edgesOverride.push({ a: parentId, b: childId, cost: `g=${g}` });
       }
     }
     // 시작 상태처럼 들어오는 간선이 없는 상태만 노드 자체를 클릭해 고른다.
@@ -134,7 +134,6 @@ if (el.section) {
         choice: "keep",
         choiceLabel: `${nodeLabel(pendingDup.id, graph.nodes)} 기존 f=${existingDupF(pendingDup)} 유지하기`,
         displayValue: pendingDup.existingG,
-        displayText: `${roundState.parentOf.get(pendingDup.id)?.cost}`,
       });
       extraEdges.push({
         a: rounds[roundIndex].expandedId,
@@ -143,7 +142,6 @@ if (el.section) {
         pending: true,
         choice: "replace",
         choiceLabel: `${nodeLabel(pendingDup.id, graph.nodes)} 새 f=${pendingDup.newF}으로 갱신하기`,
-        displayText: `${pendingDup.cost}`,
       });
       compareById[pendingDup.id] = {
         existingF: existingDupF(pendingDup),
@@ -160,12 +158,12 @@ if (el.section) {
       .filter(([childId, { parentId }]) => visibleSet.has(childId) && visibleSet.has(parentId))
       .map(([childId, { parentId, cost }]) => {
         const override = committedOverrides.get(childId);
-        return override ? { a: parentId, b: childId, ...override } : { a: parentId, b: childId, cost: `${cost}` };
+        return override ? { a: parentId, b: childId, ...override } : { a: parentId, b: childId, cost: `g=${currentG(childId)}` };
       });
     const candidateEdges = candidates
       .filter((c) => visibleSet.has(c.parentId))
       .map((c) => ({
-        a: c.parentId, b: c.id, pending: true, pick: true, displayValue: c.g, displayText: `${c.cost}`,
+        a: c.parentId, b: c.id, pending: true, pick: true, displayValue: c.g,
         pickLabel: `${nodeLabel(c.id, graph.nodes)} 간선 값 ${c.cost}, 누적 g=${c.g} 오픈 리스트에 추가하기`,
       }));
     renderGraphDiagram(el.graph, {

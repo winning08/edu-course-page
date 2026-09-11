@@ -140,11 +140,11 @@ if (el.section) {
       const g = currentG(childId);
       if (interactiveSet.has(childId)) {
         edgesOverride.push({
-          a: parentId, b: childId, displayValue: g, displayText: `${cost}`, pick: true,
+          a: parentId, b: childId, displayValue: g, pick: true,
           pickLabel: `${nodeLabel(childId)} g=${g} ${interactiveVerb || "선택하기"}`,
         });
       } else {
-        edgesOverride.push({ a: parentId, b: childId, cost: `${cost}` });
+        edgesOverride.push({ a: parentId, b: childId, cost: `g=${g}` });
       }
     }
     const nodeInteractiveIds = [...interactiveSet].filter((id) => !roundState.parentOf.has(id));
@@ -179,13 +179,11 @@ if (el.section) {
         choice: "keep",
         choiceLabel: `${nodeLabel(pendingDup.id)} 기존 f=${existingDupF(pendingDup)} 유지하기`,
         displayValue: pendingDup.existingG,
-        displayText: `f=${existingDupF(pendingDup)}`,
       });
       extraEdges.push({
         a: rounds[roundIndex].expandedId,
         b: pendingDup.id,
         displayValue: pendingDup.newG,
-        displayText: `f=${pendingDup.newF}`,
         pending: true,
         choice: "replace",
         choiceLabel: `${nodeLabel(pendingDup.id)} 새 f=${pendingDup.newF}으로 갱신하기`,
@@ -205,12 +203,12 @@ if (el.section) {
       .filter(([childId, { parentId }]) => visibleSet.has(childId) && visibleSet.has(parentId))
       .map(([childId, { parentId, cost }]) => {
         const override = committedOverrides.get(childId);
-        return override ? { a: parentId, b: childId, ...override } : { a: parentId, b: childId, cost: `${cost}` };
+        return override ? { a: parentId, b: childId, ...override } : { a: parentId, b: childId, cost: `g=${currentG(childId)}` };
       });
     const candidateEdges = candidates
       .filter((c) => visibleSet.has(c.parentId))
       .map((c) => ({
-        a: c.parentId, b: c.id, pending: true, pick: true, displayValue: c.g, displayText: `${c.cost}`,
+        a: c.parentId, b: c.id, pending: true, pick: true, displayValue: c.g,
         pickLabel: `${nodeLabel(c.id)} g=${c.g} 오픈 리스트에 추가하기`,
       }));
     renderGraphDiagram(el.graph, {

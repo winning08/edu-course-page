@@ -137,7 +137,7 @@ test("학교 지도의 휴리스틱값은 3단계 그래프의 간선 비용과 
   assert.match(js, /gate: "a", lobby: "b", yard: "c", cafeteria: "d", store: "e"/);
 });
 
-test("그래프 노드에는 h(n), 간선에는 구간 비용이 보이고 누적 g(n)은 선택 설명과 목록에서 확인한다", async () => {
+test("그래프의 파란 원과 오픈 리스트는 같은 누적 g(n)을 표시한다", async () => {
   const [html, js, practiceJs] = await Promise.all([
     readFile(new URL("index.html", lessonRoot), "utf8"),
     readFile(new URL("game.js", lessonRoot), "utf8"),
@@ -147,12 +147,14 @@ test("그래프 노드에는 h(n), 간선에는 구간 비용이 보이고 누�
   assert.match(js, /const H_LABELS = Object\.fromEntries\(NODES\.map\(\(n\) => \[n\.id, `h=\$\{HEURISTICS\[n\.id\]\}`\]\)\);/);
   assert.match(js, /gById: H_LABELS/);
   assert.doesNotMatch(js, /metricLabel: "f"/);
-  // 간선: 구간 비용을 보여주고, 선택 설명에는 누적 g(n)도 제공해야 한다.
-  assert.match(js, /a: parentId, b: childId, displayValue: g, displayText: `\$\{cost\}`, pick: true,/);
-  assert.match(js, /edgesOverride\.push\(\{ a: parentId, b: childId, cost: `\$\{cost\}` \}\)/);
+  // 파란 원과 비활성 간선 라벨 모두 시작점부터 누적한 g(n)을 보여준다.
+  assert.match(js, /a: parentId, b: childId, displayValue: g, pick: true,/);
+  assert.match(js, /edgesOverride\.push\(\{ a: parentId, b: childId, cost: `g=\$\{g\}` \}\)/);
   assert.match(js, /간선 값 \$\{cost\}, 누적 g=\$\{g\}/);
-  assert.match(practiceJs, /displayValue: g, displayText: `\$\{cost\}`, pick: true/);
-  assert.match(html, /파란 원=실제 간선 값\(클릭\)/);
+  assert.match(practiceJs, /a: parentId, b: childId, displayValue: g, pick: true,/);
+  assert.match(practiceJs, /cost: `g=\$\{currentG\(childId\)\}`/);
+  assert.doesNotMatch(practiceJs, /displayText: `\$\{c\.cost\}`/);
+  assert.match(html, /파란 원 g\(n\)=시작점부터 누적 비용\(클릭\)/);
   assert.match(js, /pick: true, displayValue: c\.g,/);
   // 클릭 처리는 노드가 아니라 .is-pickable(간선 포함) 전체를 대상으로 한다.
   assert.match(js, /event\.target\.closest\("\.is-pickable"\)/);
@@ -217,8 +219,8 @@ test("교과서 예시와 8-퍼즐 사이에 'h(n)이 틀리면?' 데모가 연�
   assert.match(html, /id="map-broken-start"/);
   assert.match(html, /id="map-broken-trace-area" hidden/);
   assert.match(html, /중앙현관 h\(n\)=9 ↔ 매점까지 9분 · 급식실 h\(n\)=3 ↔ 매점까지 3분/);
-  assert.match(html, /간선의 숫자는 그 구간에 걸리는 시간이며, 누적 g\(n\)은 오른쪽 목록에서 확인/);
-  assert.match(js, /displayText: `\$\{cost\}`/);
+  assert.match(html, /파란 원의 g\(n\)은 시작점부터 해당 상태까지의 누적 비용이며 오른쪽 목록과 같은 값/);
+  assert.doesNotMatch(js, /displayText: `\$\{cost\}`/);
   assert.match(html, /id="map-broken-summary"/);
   assert.match(html, /id="map-broken-again"/);
   // 운동장 쪽이 실제로는 더 빠른 지름길이 되도록 이 데모 전용 간선 비용(BROKEN_EDGES)을 쓰고,
