@@ -25,7 +25,7 @@ test("모든 group은 명시적인 active boolean 필드를 갖는다", async ()
 test("AI 학습 활동지만 비활성화하고 탐색 활동은 모두 활성화한다", async () => {
   const data = await loadGroups();
   for (const group of data.groups) {
-    const shouldGroupBeActive = group.id !== "ai-learning";
+    const shouldGroupBeActive = true;
     assert.equal(group.active, shouldGroupBeActive, `${group.id} 활동지의 active 상태가 공개 범위와 일치해야 함`);
     for (const child of group.children) {
       assert.equal(child.active, true, `${child.id} 탐색 활동이 active=true여야 함`);

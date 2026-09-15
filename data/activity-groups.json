@@ -51,7 +51,7 @@
       "description": "마트 과일 선별 AI를 직접 학습시키고 시험하며 입력 정보, 관계없는 정보, 편향된 데이터 같은 인공지능 기초 개념을 순서대로 체험합니다.",
       "path": "units/ai-learning/",
       "status": "published",
-      "active": false,
+      "active": true,
       "children": [
         {
           "id": "ai-inference-ripeness",
