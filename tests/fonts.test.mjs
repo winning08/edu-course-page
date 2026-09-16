@@ -10,6 +10,7 @@ const HTML_FILES = [
   "index.html",
   "units/ai-evaluation/index.html",
   "units/ai-learning/index.html",
+  "lessons/search-tictactoe-minimax/index.html",
   "lessons/turing-test-questions/index.html",
   "lessons/arc-puzzle-challenge/index.html",
   "lessons/turing-vs-arc-compare/index.html",
