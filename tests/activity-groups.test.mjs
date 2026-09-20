@@ -75,30 +75,6 @@ test("group.path와 children.path가 가리키는 index.html 파일이 실제로
   }
 });
 
-test("활동지 04와 05의 children은 lessons.json과 순서·경로·난이도·시간이 일치한다", async () => {
-  const [groupsData, lessonsRaw] = await Promise.all([
-    loadGroups(),
-    readFile(new URL("data/lessons.json", repoRoot), "utf8"),
-  ]);
-  const lessons = JSON.parse(lessonsRaw).lessons;
-  const lessonsById = Object.fromEntries(lessons.map((lesson) => [lesson.id, lesson]));
-
-  for (const [groupId, ids] of [["ai-learning", LEARNING_LESSON_IDS], ["machine-learning-algorithms", ALGORITHM_LESSON_IDS]]) {
-    const group = groupsData.groups.find((candidate) => candidate.id === groupId);
-    assert.ok(group, `${groupId} group을 찾을 수 없음`);
-    assert.deepEqual(group.children.map((child) => child.id), ids);
-    for (const child of group.children) {
-      const lesson = lessonsById[child.id];
-      assert.ok(lesson, `${child.id}가 data/lessons.json에 없음`);
-      assert.equal(child.order, lesson.order, `${child.id}의 order가 lessons.json과 다름`);
-      assert.equal(child.duration, lesson.duration, `${child.id}의 duration이 lessons.json과 다름`);
-      assert.equal(child.difficulty, lesson.difficulty, `${child.id}의 difficulty가 lessons.json과 다름`);
-      assert.equal(child.path, lesson.path, `${child.id}의 path가 lessons.json과 다름`);
-      assert.equal(child.status, lesson.status, `${child.id}의 status가 lessons.json과 다름`);
-    }
-  }
-});
-
 test("루트 허브의 group-card는 data/activity-groups.json의 group.path로 연결된다", async () => {
   const [html, data] = await Promise.all([
     readFile(new URL("index.html", repoRoot), "utf8"),
@@ -109,16 +85,3 @@ test("루트 허브의 group-card는 data/activity-groups.json의 group.path로 
   }
 });
 
-test("활동지 목록 페이지는 data/activity-groups.json의 children을 order 순서대로 모두 담는다", async () => {
-  const data = await loadGroups();
-  const group = data.groups.find((candidate) => candidate.id === "ai-learning");
-  const html = await readFile(new URL(group.path + "index.html", repoRoot), "utf8");
-  const sortedChildren = [...group.children].sort((a, b) => a.order - b.order);
-  const positions = sortedChildren.map((child) => html.indexOf(`../../${child.path}`));
-  for (const [index, position] of positions.entries()) {
-    assert.ok(position !== -1, `그룹 페이지에 ${sortedChildren[index].id} 링크가 없음`);
-  }
-  for (let i = 1; i < positions.length; i += 1) {
-    assert.ok(positions[i - 1] < positions[i], "그룹 페이지의 활동 순서가 order와 다름");
-  }
-});

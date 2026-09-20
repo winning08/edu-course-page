@@ -10,26 +10,19 @@ test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 
   const html = await readFile(new URL("index.html", repoRoot), "utf8");
   assert.match(html, /<title>양지고 인공지능 기초 활동지 모음<\/title>/);
   assert.match(html, /<h1>양지고 인공지능 기초 활동지 모음<\/h1>/);
-  assert.match(html, /class="group-card" href="units\/ai-learning\/"/);
-  assert.match(html, /class="group-card" href="units\/machine-learning-algorithms\/"/);
-  assert.match(html, />기계학습과 데이터</);
+  assert.doesNotMatch(html, /data-group-card="ai-learning"/);
+  assert.doesNotMatch(html, /data-group-card="machine-learning-algorithms"/);
   assert.doesNotMatch(html, /href="lessons\//, "루트 허브는 개별 lesson으로 바로 연결하지 않아야 함");
 });
 
-test("루트 허브는 활동지 01~03과 04 이후를 서로 다른 단원으로 구분한다", async () => {
+test("루트 허브에는 인공지능의 이해 단원만 표시한다", async () => {
   const html = await readFile(new URL("index.html", repoRoot), "utf8");
   const understandingHeading = html.indexOf('id="understanding-unit-title">인공지능의 이해');
   const activity01 = html.indexOf('data-group-card="ai-evaluation"');
   const activity03 = html.indexOf('data-group-card="ai-search"');
-  const learningHeading = html.indexOf('id="learning-unit-title">인공지능과 학습');
-  const activity04 = html.indexOf('data-group-card="ai-learning"');
-  const activity05 = html.indexOf('data-group-card="machine-learning-algorithms"');
-
   assert.ok(understandingHeading < activity01);
   assert.ok(activity01 < activity03);
-  assert.ok(activity03 < learningHeading);
-  assert.ok(learningHeading < activity04);
-  assert.ok(activity04 < activity05);
+  assert.doesNotMatch(html, /learning-unit-title|인공지능과 학습/);
 });
 
 test("루트 허브 제목은 작은 화면과 브라우저 글꼴 차이에도 한 줄로 유지된다", async () => {
