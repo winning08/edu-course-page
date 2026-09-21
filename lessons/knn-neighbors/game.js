@@ -31,7 +31,7 @@ function render() {
   dataset.forEach((point) => {
     const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     circle.setAttribute("cx", pad + point.x * (width - pad * 2)); circle.setAttribute("cy", pad + point.y * (height - pad * 2));
-    circle.setAttribute("r", neighborIds.has(point.id) ? "10" : "7"); circle.setAttribute("fill", CLASS_INFO[point.classId].color);
+    circle.setAttribute("r", "7"); circle.setAttribute("fill", CLASS_INFO[point.classId].color);
     circle.setAttribute("stroke", neighborIds.has(point.id) ? "#111827" : "white"); circle.setAttribute("stroke-width", neighborIds.has(point.id) ? "4" : "2");
     svg.append(circle);
   });
