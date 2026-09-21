@@ -54,15 +54,15 @@
       "active": true,
       "children": [
         {
-          "id": "ai-problem-method",
+          "id": "ai-prediction-lab",
           "order": 1,
           "title": "AI는 어떤 문제를 풀 수 있을까?",
-          "path": "lessons/ai-problem-method/",
-          "duration": 15,
-          "difficulty": "입문",
+          "path": "lessons/ai-prediction-lab/",
+          "duration": 28,
+          "difficulty": "보통",
           "status": "published",
           "active": true,
-          "objective": "문제의 특징을 살펴보고 규칙과 계산이 알맞은 경우와 여러 사례에서 학습하는 방법이 알맞은 경우를 구분한다."
+          "objective": "회귀·분류·군집을 직접 체험하며 기계학습이 해결하는 문제의 종류와 예측 오차를 이해한다."
         },
         {
           "id": "knn-neighbors",

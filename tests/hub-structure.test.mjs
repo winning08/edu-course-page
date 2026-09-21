@@ -4,6 +4,7 @@ import test from "node:test";
 
 const repoRoot = new URL("../", import.meta.url);
 const LEARNING_LESSON_IDS = ["ai-problem-method"];
+const ACTIVE_ALGORITHM_IDS = ["ai-prediction-lab", "knn-neighbors", "decision-tree-score"];
 const FRUIT_LESSON_IDS = ["ai-inference-ripeness", "ai-signal-noise", "ai-biased-data"];
 
 test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 목록 페이지로 연결한다", async () => {
@@ -47,7 +48,7 @@ test("활동지 04는 문제 해결 방법 활동 하나만 담는다", async ()
 });
 
 test("활동지 04와 05의 활동은 각각 소속 목록 페이지로 돌아간다", async () => {
-  for (const id of ["ai-problem-method", "knn-neighbors"]) {
+  for (const id of ACTIVE_ALGORITHM_IDS) {
     const html = await readFile(new URL(`lessons/${id}/index.html`, repoRoot), "utf8");
     assert.match(html, /href="\.\.\/\.\.\/units\/machine-learning-algorithms\/"/, `${id}의 활동 목록 링크가 그룹 페이지를 가리키지 않음`);
   }
@@ -62,12 +63,12 @@ test("data/lessons.json은 활동지 04와 05의 활동 순서를 구분한다",
   const data = JSON.parse(raw);
   assert.ok(data.lessons.length >= 3);
   const byId = Object.fromEntries(data.lessons.map((lesson) => [lesson.id, lesson]));
-  for (const id of [...LEARNING_LESSON_IDS, ...FRUIT_LESSON_IDS]) {
+  for (const id of [...ACTIVE_ALGORITHM_IDS, ...FRUIT_LESSON_IDS]) {
     assert.ok(byId[id], `${id}가 lessons.json에 없음`);
     assert.equal(byId[id].status, "published");
     assert.equal(byId[id].path, `lessons/${id}/`);
   }
-  assert.equal(byId["ai-problem-method"].order, 1);
+  assert.equal(byId["ai-prediction-lab"].order, 1);
   assert.equal(byId["knn-neighbors"].order, 2);
   assert.equal(byId["ai-inference-ripeness"].order, 1);
   assert.equal(byId["ai-signal-noise"].order, 2);

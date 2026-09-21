@@ -10,7 +10,7 @@ async function loadGroups() {
 }
 
 const GROUP_PAGES = {
-  "machine-learning-algorithms": ["units/machine-learning-algorithms/index.html", "lessons/ai-problem-method/index.html", "lessons/knn-neighbors/index.html", "lessons/decision-tree-score/index.html"],
+  "machine-learning-algorithms": ["units/machine-learning-algorithms/index.html", "lessons/ai-prediction-lab/index.html", "lessons/knn-neighbors/index.html", "lessons/decision-tree-score/index.html"],
   "ai-evaluation": ["units/ai-evaluation/index.html", "lessons/turing-test-questions/index.html", "lessons/arc-puzzle-challenge/index.html", "lessons/turing-vs-arc-compare/index.html"],
 };
 
@@ -120,7 +120,7 @@ test("모든 활동 페이지(<body>)는 data-guard-lesson으로 자기 자신�
     "lessons/ai-inference-ripeness/index.html": "ai-inference-ripeness",
     "lessons/ai-signal-noise/index.html": "ai-signal-noise",
     "lessons/ai-biased-data/index.html": "ai-biased-data",
-    "lessons/ai-problem-method/index.html": "ai-problem-method",
+    "lessons/ai-prediction-lab/index.html": "ai-prediction-lab",
     "lessons/knn-neighbors/index.html": "knn-neighbors",
     "lessons/decision-tree-score/index.html": "decision-tree-score",
     "lessons/search-tictactoe-minimax/index.html": "search-tictactoe-minimax",

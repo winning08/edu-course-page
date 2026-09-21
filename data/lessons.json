@@ -1,14 +1,14 @@
 {
   "lessons": [
     {
-      "id": "ai-problem-method",
+      "id": "ai-prediction-lab",
       "subject": "인공지능 기초",
       "unit": "기계학습 알고리즘",
       "order": 1,
       "title": "AI는 어떤 문제를 풀 수 있을까?",
-      "path": "lessons/ai-problem-method/",
-      "duration": 15,
-      "difficulty": "입문",
+      "path": "lessons/ai-prediction-lab/",
+      "duration": 28,
+      "difficulty": "보통",
       "status": "published"
     },
     {
