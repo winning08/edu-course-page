@@ -38,9 +38,12 @@ function render() {
   if (target) {
     const x = pad + target.x * (width - pad * 2), y = pad + target.y * (height - pad * 2);
     if (classification?.neighbors.length) {
-      const radius = classification.neighbors.at(-1).distance * Math.hypot(width - pad * 2, height - pad * 2);
-      const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      ring.setAttribute("cx", x); ring.setAttribute("cy", y); ring.setAttribute("r", radius); ring.setAttribute("class", "neighbor-ring"); svg.append(ring);
+      const distance = classification.neighbors.at(-1).distance;
+      const ring = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+      ring.setAttribute("cx", x); ring.setAttribute("cy", y);
+      ring.setAttribute("rx", distance * (width - pad * 2));
+      ring.setAttribute("ry", distance * (height - pad * 2));
+      ring.setAttribute("class", "neighbor-ring"); svg.append(ring);
     }
     const mark = document.createElementNS("http://www.w3.org/2000/svg", "g");
     mark.innerHTML = `<circle cx="${x}" cy="${y}" r="13" fill="white" stroke="#111827" stroke-width="4"/><path d="M${x-6} ${y}h12M${x} ${y-6}v12" stroke="#111827" stroke-width="3"/>`;
@@ -67,7 +70,13 @@ function renderResult() {
 let pointerFrame = 0;
 function pointAtPointer(event) {
   const box = svg.getBoundingClientRect();
-  return { x: (event.clientX - box.left) / box.width, y: (event.clientY - box.top) / box.height };
+  const width = 700, height = 480, pad = 22;
+  const svgX = ((event.clientX - box.left) / box.width) * width;
+  const svgY = ((event.clientY - box.top) / box.height) * height;
+  return {
+    x: Math.min(1, Math.max(0, (svgX - pad) / (width - pad * 2))),
+    y: Math.min(1, Math.max(0, (svgY - pad) / (height - pad * 2))),
+  };
 }
 svg.addEventListener("pointermove", (event) => {
   if (pointerFrame) return;
