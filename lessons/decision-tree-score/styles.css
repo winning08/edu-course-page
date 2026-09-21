@@ -38,6 +38,29 @@ body {
   color: var(--muted);
   line-height: 1.7;
 }
+.dataset {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.65fr) minmax(0, 1.35fr);
+  gap: 1.5rem;
+  align-items: start;
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+.dataset h2 { margin: .25rem 0; }
+.dataset p { color: var(--muted); line-height: 1.6; }
+.step-label { margin: 0 !important; color: var(--accent) !important; font-size: .82rem; font-weight: 800; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { padding: .55rem .7rem; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
+thead th { background: #f3f6fb; }
+tbody th { color: var(--muted); }
+.class-tag { display: inline-flex; align-items: center; gap: .35rem; font-weight: 700; }
+.class-tag::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.class-red { color: #c73546; }
+.class-blue { color: #315fc1; }
 .lab {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -98,7 +121,8 @@ body {
   line-height: 1.7;
 }
 @media (max-width: 800px) {
-  .lab {
+  .lab,
+  .dataset {
     grid-template-columns: 1fr;
   }
 }
