@@ -16,15 +16,14 @@ test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 
   assert.doesNotMatch(html, /href="lessons\//, "루트 허브는 개별 lesson으로 바로 연결하지 않아야 함");
 });
 
-test("루트 허브에는 인공지능의 이해와 기계학습 단원을 표시한다", async () => {
+test("루트 허브에는 인공지능의 이해와 인공지능과 학습 단원을 표시한다", async () => {
   const html = await readFile(new URL("index.html", repoRoot), "utf8");
   const understandingHeading = html.indexOf('id="understanding-unit-title">인공지능의 이해');
   const activity01 = html.indexOf('data-group-card="ai-evaluation"');
   const activity03 = html.indexOf('data-group-card="ai-search"');
   assert.ok(understandingHeading < activity01);
   assert.ok(activity01 < activity03);
-  assert.doesNotMatch(html, /id="learning-unit-title"|인공지능과 학습/);
-  assert.match(html, /id="machine-learning-unit-title">기계학습/);
+  assert.match(html, /id="machine-learning-unit-title">인공지능과 학습/);
 });
 
 test("루트 허브 제목은 작은 화면과 브라우저 글꼴 차이에도 한 줄로 유지된다", async () => {
