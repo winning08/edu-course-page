@@ -48,7 +48,7 @@
       "id": "machine-learning-algorithms",
       "order": 5,
       "title": "기계학습 알고리즘",
-      "description": "여러 문제의 특징을 살펴보고 전통적인 프로그래밍과 인공지능 중 어떤 해결 방법이 더 알맞은지 직접 구분합니다.",
+      "description": "회귀·분류·군집을 체험하고, KNN과 의사결정트리가 데이터를 이용해 예측하고 분류하는 방식을 비교합니다.",
       "path": "units/machine-learning-algorithms/",
       "status": "published",
       "active": true,
@@ -67,7 +67,7 @@
         {
           "id": "knn-neighbors",
           "order": 2,
-          "title": "KNN 알고리즘",
+          "title": "KNN",
           "path": "lessons/knn-neighbors/",
           "duration": 15,
           "difficulty": "입문",

@@ -32,3 +32,21 @@ test("화면은 정확한 KNN 용어와 접근 가능한 조작 장치를 제공
   assert.match(html, /aria-live="polite"/);
   assert.match(html, /data-guard-group="machine-learning-algorithms"/);
 });
+
+test("마우스 이동은 위치 미리보기만 하고 클릭하면 분류 위치를 고정한다", async () => {
+  const js = await readFile(new URL("game.js", root), "utf8");
+  assert.match(js, /pointermove/);
+  assert.match(js, /previewTarget = pointAtPointer/);
+  assert.match(js, /pointerdown/);
+  assert.match(js, /target = pointAtPointer/);
+});
+
+test("클래스별 데이터 범위가 서로 겹쳐 경계가 지나치게 분리되지 않는다", () => {
+  const data = generateDataset(3, 90, 20260921);
+  const ranges = [0, 1, 2].map((classId) => {
+    const points = data.filter((point) => point.classId === classId);
+    return { minX: Math.min(...points.map((p) => p.x)), maxX: Math.max(...points.map((p) => p.x)), minY: Math.min(...points.map((p) => p.y)), maxY: Math.max(...points.map((p) => p.y)) };
+  });
+  assert.ok(ranges[0].maxX > ranges[1].minX);
+  assert.ok(ranges[0].maxY > ranges[2].minY);
+});

@@ -12,12 +12,12 @@ export function createRandom(seed = Date.now()) {
 
 export function generateDataset(classCount, sampleCount, seed = Date.now()) {
   const random = createRandom(seed);
-  const centers = [[.24,.28],[.74,.27],[.29,.73],[.73,.72]];
+  const centers = [[.34,.36],[.64,.34],[.39,.64],[.64,.65]];
   return Array.from({ length: sampleCount }, (_, index) => {
     const classId = index % classCount;
     const [cx, cy] = centers[classId];
     const angle = random() * Math.PI * 2;
-    const radius = Math.sqrt(random()) * .19;
+    const radius = Math.sqrt(random()) * .31;
     return { id: index, classId, x: Math.min(.96, Math.max(.04, cx + Math.cos(angle) * radius)), y: Math.min(.96, Math.max(.04, cy + Math.sin(angle) * radius)) };
   });
 }

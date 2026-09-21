@@ -9,12 +9,14 @@ const values = { classCount: document.querySelector("#class-count-value"), k: do
 let seed = Date.now();
 let dataset = [];
 let target = null;
+let previewTarget = null;
 let classification = null;
 
 function regenerate() {
   seed += 1;
   dataset = generateDataset(Number(classInput.value), Number(sampleInput.value), seed);
   target = null;
+  previewTarget = null;
   classification = null;
   render();
 }
@@ -44,6 +46,14 @@ function render() {
     mark.innerHTML = `<circle cx="${x}" cy="${y}" r="13" fill="white" stroke="#111827" stroke-width="4"/><path d="M${x-6} ${y}h12M${x} ${y-6}v12" stroke="#111827" stroke-width="3"/>`;
     svg.append(mark);
   }
+  if (previewTarget) {
+    const px = pad + previewTarget.x * (width - pad * 2), py = pad + previewTarget.y * (height - pad * 2);
+    const preview = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    preview.setAttribute("cx", px); preview.setAttribute("cy", py); preview.setAttribute("r", "10");
+    preview.setAttribute("fill", "rgba(255,255,255,.75)"); preview.setAttribute("stroke", "#667085");
+    preview.setAttribute("stroke-width", "2"); preview.setAttribute("stroke-dasharray", "4 4");
+    svg.append(preview);
+  }
   renderResult();
 }
 
@@ -54,9 +64,19 @@ function renderResult() {
   result.innerHTML = `<div class="winner"><i style="background:${info.color}"></i><span>분류 결과</span><strong>${info.name}</strong></div><ul>${voteText}</ul><p>${classification.tied ? "최다 득표가 같아 가장 가까운 이웃의 클래스로 결정했습니다." : `이웃 ${classification.neighbors.length}개 중 가장 많은 표를 얻은 클래스로 분류했습니다.`}</p>`;
 }
 
-svg.addEventListener("click", (event) => {
+let pointerFrame = 0;
+function pointAtPointer(event) {
   const box = svg.getBoundingClientRect();
-  target = { x: (event.clientX - box.left) / box.width, y: (event.clientY - box.top) / box.height };
+  return { x: (event.clientX - box.left) / box.width, y: (event.clientY - box.top) / box.height };
+}
+svg.addEventListener("pointermove", (event) => {
+  if (pointerFrame) return;
+  pointerFrame = requestAnimationFrame(() => { pointerFrame = 0; previewTarget = pointAtPointer(event); render(); });
+});
+svg.addEventListener("pointerleave", () => { previewTarget = null; render(); });
+svg.addEventListener("pointerdown", (event) => {
+  svg.setPointerCapture?.(event.pointerId);
+  target = pointAtPointer(event); previewTarget = null;
   classification = classifyPoint(dataset, target, Number(kInput.value), Number(classInput.value)); render();
 });
 [classInput, sampleInput].forEach((input) => input.addEventListener("input", regenerate));
