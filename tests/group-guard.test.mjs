@@ -10,6 +10,7 @@ async function loadGroups() {
 }
 
 const GROUP_PAGES = {
+  "machine-learning-algorithms": ["units/machine-learning-algorithms/index.html", "lessons/ai-inference-ripeness/index.html", "lessons/ai-signal-noise/index.html", "lessons/ai-biased-data/index.html"],
   "ai-evaluation": ["units/ai-evaluation/index.html", "lessons/turing-test-questions/index.html", "lessons/arc-puzzle-challenge/index.html", "lessons/turing-vs-arc-compare/index.html"],
 };
 
@@ -25,8 +26,11 @@ test("모든 활동지를 공개한다", async () => {
   const data = await loadGroups();
   const search = data.groups.find((candidate) => candidate.id === "ai-search");
   const problemCases = data.groups.find((candidate) => candidate.id === "search-problem-cases");
+  const algorithms = data.groups.find((candidate) => candidate.id === "machine-learning-algorithms");
   assert.equal(search.active, true);
   assert.equal(problemCases.active, true);
+  assert.equal(algorithms.active, true);
+  assert.deepEqual(algorithms.children.map(({ active }) => active), [true, true, true]);
   assert.deepEqual(search.children.map(({ active }) => active), [true, true, true, true]);
   assert.deepEqual(problemCases.children.map(({ active }) => active), [true]);
   for (const group of data.groups) {
