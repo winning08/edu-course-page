@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <script>document.documentElement.setAttribute("data-guard", "pending");</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="마트 과일 선별 AI로 기계학습의 학습과 시험, 입력 정보와 데이터 편향을 체험하는 활동지">
+  <meta name="description" content="문제의 특징을 살펴보고 전통적인 프로그래밍과 인공지능 중 알맞은 해결 방법을 구분하는 활동지">
   <title>기계학습 알고리즘 | 인공지능 기초 활동지 모음</title>
   <link rel="stylesheet" href="../../assets/fonts.css">
   <link rel="stylesheet" href="../../assets/hub.css">
@@ -18,31 +18,25 @@
   <div id="guard-content">
   <header class="group-page-header">
     <a class="back-link" href="../../">← 전체 활동지 홈</a>
-    <p class="eyebrow">활동지 06</p>
+    <p class="eyebrow">활동지 05</p>
     <h1>기계학습 알고리즘</h1>
-    <p class="group-intro">마트에서 잘 익은 과일을 골라주는 AI를 학습시키고 시험합니다. 어떤 정보가 판단에 도움이 되는지, 학습 자료의 구성이 결과를 어떻게 바꾸는지 차례로 확인합니다.</p>
+    <p class="group-intro">여러 문제의 특징을 살펴보고, 사람이 정한 규칙과 계산으로 해결할지 여러 사례를 학습한 인공지능으로 해결할지 구분합니다.</p>
     <ul class="concept-list">
-      <li><strong>학습과 시험</strong>학습한 판단 기준을 새로운 과일에 적용한다(활동 01)</li>
-      <li><strong>입력 정보</strong>판단에 도움이 되는 정보와 관계없는 정보를 구분한다(활동 02)</li>
-      <li><strong>학습 자료</strong>한쪽으로 치우친 자료가 판단에 미치는 영향을 확인한다(활동 03)</li>
+      <li><strong>문제의 특징</strong>규칙이 분명한 문제와 패턴을 찾아야 하는 문제를 살펴본다.</li>
+      <li><strong>해결 방법</strong>전통적인 프로그래밍과 인공지능 중 더 알맞은 방법을 선택한다.</li>
     </ul>
   </header>
   <main id="main-content">
     <section aria-labelledby="ml-unit-title">
-      <div class="section-head"><div><span>인공지능과 학습</span><h2 id="ml-unit-title">AI는 자료에서 어떻게 판단 기준을 찾을까?</h2></div><strong>3개 활동</strong></div>
-      <a class="lesson-card" href="../../lessons/ai-inference-ripeness/" data-lesson-card="ai-inference-ripeness">
+      <div class="section-head"><div><span>기계학습 알고리즘</span><h2 id="ml-unit-title">AI는 어떤 문제를 풀 수 있을까?</h2></div><strong>2개 활동</strong></div>
+      <a class="lesson-card" href="../../lessons/ai-problem-method/" data-lesson-card="ai-problem-method">
         <div class="lesson-number">01</div>
-        <div><p class="lesson-meta">실습 · 보통</p><h3>잘 익은 과일 찾기</h3><p>과일 12개로 마트 AI를 학습시키고, 같은 판단 기준을 다른 과일 5개에 적용해 한 화면에서 동시에 시험합니다.</p><p class="lesson-objective"><span>학습 목표</span>색깔과 촉감 같은 입력 정보로 AI를 학습시키고 새로운 자료에 적용한다.</p></div>
+        <div><p class="lesson-meta">실습 · 15분 · 입문</p><h3>AI는 어떤 문제를 풀 수 있을까?</h3><p>그림 판별과 여러 문제 분류를 통해 규칙과 계산이 알맞은 경우와 인공지능이 알맞은 경우를 구분합니다.</p><p class="lesson-objective"><span>학습 목표</span>문제의 특징에 따라 더 알맞은 해결 방법을 선택한다.</p></div>
         <span class="arrow" aria-hidden="true">→</span>
       </a>
-      <a class="lesson-card" href="../../lessons/ai-signal-noise/" data-lesson-card="ai-signal-noise">
+      <a class="lesson-card" href="../../lessons/knn-neighbors/" data-lesson-card="knn-neighbors">
         <div class="lesson-number">02</div>
-        <div><p class="lesson-meta">실습 · 입문</p><h3>정보가 많으면 더 정확할까?</h3><p>계절 정보를 추가해 보고, 어떤 정보가 판단에 도움이 되며 어떤 정보는 관계가 없는지 찾아봅니다.</p><p class="lesson-objective"><span>학습 목표</span>판단과 관계없는 정보인 노이즈를 구분한다.</p></div>
-        <span class="arrow" aria-hidden="true">→</span>
-      </a>
-      <a class="lesson-card" href="../../lessons/ai-biased-data/" data-lesson-card="ai-biased-data">
-        <div class="lesson-number">03</div>
-        <div><p class="lesson-meta">실습 · 입문</p><h3>학습 자료가 한쪽으로 치우치면?</h3><p>일부 과일에 치우친 자료로 학습한 AI를 시험하고, 다양하고 고른 학습 자료가 필요한 이유를 확인합니다.</p><p class="lesson-objective"><span>학습 목표</span>편향된 학습 자료가 AI의 판단에 미치는 영향을 이해한다.</p></div>
+        <div><p class="lesson-meta">실습 · 15분 · 입문</p><h3>가까운 이웃으로 분류하기</h3><p>그래프를 클릭하고 이웃 수 k를 바꾸면서 KNN이 새 데이터를 어떤 클래스로 분류하는지 확인합니다.</p><p class="lesson-objective"><span>학습 목표</span>클래스 수, 이웃 수(k), 전체 데이터 수의 뜻을 알고 KNN의 다수결 분류 원리를 설명한다.</p></div>
         <span class="arrow" aria-hidden="true">→</span>
       </a>
     </section>

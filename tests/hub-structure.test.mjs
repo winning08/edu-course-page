@@ -47,9 +47,9 @@ test("활동지 04는 문제 해결 방법 활동 하나만 담는다", async ()
 });
 
 test("활동지 04와 05의 활동은 각각 소속 목록 페이지로 돌아간다", async () => {
-  for (const id of LEARNING_LESSON_IDS) {
+  for (const id of ["ai-problem-method", "knn-neighbors"]) {
     const html = await readFile(new URL(`lessons/${id}/index.html`, repoRoot), "utf8");
-    assert.match(html, /class="back-link" href="\.\.\/\.\.\/units\/ai-learning\/"/, `${id}의 back-link가 그룹 페이지를 가리키지 않음`);
+    assert.match(html, /href="\.\.\/\.\.\/units\/machine-learning-algorithms\/"/, `${id}의 활동 목록 링크가 그룹 페이지를 가리키지 않음`);
   }
   for (const id of FRUIT_LESSON_IDS) {
     const html = await readFile(new URL(`lessons/${id}/index.html`, repoRoot), "utf8");
@@ -68,6 +68,7 @@ test("data/lessons.json은 활동지 04와 05의 활동 순서를 구분한다",
     assert.equal(byId[id].path, `lessons/${id}/`);
   }
   assert.equal(byId["ai-problem-method"].order, 1);
+  assert.equal(byId["knn-neighbors"].order, 2);
   assert.equal(byId["ai-inference-ripeness"].order, 1);
   assert.equal(byId["ai-signal-noise"].order, 2);
   assert.equal(byId["ai-biased-data"].order, 3);

@@ -48,43 +48,32 @@
       "id": "machine-learning-algorithms",
       "order": 5,
       "title": "기계학습 알고리즘",
-      "description": "마트 과일 선별 AI를 학습시키고 시험하며 입력 정보, 관계없는 정보, 치우친 학습 자료가 판단에 미치는 영향을 차례로 체험합니다.",
+      "description": "여러 문제의 특징을 살펴보고 전통적인 프로그래밍과 인공지능 중 어떤 해결 방법이 더 알맞은지 직접 구분합니다.",
       "path": "units/machine-learning-algorithms/",
       "status": "published",
       "active": true,
       "children": [
         {
-          "id": "ai-inference-ripeness",
+          "id": "ai-problem-method",
           "order": 1,
-          "title": "잘 익은 과일 찾기",
-          "path": "lessons/ai-inference-ripeness/",
-          "duration": 20,
-          "difficulty": "보통",
+          "title": "AI는 어떤 문제를 풀 수 있을까?",
+          "path": "lessons/ai-problem-method/",
+          "duration": 15,
+          "difficulty": "입문",
           "status": "published",
           "active": true,
-          "objective": "색깔·촉감 같은 입력 정보로 AI를 학습시키고, 같은 판단 규칙을 다른 과일에 적용해 시험해 본다."
+          "objective": "문제의 특징을 살펴보고 규칙과 계산이 알맞은 경우와 여러 사례에서 학습하는 방법이 알맞은 경우를 구분한다."
         },
         {
-          "id": "ai-signal-noise",
+          "id": "knn-neighbors",
           "order": 2,
-          "title": "정보가 많으면 더 정확할까?",
-          "path": "lessons/ai-signal-noise/",
+          "title": "가까운 이웃으로 분류하기",
+          "path": "lessons/knn-neighbors/",
           "duration": 15,
           "difficulty": "입문",
           "status": "published",
           "active": true,
-          "objective": "판단과 관계없는 정보(노이즈)를 가려내며, 정보가 많다고 항상 도움이 되지는 않는다는 것을 확인한다."
-        },
-        {
-          "id": "ai-biased-data",
-          "order": 3,
-          "title": "학습 자료가 한쪽으로 치우치면?",
-          "path": "lessons/ai-biased-data/",
-          "duration": 15,
-          "difficulty": "입문",
-          "status": "published",
-          "active": true,
-          "objective": "치우친 학습 자료로 학습한 AI의 한계를 시험해 보고 편향된 데이터 개념을 이해한다."
+          "objective": "이웃 수 k에 따라 KNN의 분류 결과가 어떻게 달라지는지 확인하고 클래스 수, 이웃 수, 샘플 수의 의미를 설명한다."
         }
       ]
     },

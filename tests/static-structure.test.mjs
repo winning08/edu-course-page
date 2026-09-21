@@ -139,31 +139,6 @@ test("시험 제출 후 결과 화면은 개별 정답이나 O\\/X 없이 전체
   assert.match(resultsHtml, /id="test-count"/);
 });
 
-test("README와 활동지 목록 페이지 소개 문구는 시험 5문제를 한 화면에서 동시에 치른다고 설명한다", async () => {
-  const [readme, groupPage] = await Promise.all([
-    readFile(new URL("../../README.md", lessonRoot), "utf8"),
-    readFile(new URL("../../units/machine-learning-algorithms/index.html", lessonRoot), "utf8"),
-  ]);
-  assert.match(readme, /한 화면에 모두 띄워|동시에/);
-  assert.match(groupPage, /한 화면에서 동시에/);
-});
-
-test("시험 안내는 '한 번도 보여주지 않은 새 과일' 대신 같은 판단 규칙을 다른 과일에 적용한다고 설명한다", async () => {
-  const [html, readme, groupPage] = await Promise.all([
-    readFile(new URL("index.html", lessonRoot), "utf8"),
-    readFile(new URL("../../README.md", lessonRoot), "utf8"),
-    readFile(new URL("../../units/machine-learning-algorithms/index.html", lessonRoot), "utf8"),
-  ]);
-  assert.doesNotMatch(html, /한 번도 보여주지 않은|처음 보는 과일/);
-  assert.match(html, /같은 판단 규칙|같은 규칙/);
-
-  const activity1Section = groupPage.match(/<a class="lesson-card" href="\.\.\/\.\.\/lessons\/ai-inference-ripeness\/"[^>]*>[\s\S]*?<\/a>/)[0];
-  assert.doesNotMatch(activity1Section, /처음 보는 과일/);
-
-  const activity1Readme = readme.match(/^1\. .*$/m)[0];
-  assert.doesNotMatch(activity1Readme, /처음 보는 과일/);
-});
-
 test("학습 12개 완료 전환 화면 안내는 짧은 단계 목록(transition-steps)으로 나뉘어 있다", async () => {
   const html = await readFile(new URL("index.html", lessonRoot), "utf8");
   assert.match(html, /<ul class="transition-steps">/);
@@ -224,22 +199,3 @@ test("숨은 판정 규칙(빨강 항상 익음·초록 항상 안 익음·노�
   assert.equal(classify({ color: "주황", texture: "말랑함" }), "잘 익음");
 });
 
-test("활동1 페이지·활동지 목록 페이지·data/lessons.json의 난이도 표기가 '보통'으로 통일되어 있다", async () => {
-  const [html, groupPage, lessonsJson] = await Promise.all([
-    readFile(new URL("index.html", lessonRoot), "utf8"),
-    readFile(new URL("../../units/machine-learning-algorithms/index.html", lessonRoot), "utf8"),
-    readFile(new URL("../../data/lessons.json", lessonRoot), "utf8"),
-  ]);
-  assert.match(html, /<dt>난이도<\/dt><dd>보통<\/dd>/);
-
-  const activity1Card = groupPage.match(/<a class="lesson-card" href="\.\.\/\.\.\/lessons\/ai-inference-ripeness\/"[^>]*>[\s\S]*?<\/a>/)[0];
-  assert.match(activity1Card, /실습 · 보통/);
-
-  const lessons = JSON.parse(lessonsJson).lessons;
-  const activity1 = lessons.find((lesson) => lesson.id === "ai-inference-ripeness");
-  assert.equal(activity1.difficulty, "보통");
-  const activity2 = lessons.find((lesson) => lesson.id === "ai-signal-noise");
-  const activity3 = lessons.find((lesson) => lesson.id === "ai-biased-data");
-  assert.equal(activity2.difficulty, "입문", "활동2 난이도는 그대로 보존되어야 함");
-  assert.equal(activity3.difficulty, "입문", "활동3 난이도는 그대로 보존되어야 함");
-});

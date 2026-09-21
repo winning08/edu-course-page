@@ -3,10 +3,21 @@
     {
       "id": "ai-problem-method",
       "subject": "인공지능 기초",
-      "unit": "기계학습과 데이터",
+      "unit": "기계학습 알고리즘",
       "order": 1,
-      "title": "어떤 방법으로 해결할까?",
+      "title": "AI는 어떤 문제를 풀 수 있을까?",
       "path": "lessons/ai-problem-method/",
+      "duration": 15,
+      "difficulty": "입문",
+      "status": "published"
+    },
+    {
+      "id": "knn-neighbors",
+      "subject": "인공지능 기초",
+      "unit": "기계학습 알고리즘",
+      "order": 2,
+      "title": "가까운 이웃으로 분류하기",
+      "path": "lessons/knn-neighbors/",
       "duration": 15,
       "difficulty": "입문",
       "status": "published"

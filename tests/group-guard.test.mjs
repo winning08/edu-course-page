@@ -10,7 +10,7 @@ async function loadGroups() {
 }
 
 const GROUP_PAGES = {
-  "machine-learning-algorithms": ["units/machine-learning-algorithms/index.html", "lessons/ai-inference-ripeness/index.html", "lessons/ai-signal-noise/index.html", "lessons/ai-biased-data/index.html"],
+  "machine-learning-algorithms": ["units/machine-learning-algorithms/index.html", "lessons/ai-problem-method/index.html", "lessons/knn-neighbors/index.html"],
   "ai-evaluation": ["units/ai-evaluation/index.html", "lessons/turing-test-questions/index.html", "lessons/arc-puzzle-challenge/index.html", "lessons/turing-vs-arc-compare/index.html"],
 };
 
@@ -30,7 +30,7 @@ test("모든 활동지를 공개한다", async () => {
   assert.equal(search.active, true);
   assert.equal(problemCases.active, true);
   assert.equal(algorithms.active, true);
-  assert.deepEqual(algorithms.children.map(({ active }) => active), [true, true, true]);
+  assert.deepEqual(algorithms.children.map(({ active }) => active), [true, true]);
   assert.deepEqual(search.children.map(({ active }) => active), [true, true, true, true]);
   assert.deepEqual(problemCases.children.map(({ active }) => active), [true]);
   for (const group of data.groups) {
@@ -84,7 +84,7 @@ test("모든 unit·lesson 페이지는 공통 가드(pending 초기 상태, 소�
   for (const [groupId, pages] of Object.entries(GROUP_PAGES)) {
     for (const page of pages) {
       const html = await readFile(new URL(page, repoRoot), "utf8");
-      assert.match(html, /data-guard\("pending"\)|setAttribute\("data-guard", "pending"\)/, `${page}에 초기 pending 가드 스크립트가 없음`);
+      assert.match(html, /data-guard\("pending"\)|setAttribute\("data-guard",\s*"pending"\)/, `${page}에 초기 pending 가드 스크립트가 없음`);
       assert.match(html, new RegExp(`data-guard-scope="page"[^>]*data-guard-group="${groupId}"|data-guard-group="${groupId}"[^>]*data-guard-scope="page"`), `${page}의 data-guard-group이 ${groupId}가 아님`);
       assert.match(html, /id="guard-blocked"/, `${page}에 guard-blocked 안내가 없음`);
       assert.match(html, /id="guard-content"/, `${page}에 guard-content 래퍼가 없음`);
@@ -121,6 +121,7 @@ test("모든 활동 페이지(<body>)는 data-guard-lesson으로 자기 자신�
     "lessons/ai-signal-noise/index.html": "ai-signal-noise",
     "lessons/ai-biased-data/index.html": "ai-biased-data",
     "lessons/ai-problem-method/index.html": "ai-problem-method",
+    "lessons/knn-neighbors/index.html": "knn-neighbors",
     "lessons/search-tictactoe-minimax/index.html": "search-tictactoe-minimax",
     "lessons/turing-test-questions/index.html": "turing-test-questions",
     "lessons/arc-puzzle-challenge/index.html": "arc-puzzle-challenge",
