@@ -67,13 +67,24 @@
         {
           "id": "knn-neighbors",
           "order": 2,
-          "title": "가까운 이웃으로 분류하기",
+          "title": "KNN 알고리즘",
           "path": "lessons/knn-neighbors/",
           "duration": 15,
           "difficulty": "입문",
           "status": "published",
           "active": true,
           "objective": "이웃 수 k에 따라 KNN의 분류 결과가 어떻게 달라지는지 확인하고 클래스 수, 이웃 수, 샘플 수의 의미를 설명한다."
+        },
+        {
+          "id": "decision-tree-score",
+          "order": 3,
+          "title": "의사결정트리",
+          "path": "lessons/decision-tree-score/",
+          "duration": 15,
+          "difficulty": "입문",
+          "status": "published",
+          "active": true,
+          "objective": "의사결정트리 회귀가 공부 시간을 구간으로 나누고 각 구간의 평균으로 시험 점수를 예측하는 원리를 이해한다."
         }
       ]
     },
