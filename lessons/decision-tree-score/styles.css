@@ -169,6 +169,32 @@ tbody th {
   width: 100%;
   height: auto;
 }
+.chart circle[role="button"] {
+  cursor: pointer;
+  outline: none;
+}
+.chart circle[role="button"]:focus {
+  stroke: #f59e0b;
+  stroke-width: 5;
+}
+.click-guide {
+  margin-bottom: 0.4rem;
+  color: var(--accent) !important;
+  font-weight: 700;
+}
+.point-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.9rem;
+  min-height: 48px;
+  padding: 0.75rem;
+  background: #f3f6fb;
+  border-radius: 10px;
+  color: var(--muted);
+}
+.point-detail strong {
+  color: var(--ink);
+}
 .control {
   margin-bottom: 1.3rem;
 }
@@ -194,6 +220,31 @@ tbody th {
 .rule input {
   width: 100%;
   min-height: 38px;
+}
+.range-heading,
+.range-ends {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.range-heading span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.range-heading output {
+  padding: 0.3rem 0.65rem;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  font-weight: 800;
+}
+.range-ends {
+  margin-top: -0.5rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.rule input[type="range"] {
+  accent-color: var(--accent);
 }
 .rule.is-disabled {
   opacity: 0.42;
@@ -261,6 +312,101 @@ tbody th {
   border-left: 4px solid var(--accent);
   line-height: 1.7;
 }
+.tree-visual-section {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  text-align: center;
+}
+.tree-visual-section > p:not(.step-label) {
+  color: var(--muted);
+}
+.tree-visual {
+  position: relative;
+  width: min(820px, 100%);
+  margin: 1.5rem auto 0;
+  overflow-x: auto;
+}
+.tree-node {
+  position: relative;
+  z-index: 1;
+  padding: 0.75rem;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  text-align: center;
+}
+.tree-question {
+  color: #fff;
+  background: #3158d7;
+  border-color: #3158d7;
+  font-weight: 800;
+}
+.tree-root {
+  width: min(300px, 80%);
+  margin: 0 auto 2.25rem;
+}
+.tree-branches {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  min-width: 620px;
+}
+.tree-branches::before {
+  content: "";
+  position: absolute;
+  top: -1.2rem;
+  left: 25%;
+  right: 25%;
+  border-top: 2px solid #9aa8bd;
+}
+.tree-branches section {
+  position: relative;
+}
+.tree-branches section::before {
+  content: "";
+  position: absolute;
+  top: -1.2rem;
+  left: 50%;
+  height: 1.2rem;
+  border-left: 2px solid #9aa8bd;
+}
+.branch-label,
+.mini-branches span {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  color: var(--muted);
+  background: #f3f6fb;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.tree-leaf strong,
+.tree-leaf small {
+  display: block;
+}
+.tree-leaf small {
+  margin-bottom: 0.2rem;
+  color: var(--muted);
+}
+.leaf-blue {
+  border-color: #3976e8;
+}
+.leaf-red {
+  border-color: #e24a5a;
+}
+.mini-tree > .tree-question {
+  margin-bottom: 1.5rem;
+}
+.mini-branches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
 @media (max-width: 800px) {
   .lab,
   .dataset {
@@ -271,5 +417,8 @@ tbody th {
   }
   .how-to li {
     min-height: auto;
+  }
+  .point-detail {
+    display: grid;
   }
 }

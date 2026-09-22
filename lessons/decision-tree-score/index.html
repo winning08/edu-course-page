@@ -97,6 +97,12 @@
               <span class="blue"></span>집중 학습형 · 검은 테두리는 잘못 분류된
               데이터
             </p>
+            <p class="click-guide">
+              점을 클릭하면 해당 학생의 값을 확인할 수 있습니다.
+            </p>
+            <div id="point-detail" class="point-detail" aria-live="polite">
+              확인할 점을 클릭하세요.
+            </div>
           </div>
           <aside class="panel">
             <p class="step-label">2단계 · 질문 만들기</p>
@@ -104,17 +110,24 @@
             <div class="rule">
               <select id="root-feature">
                 <option value="x">공부 시간</option>
-                <option value="y">수면 시간</option></select
-              ><input
+                <option value="y">수면 시간</option>
+              </select>
+              <div class="range-heading">
+                <span>기준 시간</span
+                ><output id="root-threshold-value">6시간</output>
+              </div>
+              <input
                 id="root-threshold"
                 type="range"
                 min="2"
                 max="9"
                 value="6"
-              /><strong
-                ><output id="root-threshold-value">6</output>시간
-                이상인가?</strong
-              >
+              />
+              <div class="range-ends"><span>2시간</span><span>9시간</span></div>
+              <select id="root-operator" aria-label="첫 질문의 비교 방법">
+                <option value="gte">선택한 기준 이상인가?</option>
+                <option value="lte">선택한 기준 이하인가?</option>
+              </select>
               <p class="branch-guide">
                 <span>참 → 집중 학습형</span><span>거짓 → 보충 학습형</span>
               </p>
@@ -129,16 +142,23 @@
             <div class="rule" id="yes-rule">
               <select id="yes-feature">
                 <option value="x">공부 시간</option>
-                <option value="y">수면 시간</option></select
-              ><input
+                <option value="y">수면 시간</option>
+              </select>
+              <div class="range-heading">
+                <span>기준 시간</span
+                ><output id="yes-threshold-value">5시간</output>
+              </div>
+              <input
                 id="yes-threshold"
                 type="range"
                 min="2"
                 max="9"
                 value="5"
-              /><strong
-                ><output id="yes-threshold-value">5</output>시간
-                이상인가?</strong
+              />
+              <div class="range-ends"><span>2시간</span><span>9시간</span></div>
+              <select id="yes-operator" aria-label="참 가지 질문의 비교 방법">
+                <option value="gte">기준 이상인가?</option>
+                <option value="lte">기준 이하인가?</option></select
               ><select id="yes-yes">
                 <option value="1">참→집중</option>
                 <option value="0">참→보충</option></select
@@ -152,16 +172,17 @@
             <div class="rule" id="no-rule">
               <select id="no-feature">
                 <option value="y">수면 시간</option>
-                <option value="x">공부 시간</option></select
-              ><input
-                id="no-threshold"
-                type="range"
-                min="2"
-                max="9"
-                value="6"
-              /><strong
-                ><output id="no-threshold-value">6</output>시간
-                이상인가?</strong
+                <option value="x">공부 시간</option>
+              </select>
+              <div class="range-heading">
+                <span>기준 시간</span
+                ><output id="no-threshold-value">6시간</output>
+              </div>
+              <input id="no-threshold" type="range" min="2" max="9" value="6" />
+              <div class="range-ends"><span>2시간</span><span>9시간</span></div>
+              <select id="no-operator" aria-label="거짓 가지 질문의 비교 방법">
+                <option value="gte">기준 이상인가?</option>
+                <option value="lte">기준 이하인가?</option></select
               ><select id="no-yes">
                 <option value="1">참→집중</option>
                 <option value="0">참→보충</option></select
@@ -183,6 +204,15 @@
             질문을 많이 추가한다고 항상 좋은 것은 아닙니다. 적은 질문으로 새로운
             데이터도 잘 구분하는 트리가 좋은 모델입니다.
           </p>
+        </section>
+        <section
+          class="tree-visual-section"
+          aria-labelledby="tree-visual-title"
+        >
+          <p class="step-label">3단계 · 완성된 구조 확인</p>
+          <h2 id="tree-visual-title">내 의사결정트리</h2>
+          <p>위에서 설정한 질문과 분류 결과가 트리 모양으로 바로 나타납니다.</p>
+          <div id="tree-visual" class="tree-visual"></div>
         </section>
       </main>
     </div>
