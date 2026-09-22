@@ -1,19 +1,24 @@
+export const FEATURES = {
+  x: { name: "꽃잎 길이", unit: "cm", min: 3.5, max: 6.5, step: 0.1 },
+  y: { name: "꽃잎 너비", unit: "cm", min: 1, max: 2.6, step: 0.1 },
+};
+
 export const DATA = [
-  { x: 2, y: 3, c: 0 },
-  { x: 3, y: 4, c: 0 },
-  { x: 4, y: 2, c: 0 },
-  { x: 4, y: 5, c: 0 },
-  { x: 5, y: 3, c: 0 },
-  { x: 6, y: 7, c: 1 },
-  { x: 7, y: 6, c: 1 },
-  { x: 8, y: 7, c: 1 },
-  { x: 7, y: 8, c: 1 },
-  { x: 9, y: 6, c: 1 },
-  { x: 5, y: 7, c: 0 },
-  { x: 6, y: 4, c: 1 },
-  { x: 3, y: 7, c: 0 },
-  { x: 8, y: 4, c: 1 },
-  { x: 5, y: 6, c: 1 },
+  { x: 4.7, y: 1.4, c: 0 },
+  { x: 4.5, y: 1.5, c: 0 },
+  { x: 4.9, y: 1.5, c: 0 },
+  { x: 4.0, y: 1.3, c: 0 },
+  { x: 4.6, y: 1.5, c: 0 },
+  { x: 4.5, y: 1.3, c: 0 },
+  { x: 4.7, y: 1.6, c: 0 },
+  { x: 3.9, y: 1.1, c: 0 },
+  { x: 6.0, y: 2.5, c: 1 },
+  { x: 5.1, y: 1.9, c: 1 },
+  { x: 5.9, y: 2.1, c: 1 },
+  { x: 5.6, y: 1.8, c: 1 },
+  { x: 5.8, y: 2.2, c: 1 },
+  { x: 4.5, y: 1.7, c: 1 },
+  { x: 5.1, y: 2.0, c: 1 },
 ];
 export function matches(point, rule) {
   const value = rule.feature === "x" ? point.x : point.y;

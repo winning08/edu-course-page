@@ -169,6 +169,24 @@ tbody th {
   width: 100%;
   height: auto;
 }
+.plot-grid line {
+  stroke: #dce3ed;
+  stroke-width: 1;
+}
+.plot-grid text {
+  fill: #667085;
+  font-size: 12px;
+  text-anchor: middle;
+}
+.plot-axis {
+  stroke: #475467;
+  stroke-width: 2;
+}
+.axis-title {
+  fill: #172033;
+  font-size: 14px;
+  font-weight: 800;
+}
 .chart circle[role="button"] {
   cursor: pointer;
   outline: none;

@@ -11,13 +11,13 @@ import {
 
 test("사용자가 만든 조건과 가지에 따라 데이터를 분류한다", () => {
   const rules = {
-    root: { feature: "x", threshold: 6 },
+    root: { feature: "x", threshold: 5 },
     yes: null,
     no: null,
   };
 
-  assert.equal(predict({ x: 7, y: 2 }, rules), 1);
-  assert.equal(predict({ x: 3, y: 8 }, rules), 0);
+  assert.equal(predict({ x: 5.5, y: 2 }, rules), 1);
+  assert.equal(predict({ x: 4.5, y: 1.4 }, rules), 0);
   assert.ok(accuracy(DATA, rules) >= 0 && accuracy(DATA, rules) <= 100);
 });
 
@@ -39,9 +39,9 @@ test("화면은 나만의 의사결정트리를 만드는 활동과 파비콘을
   );
 
   assert.match(html, /나만의 의사결정트리로/);
-  assert.match(html, /공부 시간/);
-  assert.match(html, /수면 시간/);
-  assert.match(html, /15명의 학습 데이터/);
+  assert.match(html, /꽃잎 길이/);
+  assert.match(html, /꽃잎 너비/);
+  assert.match(html, /15개의 붓꽃 표본/);
   assert.match(html, /id="dataset-body"/);
   assert.match(html, /이렇게 활동하세요/);
   assert.match(html, /정확도 90% 이상/);
@@ -54,7 +54,8 @@ test("화면은 나만의 의사결정트리를 만드는 활동과 파비콘을
     "utf8",
   );
   assert.match(script, /pointCallout/);
-  assert.match(script, /공부.*시간.*수면.*시간/);
+  assert.match(script, /꽃잎 길이.*꽃잎 너비/s);
+  assert.match(script, /plot-grid/);
   assert.match(html, /favicon\.svg/);
   assert.match(html, /data-guard-group="machine-learning-algorithms"/);
 });

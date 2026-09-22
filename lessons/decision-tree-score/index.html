@@ -36,9 +36,8 @@
           <p>DECISION TREE</p>
           <h1>나만의 의사결정트리로<br />데이터 구분하기</h1>
           <p>
-            공부 시간과 수면 시간 중 하나를 고르고 기준값을 정해 질문을
-            만드세요. 참·거짓 가지에 질문을 더해 두 학습 유형을 구분할 수
-            있습니다.
+            실제 붓꽃의 꽃잎 길이와 너비를 살펴보고 기준값을 정해 질문을
+            만드세요. 참·거짓 가지에 질문을 더해 두 품종을 구분할 수 있습니다.
           </p>
         </section>
         <section class="how-to" aria-labelledby="how-to-title">
@@ -46,11 +45,11 @@
           <ol>
             <li>
               <strong>데이터 관찰</strong
-              ><span>두 학습 유형의 공통점을 찾습니다.</span>
+              ><span>두 붓꽃 품종의 특징을 찾습니다.</span>
             </li>
             <li>
               <strong>첫 질문 만들기</strong
-              ><span>특징과 기준 시간을 바꾸어 데이터를 둘로 나눕니다.</span>
+              ><span>특징과 기준값을 바꾸어 데이터를 둘로 나눕니다.</span>
             </li>
             <li>
               <strong>필요하면 질문 추가</strong
@@ -64,20 +63,20 @@
         <section class="dataset" aria-labelledby="dataset-title">
           <div>
             <p class="step-label">먼저 살펴볼 데이터</p>
-            <h2 id="dataset-title">15명의 학습 데이터</h2>
+            <h2 id="dataset-title">15개의 붓꽃 표본</h2>
             <p>
-              각 학생의 공부 시간과 수면 시간, 실제 학습 유형을 비교해 보세요.
-              어떤 질문을 먼저 하면 두 유형을 잘 나눌 수 있을까요?
+              실제 붓꽃 표본의 꽃잎 길이와 너비, 품종을 비교해 보세요. 어떤
+              질문을 먼저 하면 두 품종을 잘 나눌 수 있을까요?
             </p>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th scope="col">학생</th>
-                  <th scope="col">공부 시간</th>
-                  <th scope="col">수면 시간</th>
-                  <th scope="col">실제 학습 유형</th>
+                  <th scope="col">표본</th>
+                  <th scope="col">꽃잎 길이</th>
+                  <th scope="col">꽃잎 너비</th>
+                  <th scope="col">실제 품종</th>
                 </tr>
               </thead>
               <tbody id="dataset-body"></tbody>
@@ -90,15 +89,15 @@
               id="tree-chart"
               viewBox="0 0 660 500"
               role="img"
-              aria-label="공부 시간과 수면 시간에 따른 두 클래스 데이터"
+              aria-label="꽃잎 길이와 너비에 따른 두 붓꽃 품종의 좌표평면"
             ></svg>
             <p>
-              <span class="red"></span>보충 학습형
-              <span class="blue"></span>집중 학습형 · 검은 테두리는 잘못 분류된
+              <span class="red"></span>버시컬러
+              <span class="blue"></span>버지니카 · 검은 테두리는 잘못 분류된
               데이터
             </p>
             <p class="click-guide">
-              점을 클릭하면 해당 학생의 값을 확인할 수 있습니다.
+              점을 클릭하면 해당 붓꽃 표본의 좌표를 확인할 수 있습니다.
             </p>
             <div id="point-detail" class="point-detail" aria-live="polite">
               확인할 점을 클릭하세요.
@@ -109,27 +108,28 @@
             <h2>규칙 1 · 첫 질문</h2>
             <div class="rule">
               <select id="root-feature">
-                <option value="x">공부 시간</option>
-                <option value="y">수면 시간</option>
+                <option value="x">꽃잎 길이</option>
+                <option value="y">꽃잎 너비</option>
               </select>
               <div class="range-heading">
-                <span>기준 시간</span
-                ><output id="root-threshold-value">6시간</output>
+                <span>기준값</span
+                ><output id="root-threshold-value">5.5cm</output>
               </div>
               <input
                 id="root-threshold"
                 type="range"
-                min="2"
-                max="9"
-                value="6"
+                min="3.5"
+                max="6.5"
+                step="0.1"
+                value="5.5"
               />
-              <div class="range-ends"><span>2시간</span><span>9시간</span></div>
+              <div class="range-ends"><span>3.5cm</span><span>6.5cm</span></div>
               <select id="root-operator" aria-label="첫 질문의 비교 방법">
                 <option value="gte">선택한 기준 이상인가?</option>
                 <option value="lte">선택한 기준 이하인가?</option>
               </select>
               <p class="branch-guide">
-                <span>참 → 집중 학습형</span><span>거짓 → 보충 학습형</span>
+                <span>참 → 버지니카</span><span>거짓 → 버시컬러</span>
               </p>
               <input id="root-yes" type="hidden" value="1" /><input
                 id="root-no"
@@ -141,54 +141,61 @@
             <label><input id="yes-use" type="checkbox" /> 질문 추가</label>
             <div class="rule" id="yes-rule">
               <select id="yes-feature">
-                <option value="x">공부 시간</option>
-                <option value="y">수면 시간</option>
+                <option value="x">꽃잎 길이</option>
+                <option value="y">꽃잎 너비</option>
               </select>
               <div class="range-heading">
-                <span>기준 시간</span
-                ><output id="yes-threshold-value">5시간</output>
+                <span>기준값</span><output id="yes-threshold-value">5cm</output>
               </div>
               <input
                 id="yes-threshold"
                 type="range"
-                min="2"
-                max="9"
+                min="3.5"
+                max="6.5"
+                step="0.1"
                 value="5"
               />
-              <div class="range-ends"><span>2시간</span><span>9시간</span></div>
+              <div class="range-ends"><span>3.5cm</span><span>6.5cm</span></div>
               <select id="yes-operator" aria-label="참 가지 질문의 비교 방법">
                 <option value="gte">기준 이상인가?</option>
                 <option value="lte">기준 이하인가?</option></select
               ><select id="yes-yes">
-                <option value="1">참→집중</option>
-                <option value="0">참→보충</option></select
+                <option value="1">참→버지니카</option>
+                <option value="0">참→버시컬러</option></select
               ><select id="yes-no">
-                <option value="0">거짓→보충</option>
-                <option value="1">거짓→집중</option>
+                <option value="0">거짓→버시컬러</option>
+                <option value="1">거짓→버지니카</option>
               </select>
             </div>
             <h2>규칙 2 · 거짓 가지</h2>
             <label><input id="no-use" type="checkbox" /> 질문 추가</label>
             <div class="rule" id="no-rule">
               <select id="no-feature">
-                <option value="y">수면 시간</option>
-                <option value="x">공부 시간</option>
+                <option value="y">꽃잎 너비</option>
+                <option value="x">꽃잎 길이</option>
               </select>
               <div class="range-heading">
-                <span>기준 시간</span
-                ><output id="no-threshold-value">6시간</output>
+                <span>기준값</span
+                ><output id="no-threshold-value">1.7cm</output>
               </div>
-              <input id="no-threshold" type="range" min="2" max="9" value="6" />
-              <div class="range-ends"><span>2시간</span><span>9시간</span></div>
+              <input
+                id="no-threshold"
+                type="range"
+                min="1"
+                max="2.6"
+                step="0.1"
+                value="1.7"
+              />
+              <div class="range-ends"><span>1cm</span><span>2.6cm</span></div>
               <select id="no-operator" aria-label="거짓 가지 질문의 비교 방법">
                 <option value="gte">기준 이상인가?</option>
                 <option value="lte">기준 이하인가?</option></select
               ><select id="no-yes">
-                <option value="1">참→집중</option>
-                <option value="0">참→보충</option></select
+                <option value="1">참→버지니카</option>
+                <option value="0">참→버시컬러</option></select
               ><select id="no-no">
-                <option value="0">거짓→보충</option>
-                <option value="1">거짓→집중</option>
+                <option value="0">거짓→버시컬러</option>
+                <option value="1">거짓→버지니카</option>
               </select>
             </div>
             <div class="result">
