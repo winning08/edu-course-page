@@ -217,19 +217,6 @@ tbody th {
   color: var(--accent) !important;
   font-weight: 700;
 }
-.point-detail {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 0.9rem;
-  min-height: 48px;
-  padding: 0.75rem;
-  background: #f3f6fb;
-  border-radius: 10px;
-  color: var(--muted);
-}
-.point-detail strong {
-  color: var(--ink);
-}
 .control {
   margin-bottom: 1.3rem;
 }
@@ -452,8 +439,5 @@ tbody th {
   }
   .how-to li {
     min-height: auto;
-  }
-  .point-detail {
-    display: grid;
   }
 }

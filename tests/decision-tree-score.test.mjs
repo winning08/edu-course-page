@@ -47,13 +47,14 @@ test("화면은 나만의 의사결정트리를 만드는 활동과 파비콘을
   assert.match(html, /정확도 90% 이상/);
   assert.match(html, /root-threshold-value/);
   assert.match(html, /root-operator/);
-  assert.match(html, /id="point-detail"/);
+  assert.match(html, /같은 점을 다시 클릭하면 사라집니다/);
   assert.match(html, /id="tree-visual"/);
   const script = await readFile(
     new URL("../lessons/decision-tree-score/game.js", import.meta.url),
     "utf8",
   );
   assert.match(script, /pointCallout/);
+  assert.match(script, /selectedPoint === index \? null : index/);
   assert.match(script, /꽃잎 길이.*꽃잎 너비/s);
   assert.match(script, /plot-grid/);
   assert.match(html, /favicon\.svg/);

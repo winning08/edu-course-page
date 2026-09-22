@@ -34,6 +34,17 @@
       "status": "published"
     },
     {
+      "id": "quick-draw",
+      "subject": "인공지능 기초",
+      "unit": "기계학습 알고리즘",
+      "order": 4,
+      "title": "퀵드로우",
+      "path": "lessons/quick-draw/",
+      "duration": 10,
+      "difficulty": "입문",
+      "status": "published"
+    },
+    {
       "id": "ai-inference-ripeness",
       "subject": "인공지능 기초",
       "unit": "기계학습 알고리즘",

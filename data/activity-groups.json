@@ -85,6 +85,17 @@
           "status": "published",
           "active": true,
           "objective": "붓꽃의 꽃잎 길이와 너비를 기준으로 질문을 만들고, 참·거짓 가지를 따라 품종을 분류하는 의사결정트리의 원리를 이해한다."
+        },
+        {
+          "id": "quick-draw",
+          "order": 4,
+          "title": "퀵드로우",
+          "path": "lessons/quick-draw/",
+          "duration": 10,
+          "difficulty": "입문",
+          "status": "published",
+          "active": true,
+          "objective": "인공지능이 손그림의 특징을 빠르게 인식하고 분류하는 과정을 체험한다."
         }
       ]
     },

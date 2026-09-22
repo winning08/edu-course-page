@@ -4,8 +4,17 @@ import test from "node:test";
 
 const repoRoot = new URL("../", import.meta.url);
 const LEARNING_LESSON_IDS = ["ai-problem-method"];
-const ACTIVE_ALGORITHM_IDS = ["ai-prediction-lab", "knn-neighbors", "decision-tree-score"];
-const FRUIT_LESSON_IDS = ["ai-inference-ripeness", "ai-signal-noise", "ai-biased-data"];
+const ACTIVE_ALGORITHM_IDS = [
+  "ai-prediction-lab",
+  "knn-neighbors",
+  "decision-tree-score",
+  "quick-draw",
+];
+const FRUIT_LESSON_IDS = [
+  "ai-inference-ripeness",
+  "ai-signal-noise",
+  "ai-biased-data",
+];
 
 test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 목록 페이지로 연결한다", async () => {
   const html = await readFile(new URL("index.html", repoRoot), "utf8");
@@ -13,12 +22,18 @@ test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 
   assert.match(html, /<h1>양지고 인공지능 기초 활동지 모음<\/h1>/);
   assert.doesNotMatch(html, /data-group-card="ai-learning"/);
   assert.match(html, /data-group-card="machine-learning-algorithms"/);
-  assert.doesNotMatch(html, /href="lessons\//, "루트 허브는 개별 lesson으로 바로 연결하지 않아야 함");
+  assert.doesNotMatch(
+    html,
+    /href="lessons\//,
+    "루트 허브는 개별 lesson으로 바로 연결하지 않아야 함",
+  );
 });
 
 test("루트 허브에는 인공지능의 이해와 인공지능과 학습 단원을 표시한다", async () => {
   const html = await readFile(new URL("index.html", repoRoot), "utf8");
-  const understandingHeading = html.indexOf('id="understanding-unit-title">인공지능의 이해');
+  const understandingHeading = html.indexOf(
+    'id="understanding-unit-title">인공지능의 이해',
+  );
   const activity01 = html.indexOf('data-group-card="ai-evaluation"');
   const activity03 = html.indexOf('data-group-card="ai-search"');
   assert.ok(understandingHeading < activity01);
@@ -28,32 +43,63 @@ test("루트 허브에는 인공지능의 이해와 인공지능과 학습 단�
 
 test("루트 허브 제목은 작은 화면과 브라우저 글꼴 차이에도 한 줄로 유지된다", async () => {
   const css = await readFile(new URL("assets/hub.css", repoRoot), "utf8");
-  assert.match(css, /\.hub-header h1\s*\{[^}]*font-size:clamp\([^}]*white-space:nowrap/s);
+  assert.match(
+    css,
+    /\.hub-header h1\s*\{[^}]*font-size:clamp\([^}]*white-space:nowrap/s,
+  );
 });
 
 test("활동지 04는 문제 해결 방법 활동 하나만 담는다", async () => {
-  const html = await readFile(new URL("units/ai-learning/index.html", repoRoot), "utf8");
-  assert.match(html, /<title>기계학습과 데이터 \| 인공지능 기초 활동지 모음<\/title>/);
+  const html = await readFile(
+    new URL("units/ai-learning/index.html", repoRoot),
+    "utf8",
+  );
+  assert.match(
+    html,
+    /<title>기계학습과 데이터 \| 인공지능 기초 활동지 모음<\/title>/,
+  );
   assert.match(html, /<h1>기계학습과 데이터<\/h1>/);
-  const positions = LEARNING_LESSON_IDS.map((id) => html.indexOf(`lessons/${id}/`));
+  const positions = LEARNING_LESSON_IDS.map((id) =>
+    html.indexOf(`lessons/${id}/`),
+  );
   for (const [index, position] of positions.entries()) {
-    assert.ok(position !== -1, `그룹 페이지에 lessons/${LEARNING_LESSON_IDS[index]}/ 링크가 없음`);
+    assert.ok(
+      position !== -1,
+      `그룹 페이지에 lessons/${LEARNING_LESSON_IDS[index]}/ 링크가 없음`,
+    );
   }
   assert.equal(positions.length, 1);
   assert.match(html, />01</);
   for (const id of LEARNING_LESSON_IDS) {
-    assert.match(html, new RegExp(`href="\\.\\./\\.\\./lessons/${id}/"`), `그룹 페이지의 ${id} 링크가 올바른 상대 경로가 아님`);
+    assert.match(
+      html,
+      new RegExp(`href="\\.\\./\\.\\./lessons/${id}/"`),
+      `그룹 페이지의 ${id} 링크가 올바른 상대 경로가 아님`,
+    );
   }
 });
 
 test("활동지 04와 05의 활동은 각각 소속 목록 페이지로 돌아간다", async () => {
   for (const id of ACTIVE_ALGORITHM_IDS) {
-    const html = await readFile(new URL(`lessons/${id}/index.html`, repoRoot), "utf8");
-    assert.match(html, /href="\.\.\/\.\.\/units\/machine-learning-algorithms\/"/, `${id}의 활동 목록 링크가 그룹 페이지를 가리키지 않음`);
+    const html = await readFile(
+      new URL(`lessons/${id}/index.html`, repoRoot),
+      "utf8",
+    );
+    assert.match(
+      html,
+      /href="\.\.\/\.\.\/units\/machine-learning-algorithms\/"/,
+      `${id}의 활동 목록 링크가 그룹 페이지를 가리키지 않음`,
+    );
   }
   for (const id of FRUIT_LESSON_IDS) {
-    const html = await readFile(new URL(`lessons/${id}/index.html`, repoRoot), "utf8");
-    assert.match(html, /class="back-link" href="\.\.\/\.\.\/units\/machine-learning-algorithms\/"/);
+    const html = await readFile(
+      new URL(`lessons/${id}/index.html`, repoRoot),
+      "utf8",
+    );
+    assert.match(
+      html,
+      /class="back-link" href="\.\.\/\.\.\/units\/machine-learning-algorithms\/"/,
+    );
   }
 });
 
@@ -61,7 +107,9 @@ test("data/lessons.json은 활동지 04와 05의 활동 순서를 구분한다",
   const raw = await readFile(new URL("data/lessons.json", repoRoot), "utf8");
   const data = JSON.parse(raw);
   assert.ok(data.lessons.length >= 3);
-  const byId = Object.fromEntries(data.lessons.map((lesson) => [lesson.id, lesson]));
+  const byId = Object.fromEntries(
+    data.lessons.map((lesson) => [lesson.id, lesson]),
+  );
   for (const id of [...ACTIVE_ALGORITHM_IDS, ...FRUIT_LESSON_IDS]) {
     assert.ok(byId[id], `${id}가 lessons.json에 없음`);
     assert.equal(byId[id].status, "published");
@@ -69,6 +117,7 @@ test("data/lessons.json은 활동지 04와 05의 활동 순서를 구분한다",
   }
   assert.equal(byId["ai-prediction-lab"].order, 1);
   assert.equal(byId["knn-neighbors"].order, 2);
+  assert.equal(byId["quick-draw"].order, 4);
   assert.equal(byId["ai-inference-ripeness"].order, 1);
   assert.equal(byId["ai-signal-noise"].order, 2);
   assert.equal(byId["ai-biased-data"].order, 3);
@@ -76,8 +125,16 @@ test("data/lessons.json은 활동지 04와 05의 활동 순서를 구분한다",
 
 test("관련 활동 모두 독립 index.html·game-core.js·game.js·styles.css를 lessons/ 아래에 직접 갖는다", async () => {
   for (const id of [...LEARNING_LESSON_IDS, ...FRUIT_LESSON_IDS]) {
-    for (const file of ["index.html", "game-core.js", "game.js", "styles.css"]) {
-      const content = await readFile(new URL(`lessons/${id}/${file}`, repoRoot), "utf8");
+    for (const file of [
+      "index.html",
+      "game-core.js",
+      "game.js",
+      "styles.css",
+    ]) {
+      const content = await readFile(
+        new URL(`lessons/${id}/${file}`, repoRoot),
+        "utf8",
+      );
       assert.ok(content.length > 0, `lessons/${id}/${file}가 비어 있음`);
     }
   }
@@ -103,8 +160,15 @@ test("shared 모듈은 유효한 함수를 내보내고 과일 활동 세 개의
   assert.equal(typeof sharedRandom.summarize, "function");
 
   for (const id of FRUIT_LESSON_IDS) {
-    const gameCoreSource = await readFile(new URL(`lessons/${id}/game-core.js`, repoRoot), "utf8");
-    assert.match(gameCoreSource, /from "\.\.\/shared\/random\.js"/, `${id}가 shared/random.js를 재사용하지 않음`);
+    const gameCoreSource = await readFile(
+      new URL(`lessons/${id}/game-core.js`, repoRoot),
+      "utf8",
+    );
+    assert.match(
+      gameCoreSource,
+      /from "\.\.\/shared\/random\.js"/,
+      `${id}가 shared/random.js를 재사용하지 않음`,
+    );
   }
 });
 
