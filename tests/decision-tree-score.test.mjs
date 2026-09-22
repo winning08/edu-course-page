@@ -49,6 +49,12 @@ test("화면은 나만의 의사결정트리를 만드는 활동과 파비콘을
   assert.match(html, /root-operator/);
   assert.match(html, /id="point-detail"/);
   assert.match(html, /id="tree-visual"/);
+  const script = await readFile(
+    new URL("../lessons/decision-tree-score/game.js", import.meta.url),
+    "utf8",
+  );
+  assert.match(script, /pointCallout/);
+  assert.match(script, /공부.*시간.*수면.*시간/);
   assert.match(html, /favicon\.svg/);
   assert.match(html, /data-guard-group="machine-learning-algorithms"/);
 });

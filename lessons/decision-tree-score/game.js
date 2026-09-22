@@ -42,6 +42,17 @@ function childTree(rule, defaultClass) {
 function renderTree(rules) {
   treeVisual.innerHTML = `<div class="tree-node tree-question tree-root">${rules.root.feature === "x" ? "공부 시간" : "수면 시간"}이 ${rules.root.threshold}시간 ${rules.root.operator === "lte" ? "이하" : "이상"}?</div><div class="tree-branches"><section><span class="branch-label">참</span>${childTree(rules.yes, 1)}</section><section><span class="branch-label">거짓</span>${childTree(rules.no, 0)}</section></div>`;
 }
+function pointCallout(rules) {
+  if (selectedPoint === null) return "";
+  const point = DATA[selectedPoint],
+    predicted = predict(point, rules),
+    pointX = 45 + point.x * 57,
+    pointY = 455 - point.y * 43,
+    boxX = pointX > 420 ? pointX - 238 : pointX + 18,
+    boxY = pointY < 92 ? pointY + 18 : pointY - 76,
+    anchorX = pointX > 420 ? boxX + 220 : boxX;
+  return `<g class="point-callout" aria-hidden="true"><line x1="${pointX}" y1="${pointY}" x2="${anchorX}" y2="${boxY + 29}"/><rect x="${boxX}" y="${boxY}" width="220" height="58" rx="10"/><text x="${boxX + 12}" y="${boxY + 22}"><tspan font-weight="800">${selectedPoint + 1}번 학생</tspan><tspan dx="10">공부 ${point.x}시간 · 수면 ${point.y}시간</tspan></text><text x="${boxX + 12}" y="${boxY + 44}">실제 ${className(point.c)} · 예측 ${className(predicted)}</text></g>`;
+}
 function render() {
   const rules = getRules(),
     value = accuracy(DATA, rules);
@@ -65,6 +76,11 @@ function render() {
   });
   path.innerHTML = `<li>첫 질문: ${describe(rules.root)}</li><li>참 가지: ${rules.yes ? describe(rules.yes) : "집중 학습형으로 분류"}</li><li>거짓 가지: ${rules.no ? describe(rules.no) : "보충 학습형으로 분류"}</li>`;
   renderTree(rules);
+  if (selectedPoint !== null) {
+    const point = DATA[selectedPoint],
+      predicted = predict(point, rules);
+    pointDetail.innerHTML = `<strong>${selectedPoint + 1}번 학생</strong><span>공부 ${point.x}시간</span><span>수면 ${point.y}시간</span><span>실제: ${className(point.c)}</span><span>트리 예측: ${className(predicted)}</span>`;
+  }
   svg.innerHTML =
     '<rect width="660" height="500" fill="#fff" rx="16"/>' +
     DATA.map((point, index) => {
@@ -72,13 +88,11 @@ function render() {
         selected = selectedPoint === index;
       return `<circle data-point-index="${index}" tabindex="0" role="button" aria-label="${index + 1}번 학생, 공부 ${point.x}시간, 수면 ${point.y}시간" cx="${45 + point.x * 57}" cy="${455 - point.y * 43}" r="${selected ? 13 : 10}" fill="${point.c ? "#3976e8" : "#e24a5a"}" stroke="${selected ? "#f59e0b" : correct ? "white" : "#111827"}" stroke-width="${selected ? 5 : correct ? 2 : 5}"/>`;
     }).join("") +
+    pointCallout(rules) +
     '<text x="330" y="490" text-anchor="middle">공부 시간</text><text x="14" y="250" transform="rotate(-90 14 250)" text-anchor="middle">수면 시간</text>';
 }
 function showPoint(index) {
   selectedPoint = index;
-  const point = DATA[index],
-    predicted = predict(point, getRules());
-  pointDetail.innerHTML = `<strong>${index + 1}번 학생</strong><span>공부 ${point.x}시간</span><span>수면 ${point.y}시간</span><span>실제: ${className(point.c)}</span><span>트리 예측: ${className(predicted)}</span>`;
   render();
 }
 svg.addEventListener("click", (event) => {
