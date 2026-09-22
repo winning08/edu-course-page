@@ -41,6 +41,26 @@
             있습니다.
           </p>
         </section>
+        <section class="how-to" aria-labelledby="how-to-title">
+          <h2 id="how-to-title">이렇게 활동하세요</h2>
+          <ol>
+            <li>
+              <strong>데이터 관찰</strong
+              ><span>두 학습 유형의 공통점을 찾습니다.</span>
+            </li>
+            <li>
+              <strong>첫 질문 만들기</strong
+              ><span>특징과 기준 시간을 바꾸어 데이터를 둘로 나눕니다.</span>
+            </li>
+            <li>
+              <strong>필요하면 질문 추가</strong
+              ><span
+                >틀린 점이 남은 가지에 두 번째 질문을 추가해 정확도 90% 이상에
+                도전합니다.</span
+              >
+            </li>
+          </ol>
+        </section>
         <section class="dataset" aria-labelledby="dataset-title">
           <div>
             <p class="step-label">먼저 살펴볼 데이터</p>
@@ -79,6 +99,7 @@
             </p>
           </div>
           <aside class="panel">
+            <p class="step-label">2단계 · 질문 만들기</p>
             <h2>규칙 1 · 첫 질문</h2>
             <div class="rule">
               <select id="root-feature">
@@ -90,8 +111,14 @@
                 min="2"
                 max="9"
                 value="6"
-              /><span>시간 이상인가?</span
-              ><input id="root-yes" type="hidden" value="1" /><input
+              /><strong
+                ><output id="root-threshold-value">6</output>시간
+                이상인가?</strong
+              >
+              <p class="branch-guide">
+                <span>참 → 집중 학습형</span><span>거짓 → 보충 학습형</span>
+              </p>
+              <input id="root-yes" type="hidden" value="1" /><input
                 id="root-no"
                 type="hidden"
                 value="0"
@@ -99,7 +126,7 @@
             </div>
             <h2>규칙 2 · 참 가지</h2>
             <label><input id="yes-use" type="checkbox" /> 질문 추가</label>
-            <div class="rule">
+            <div class="rule" id="yes-rule">
               <select id="yes-feature">
                 <option value="x">공부 시간</option>
                 <option value="y">수면 시간</option></select
@@ -109,7 +136,10 @@
                 min="2"
                 max="9"
                 value="5"
-              /><select id="yes-yes">
+              /><strong
+                ><output id="yes-threshold-value">5</output>시간
+                이상인가?</strong
+              ><select id="yes-yes">
                 <option value="1">참→집중</option>
                 <option value="0">참→보충</option></select
               ><select id="yes-no">
@@ -119,7 +149,7 @@
             </div>
             <h2>규칙 2 · 거짓 가지</h2>
             <label><input id="no-use" type="checkbox" /> 질문 추가</label>
-            <div class="rule">
+            <div class="rule" id="no-rule">
               <select id="no-feature">
                 <option value="y">수면 시간</option>
                 <option value="x">공부 시간</option></select
@@ -129,7 +159,10 @@
                 min="2"
                 max="9"
                 value="6"
-              /><select id="no-yes">
+              /><strong
+                ><output id="no-threshold-value">6</output>시간
+                이상인가?</strong
+              ><select id="no-yes">
                 <option value="1">참→집중</option>
                 <option value="0">참→보충</option></select
               ><select id="no-no">
@@ -139,6 +172,7 @@
             </div>
             <div class="result">
               <span>분류 정확도</span><strong id="accuracy">0%</strong>
+              <p id="goal-feedback" aria-live="polite"></p>
             </div>
           </aside>
         </section>

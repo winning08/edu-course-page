@@ -31,6 +31,9 @@ test("화면은 나만의 의사결정트리를 만드는 활동과 파비콘을
   assert.match(html, /수면 시간/);
   assert.match(html, /15명의 학습 데이터/);
   assert.match(html, /id="dataset-body"/);
+  assert.match(html, /이렇게 활동하세요/);
+  assert.match(html, /정확도 90% 이상/);
+  assert.match(html, /root-threshold-value/);
   assert.match(html, /favicon\.svg/);
   assert.match(html, /data-guard-group="machine-learning-algorithms"/);
 });

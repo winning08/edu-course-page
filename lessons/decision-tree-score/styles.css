@@ -38,6 +38,57 @@ body {
   color: var(--muted);
   line-height: 1.7;
 }
+.how-to {
+  margin: 1.5rem 0 1rem;
+  padding: 1.25rem;
+  color: #fff;
+  background: #25345a;
+  border-radius: 18px;
+}
+.how-to h2 {
+  margin: 0 0 1rem;
+}
+.how-to ol {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: steps;
+}
+.how-to li {
+  position: relative;
+  min-height: 108px;
+  padding: 1rem 1rem 1rem 3.3rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  counter-increment: steps;
+}
+.how-to li::before {
+  content: counter(steps);
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  color: #25345a;
+  background: #fff;
+  border-radius: 50%;
+  font-weight: 800;
+}
+.how-to strong,
+.how-to span {
+  display: block;
+}
+.how-to span {
+  margin-top: 0.35rem;
+  color: #dce5ff;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
 .dataset {
   display: grid;
   grid-template-columns: minmax(220px, 0.65fr) minmax(0, 1.35fr);
@@ -49,18 +100,59 @@ body {
   border: 1px solid var(--line);
   border-radius: 18px;
 }
-.dataset h2 { margin: .25rem 0; }
-.dataset p { color: var(--muted); line-height: 1.6; }
-.step-label { margin: 0 !important; color: var(--accent) !important; font-size: .82rem; font-weight: 800; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-th, td { padding: .55rem .7rem; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
-thead th { background: #f3f6fb; }
-tbody th { color: var(--muted); }
-.class-tag { display: inline-flex; align-items: center; gap: .35rem; font-weight: 700; }
-.class-tag::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
-.class-red { color: #c73546; }
-.class-blue { color: #315fc1; }
+.dataset h2 {
+  margin: 0.25rem 0;
+}
+.dataset p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+.step-label {
+  margin: 0 !important;
+  color: var(--accent) !important;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+th,
+td {
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  white-space: nowrap;
+}
+thead th {
+  background: #f3f6fb;
+}
+tbody th {
+  color: var(--muted);
+}
+.class-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+.class-tag::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.class-red {
+  color: #c73546;
+}
+.class-blue {
+  color: #315fc1;
+}
 .lab {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -89,13 +181,56 @@ tbody th { color: var(--muted); }
   width: 100%;
   margin-top: 0.8rem;
 }
-.panel h2 { margin: 1rem 0 .55rem; font-size: 1rem; }
-.rule { display: grid; gap: .55rem; margin: .45rem 0 1rem; }
-.rule select, .rule input { width: 100%; min-height: 38px; }
-.red, .blue { display:inline-block; width:12px; height:12px; margin:0 .3rem; border-radius:50%; }
-.red { background:#e24a5a; }
-.blue { background:#3976e8; }
-.panel label { display:block; margin-bottom:.4rem; font-weight:700; }
+.panel h2 {
+  margin: 1rem 0 0.55rem;
+  font-size: 1rem;
+}
+.rule {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0.45rem 0 1rem;
+}
+.rule select,
+.rule input {
+  width: 100%;
+  min-height: 38px;
+}
+.rule.is-disabled {
+  opacity: 0.42;
+}
+.branch-guide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin: 0;
+}
+.branch-guide span {
+  padding: 0.45rem;
+  background: #f3f6fb;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+.red,
+.blue {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin: 0 0.3rem;
+  border-radius: 50%;
+}
+.red {
+  background: #e24a5a;
+}
+.blue {
+  background: #3976e8;
+}
+.panel label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+}
 .result {
   padding: 1rem;
   background: #eef2ff;
@@ -108,6 +243,12 @@ tbody th { color: var(--muted); }
   display: block;
   font-size: 2.5rem;
   color: var(--accent);
+}
+.result p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
 #path {
   padding-left: 1.3rem;
@@ -124,5 +265,11 @@ tbody th { color: var(--muted); }
   .lab,
   .dataset {
     grid-template-columns: 1fr;
+  }
+  .how-to ol {
+    grid-template-columns: 1fr;
+  }
+  .how-to li {
+    min-height: auto;
   }
 }
