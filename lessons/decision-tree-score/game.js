@@ -91,7 +91,7 @@ function pointCallout() {
   const boxX = pointX > 500 ? pointX - 128 : pointX + 14;
   const boxY = pointY < 95 ? pointY + 12 : pointY - 42;
   const anchorX = pointX > 500 ? boxX + 114 : boxX;
-  return `<g class="point-callout" aria-hidden="true"><line x1="${pointX}" y1="${pointY}" x2="${anchorX}" y2="${boxY + 16}"/><rect x="${boxX}" y="${boxY}" width="114" height="32" rx="9"/><text x="${boxX + 57}" y="${boxY + 21}" text-anchor="middle">(${point.x}, ${point.y})</text></g>`;
+  return `<g class="point-callout" aria-hidden="true"><line x1="${pointX}" y1="${pointY}" x2="${anchorX}" y2="${boxY + 16}"/><rect x="${boxX}" y="${boxY}" width="114" height="32" rx="9"/><text x="${boxX + 57}" y="${boxY + 21}" text-anchor="middle">(x=${point.x}, y=${point.y})</text></g>`;
 }
 
 function render() {

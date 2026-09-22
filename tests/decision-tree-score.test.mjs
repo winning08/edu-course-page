@@ -54,6 +54,7 @@ test("화면은 나만의 의사결정트리를 만드는 활동과 파비콘을
     "utf8",
   );
   assert.match(script, /pointCallout/);
+  assert.match(script, /\(x=\$\{point\.x\}, y=\$\{point\.y\}\)/);
   assert.match(script, /selectedPoint === index \? null : index/);
   assert.match(script, /꽃잎 길이.*꽃잎 너비/s);
   assert.match(script, /plot-grid/);
