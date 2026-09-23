@@ -19,6 +19,11 @@ test("퀵드로우는 활동 안내를 거쳐 공식 외부 사이트로 연결�
 
   assert.match(unit, /href="\.\.\/\.\.\/lessons\/quick-draw\/"/);
   assert.match(html, /이렇게 활동하세요/);
+  assert.match(html, /분류 모델 체험/);
+  assert.match(html, /입력 데이터/);
+  assert.match(html, /특징 비교/);
+  assert.match(html, /분류 결과/);
+  assert.match(html, /학습과 예측은 달라요/);
   assert.match(html, /그리는 동안 생각해 보세요/);
   assert.match(html, /AI는 그림을 ‘이해’한 걸까요/);
   assert.match(html, /href="https:\/\/quickdraw\.withgoogle\.com\/"/);

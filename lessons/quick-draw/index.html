@@ -37,8 +37,49 @@
           <p>
             제시된 사물을 그리는 동안 인공지능이 선의 모양과 그려지는 과정을
             보고 무엇인지 계속 추측합니다. 잘 그리는 것이 목적이 아니라, AI가
-            어떤 특징을 단서로 사용하는지 관찰하는 활동입니다.
+            어떤 특징을 단서로 사용하는지 관찰하며 <strong>분류 모델</strong>을
+            체험하는 활동입니다.
           </p>
+        </section>
+        <section class="classification" aria-labelledby="classification-title">
+          <p class="eyebrow">분류 모델 체험</p>
+          <h2 id="classification-title">
+            여러 이름 중 가장 알맞은 하나를 고르는 AI
+          </h2>
+          <p class="classification-lead">
+            분류 모델은 입력된 데이터를 미리 정해진 여러 범주(클래스) 중 하나로
+            나눕니다. 퀵드로우에서는 내가 그린 손그림이 입력 데이터이고,
+            ‘고양이’, ‘자전거’, ‘우산’ 같은 이름들이 클래스입니다.
+          </p>
+          <div class="model-flow" aria-label="퀵드로우 분류 모델의 처리 과정">
+            <article>
+              <span>입력 데이터</span><strong>내가 그리는 선</strong>
+              <p>선의 위치, 방향, 모양과 그려지는 순서가 모델에 들어갑니다.</p>
+            </article>
+            <i aria-hidden="true">→</i>
+            <article>
+              <span>특징 비교</span><strong>학습한 그림과 비교</strong>
+              <p>
+                많은 손그림에서 학습한 패턴과 현재 그림의 특징을 비교합니다.
+              </p>
+            </article>
+            <i aria-hidden="true">→</i>
+            <article>
+              <span>분류 결과</span><strong>가장 가능성 높은 이름</strong>
+              <p>
+                여러 클래스 중 현재 그림과 가장 비슷하다고 판단한 이름을
+                예측합니다.
+              </p>
+            </article>
+          </div>
+          <aside class="concept-note">
+            <strong>학습과 예측은 달라요.</strong>
+            <p>
+              이 활동에서는 모델을 새로 학습시키는 것이 아니라, 이미 많은
+              손그림으로 학습된 분류 모델에 내 그림을 입력하고 예측 결과가
+              변하는 과정을 관찰합니다.
+            </p>
+          </aside>
         </section>
         <section class="steps" aria-labelledby="steps-title">
           <h2 id="steps-title">이렇게 활동하세요</h2>
@@ -69,7 +110,7 @@
           </div>
           <ul>
             <li>AI는 그림을 완성하기 전에도 추측할 수 있었나요?</li>
-            <li>어떤 선이나 모양을 추가했을 때 정답을 맞혔나요?</li>
+            <li>어떤 선이나 모양을 추가했을 때 예측한 클래스가 바뀌었나요?</li>
             <li>사람에게는 쉬운 그림을 AI가 틀린 이유는 무엇일까요?</li>
           </ul>
         </section>
@@ -94,9 +135,11 @@
           <h2>AI는 그림을 ‘이해’한 걸까요?</h2>
           <p>
             AI는 사람이 무엇을 생각했는지 아는 것이 아니라, 많은 손그림에서
-            학습한 선과 모양의 패턴을 바탕으로 가장 비슷한 범주를 예측합니다.
-            학습한 그림과 다른 방식으로 그리거나 특징이 충분하지 않으면 틀릴 수
-            있습니다.
+            학습한 선과 모양의 패턴을 바탕으로 각 클래스일 가능성을 계산하고
+            가장 가능성이 높다고 판단한 범주를 출력합니다. 따라서 학습한 그림과
+            다른 방식으로 그리거나 구분할 특징이 충분하지 않으면 틀릴 수
+            있습니다. 이것이 분류 모델의 예측이며, 정답을 항상 보장하는 규칙과는
+            다릅니다.
           </p>
         </section>
       </main>

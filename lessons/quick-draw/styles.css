@@ -49,12 +49,14 @@ h2 {
   margin: 0.3rem 0 0.9rem;
 }
 .hero > p:last-child,
+.classification-lead,
 .launch-card p,
 .reflection p {
   color: var(--muted);
   line-height: 1.75;
 }
 .steps,
+.classification,
 .observe,
 .launch-card,
 .reflection {
@@ -63,6 +65,68 @@ h2 {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 18px;
+}
+.classification {
+  border-top: 5px solid var(--accent);
+}
+.classification-lead {
+  max-width: 820px;
+}
+.model-flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 1.2rem;
+}
+.model-flow article {
+  min-height: 180px;
+  padding: 1rem;
+  background: #f3f6fb;
+  border-radius: 14px;
+}
+.model-flow article > span {
+  display: inline-block;
+  padding: 0.25rem 0.55rem;
+  color: var(--accent);
+  background: #e8edff;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.model-flow strong {
+  display: block;
+  margin: 0.75rem 0 0.35rem;
+}
+.model-flow p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.model-flow > i {
+  color: var(--accent);
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 800;
+}
+.concept-note {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 1rem;
+  padding: 1rem;
+  color: #fff;
+  background: #25345a;
+  border-radius: 12px;
+}
+.concept-note strong {
+  flex: 0 0 auto;
+}
+.concept-note p {
+  margin: 0;
+  color: #dce5ff;
+  line-height: 1.65;
 }
 .steps ol {
   display: grid;
@@ -154,8 +218,20 @@ footer {
 }
 @media (max-width: 760px) {
   .steps ol,
-  .observe {
+  .observe,
+  .model-flow {
     grid-template-columns: 1fr;
+  }
+  .model-flow > i {
+    transform: rotate(90deg);
+    text-align: center;
+  }
+  .model-flow article {
+    min-height: auto;
+  }
+  .concept-note {
+    flex-direction: column;
+    gap: 0.35rem;
   }
   .steps li {
     min-height: auto;

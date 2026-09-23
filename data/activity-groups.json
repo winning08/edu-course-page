@@ -95,7 +95,7 @@
           "difficulty": "입문",
           "status": "published",
           "active": true,
-          "objective": "인공지능이 손그림의 특징을 빠르게 인식하고 분류하는 과정을 체험한다."
+          "objective": "손그림을 입력 데이터로 사용해 여러 클래스 중 하나를 예측하는 분류 모델의 작동 과정을 체험한다."
         }
       ]
     },
