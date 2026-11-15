@@ -67,6 +67,7 @@ test("활동지는 외부 모럴머신 체험과 윤리 성찰 제출 흐름을 
   assert.match(html, /name="criterion_3"/);
   assert.match(html, /name="criterion_least"/);
   assert.match(html, /name="criterion_least_reason"/);
+  assert.doesNotMatch(html, /② 자신의 판단에/);
   assert.match(html, /정답을 맞히는 활동이 아닙니다/);
   assert.match(html, /가장 고민되었던 상황/);
   assert.match(html, /그 상황에서 선택한 결과/);
