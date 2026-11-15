@@ -88,6 +88,13 @@ form.addEventListener("submit", async (event) => {
     followup: `[선택하기 어려웠던 상황의 두 선택지] ${String(data.hard_scenario).trim()}\n[두 선택지 사이에서 고민했던 이유] ${String(data.dilemma_reason).trim()}`,
     followup_reason: `[선택한 결과] ${String(data.choice).trim()}`,
   };
+  // 현재 배포된 웹 앱이 ELIZA 활동용 필드명을 검사하므로 윤리 응답을
+  // 동일한 다섯 필드에도 담아 보낸다. 윤리 전용 스크립트로 교체해도
+  // 위의 question/reason/followup 필드는 그대로 사용할 수 있다.
+  payload.motivation = payload.question;
+  payload.usage_improvement = payload.reason;
+  payload.code = `${payload.followup}\n${payload.followup_reason}`;
+  payload.version = "인공지능 윤리 활동지 v1";
 
   button.disabled = true;
   button.textContent = "제출 중…";

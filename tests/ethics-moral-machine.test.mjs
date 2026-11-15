@@ -49,7 +49,8 @@ test("활동지는 외부 모럴머신 체험과 윤리 성찰 제출 흐름을 
   }
   assert.match(html, /중요하지 않음/);
   assert.match(html, /매우 중요함/);
-  assert.match(html, /7\. 성별 선호도/);
+  assert.match(html, /<legend>성별 선호도<\/legend>/);
+  assert.doesNotMatch(html, /<legend>(?:[3-9]|10|11)\./);
   assert.match(html, /<span>남성<\/span>/);
   assert.match(html, /<span>여성<\/span>/);
   assert.match(html, /<span>인간<\/span>/);
@@ -89,6 +90,9 @@ test("제출 스크립트는 학번과 필수 응답을 검증하고 모럴머�
   assert.match(script, /result_sacrificed/);
   assert.match(script, /criterion_least_reason/);
   assert.match(script, /dilemma_reason/);
+  assert.match(script, /payload\.motivation = payload\.question/);
+  assert.match(script, /payload\.usage_improvement = payload\.reason/);
+  assert.match(script, /payload\.code =/);
   assert.match(script, /new Set\(rankedCriteria\)/);
   assert.match(
     script,
