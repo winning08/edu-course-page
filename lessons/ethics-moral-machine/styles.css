@@ -200,15 +200,65 @@ fieldset label {
 }
 .preference-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 0.8rem;
 }
-.preference-grid label,
 .criterion-row label,
 .scenario-record label {
   display: grid;
   gap: 0.4rem;
   font-weight: 750;
+}
+.scale-question {
+  display: block;
+  padding: 0.9rem 1rem 1rem;
+  background: #fbf8fc;
+}
+.scale-question legend {
+  font-size: 0.95rem;
+}
+.scale-row {
+  display: grid;
+  grid-template-columns: minmax(92px, 1fr) repeat(5, 48px) minmax(92px, 1fr);
+  gap: 0.35rem;
+  align-items: center;
+  text-align: center;
+}
+.scale-row > span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.scale-row label {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+.scale-row label span {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #aeb8c9;
+  border-radius: 50%;
+  background: #fff;
+  font-weight: 800;
+}
+.scale-row input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.scale-row input:checked + span {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.scale-row input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 .criterion-row {
   display: grid;
@@ -303,6 +353,19 @@ footer {
   }
   .result-record .full-width {
     grid-column: auto;
+  }
+  .scale-row {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .scale-row > span {
+    grid-column: span 2;
+  }
+  .scale-row > span:last-child {
+    grid-column: 4 / span 2;
+    grid-row: 1;
+  }
+  .scale-row label {
+    grid-row: 2;
   }
   .activity {
     display: grid;

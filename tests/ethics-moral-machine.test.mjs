@@ -47,7 +47,10 @@ test("활동지는 외부 모럴머신 체험과 윤리 성찰 제출 흐름을 
   ]) {
     assert.match(html, new RegExp(`name="${field}"`));
   }
-  assert.match(html, /1\(낮음\)부터 5\(높음\)/);
+  assert.match(html, /중요하지 않음/);
+  assert.match(html, /매우 중요함/);
+  assert.equal((html.match(/class="scale-question"/g) ?? []).length, 9);
+  assert.equal((html.match(/type="radio" name="preference_/g) ?? []).length, 45);
   assert.match(html, /name="criterion_1"/);
   assert.match(html, /name="criterion_2"/);
   assert.match(html, /name="criterion_3"/);
