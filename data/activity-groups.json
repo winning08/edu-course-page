@@ -221,7 +221,7 @@
         {
           "id": "ethics-moral-machine",
           "order": 1,
-          "title": "자율주행자동차는 누구를 지켜야 할까?",
+          "title": "인공지능 윤리",
           "path": "lessons/ethics-moral-machine/",
           "duration": 25,
           "difficulty": "보통",
