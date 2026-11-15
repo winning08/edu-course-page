@@ -26,6 +26,10 @@ const GROUP_PAGES = {
     "lessons/arc-puzzle-challenge/index.html",
     "lessons/turing-vs-arc-compare/index.html",
   ],
+  "ai-ethics": [
+    "units/ai-ethics/index.html",
+    "lessons/ethics-moral-machine/index.html",
+  ],
 };
 
 test("모든 group은 명시적인 active boolean 필드를 갖는다", async () => {

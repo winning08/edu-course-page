@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      document.documentElement.setAttribute("data-guard", "pending");
+    </script>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="모럴머신으로 자율주행자동차의 윤리적 딜레마를 체험하고 판단 기준과 책임에 대한 활동지를 제출하는 수업 활동"
+    />
+    <title>자율주행자동차는 누구를 지켜야 할까? | 인공지능 윤리</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../assets/fonts.css">
+    <link rel="stylesheet" href="../../assets/guard.css">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="../../assets/group-guard.js"></script>
+    <script type="module" src="form.js"></script>
+  </head>
+  <body
+    data-guard-scope="page"
+    data-guard-group="ai-ethics"
+    data-guard-lesson="ethics-moral-machine"
+  >
+    <div id="guard-loading" class="guard-panel">
+      <p>활동 정보를 확인하는 중입니다…</p>
+    </div>
+    <div id="guard-blocked" class="guard-panel">
+      <h1>아직 준비 중인 활동입니다</h1>
+      <a class="guard-home-link" href="../../">홈으로</a>
+    </div>
+    <div id="guard-content">
+      <header>
+        <a href="../../units/ai-ethics/">← 활동 목록</a
+        ><strong>활동 01 · 모럴머신</strong>
+      </header>
+      <main>
+        <section class="hero">
+          <p class="eyebrow">AI ETHICS · AUTONOMOUS VEHICLE</p>
+          <h1>자율주행자동차는<br />누구를 지켜야 할까?</h1>
+          <p>
+            피할 수 없는 사고 상황에서 인공지능은 어떤 선택을 해야 할까요?
+            모럴머신의 딜레마를 직접 판단하고, 내가 중요하게 생각한 기준을
+            근거와 함께 정리해 봅시다.
+          </p>
+        </section>
+
+        <section class="concept" aria-labelledby="concept-title">
+          <div>
+            <p class="step">활동 전</p>
+            <h2 id="concept-title">정답을 맞히는 활동이 아닙니다</h2>
+          </div>
+          <div class="concept-grid">
+            <article>
+              <strong>도덕적 딜레마</strong>
+              <p>
+                어느 쪽을 선택해도 중요한 가치가 손상되어 하나의 완벽한 답을
+                고르기 어려운 상황입니다.
+              </p>
+            </article>
+            <article>
+              <strong>판단 기준</strong>
+              <p>
+                생명의 수, 교통법규, 승객과 보행자의 안전 등 어떤 가치를
+                우선했는지 살펴봅니다.
+              </p>
+            </article>
+            <article>
+              <strong>책임</strong>
+              <p>
+                개발자·기업·정부·사용자 중 누가 기준을 정하고 결과에 책임져야
+                하는지 생각합니다.
+              </p>
+            </article>
+          </div>
+          <aside>
+            <strong>주의해서 해석하기</strong>
+            <p>
+              모럴머신은 사람들이 기계의 도덕적 결정에 대해 어떻게 생각하는지
+              참여하고 토론하는 플랫폼입니다. 제시된 상황은 윤리적 쟁점을
+              선명하게 보여 주기 위해 단순화된 가상 상황이며, 실제 자율주행
+              시스템 전체를 그대로 재현한 것은 아닙니다.
+            </p>
+          </aside>
+        </section>
+
+        <section class="activity" aria-labelledby="activity-title">
+          <div>
+            <p class="step">1단계</p>
+            <h2 id="activity-title">모럴머신에서 직접 판단하기</h2>
+            <p>
+              새 탭에서 체험을 진행하세요. 선택할 때마다 ‘왜 이쪽을 골랐는지’를
+              짧게 기억해 두면 활동지 작성이 쉬워집니다.
+            </p>
+          </div>
+          <ol>
+            <li>두 결과에서 살아남는 사람과 희생되는 사람을 확인합니다.</li>
+            <li>더 중요하다고 생각하는 결과를 선택합니다.</li>
+            <li>반복되는 나의 선택 기준과 가장 고민된 상황을 관찰합니다.</li>
+          </ol>
+          <a
+            class="launch"
+            href="https://www.moralmachine.net/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >모럴머신 활동 시작하기 ↗</a
+          >
+        </section>
+
+        <section class="worksheet" aria-labelledby="worksheet-title">
+          <p class="step">2단계</p>
+          <h2 id="worksheet-title">나의 판단 기준을 활동지로 제출하기</h2>
+          <p class="lead">
+            모럴머신 체험을 마친 뒤 작성하세요. 윤리적 판단은 결론보다 근거가
+            중요합니다.
+          </p>
+          <form id="ethics-form" novalidate>
+            <div class="student-fields">
+              <label
+                >학번<input
+                  name="student_number"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  pattern="[0-9]{5}"
+                  maxlength="5"
+                  required /></label
+              ><label
+                >이름<input name="student_name" autocomplete="name" required
+              /></label>
+            </div>
+            <label class="completed"
+              ><input name="completed" type="checkbox" value="yes" required />
+              모럴머신 활동을 직접 완료했습니다.</label
+            >
+            <label
+              >가장 고민되었던 상황은 무엇이었나요?<textarea
+                name="hard_scenario"
+                rows="4"
+                required
+                placeholder="예: 승객을 지키면 여러 보행자가 위험해지는 상황"
+              ></textarea>
+            </label>
+            <label
+              >그 상황에서 어떤 결과를 선택했나요?<textarea
+                name="choice"
+                rows="3"
+                required
+              ></textarea>
+            </label>
+            <label
+              >가장 중요하게 고려한 기준<select name="criterion" required>
+                <option value="">선택하세요</option>
+                <option>더 많은 생명 보호</option>
+                <option>교통법규 준수</option>
+                <option>승객 보호</option>
+                <option>보행자 보호</option>
+                <option>어린이·노약자 등 취약한 사람 보호</option>
+                <option>개인의 특성으로 차별하지 않기</option>
+                <option>기타</option>
+              </select></label
+            >
+            <label
+              >그 기준을 중요하게 생각한 이유<textarea
+                name="reason"
+                rows="4"
+                required
+              ></textarea>
+            </label>
+            <fieldset>
+              <legend>
+                판단 기준을 정할 때 가장 큰 책임을 져야 하는 주체는 누구라고
+                생각하나요?
+              </legend>
+              <label
+                ><input
+                  type="radio"
+                  name="responsibility"
+                  value="개발자와 기업"
+                  required
+                />
+                개발자와 기업</label
+              ><label
+                ><input
+                  type="radio"
+                  name="responsibility"
+                  value="정부와 법률"
+                />
+                정부와 법률</label
+              ><label
+                ><input
+                  type="radio"
+                  name="responsibility"
+                  value="자동차 사용자"
+                />
+                자동차 사용자</label
+              ><label
+                ><input
+                  type="radio"
+                  name="responsibility"
+                  value="사회적 합의"
+                />
+                시민이 참여한 사회적 합의</label
+              >
+            </fieldset>
+            <label
+              >인공지능의 윤리적 판단에서 가장 중요하다고 생각한 점<textarea
+                name="reflection"
+                rows="5"
+                required
+                placeholder="활동 전후에 생각이 달라졌다면 함께 적어 보세요."
+              ></textarea>
+            </label>
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+            <button id="submit-button" type="submit">활동지 제출하기</button>
+          </form>
+          <div id="submit-success" class="submit-success" tabindex="-1" hidden>
+            <strong>제출이 완료되었습니다.</strong>
+            <p>나의 선택과 근거가 저장되었습니다.</p>
+            <dl id="submit-summary"></dl>
+          </div>
+        </section>
+      </main>
+      <footer>외부 체험: Moral Machine · 활동지: 양지고 인공지능 기초</footer>
+    </div>
+  </body>
+</html>

@@ -208,6 +208,28 @@
           "objective": "Min-Max 알고리즘을 적용한 컴퓨터와 틱택토를 하며 상대가 있는 게임에서의 탐색 과정을 체험하고, 컴퓨터의 선택이 만들어지는 의사결정 트리를 직접 따라간다."
         }
       ]
+    },
+    {
+      "id": "ai-ethics",
+      "order": 6,
+      "title": "인공지능 윤리",
+      "description": "자율주행자동차가 피할 수 없는 사고 상황에서 어떤 판단을 내려야 하는지 모럴머신으로 체험하고, 인공지능의 결정 기준과 책임을 윤리적으로 성찰합니다.",
+      "path": "units/ai-ethics/",
+      "status": "published",
+      "active": true,
+      "children": [
+        {
+          "id": "ethics-moral-machine",
+          "order": 1,
+          "title": "자율주행자동차는 누구를 지켜야 할까?",
+          "path": "lessons/ethics-moral-machine/",
+          "duration": 25,
+          "difficulty": "보통",
+          "status": "published",
+          "active": true,
+          "objective": "모럴머신의 도덕적 딜레마를 체험하고, 자율주행 인공지능의 판단 기준과 책임 주체에 대한 자신의 근거를 설명한다."
+        }
+      ]
     }
   ]
 }

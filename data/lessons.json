@@ -186,6 +186,17 @@
       "duration": 25,
       "difficulty": "보통",
       "status": "published"
+    },
+    {
+      "id": "ethics-moral-machine",
+      "subject": "인공지능 기초",
+      "unit": "인공지능 윤리",
+      "order": 1,
+      "title": "자율주행자동차는 누구를 지켜야 할까?",
+      "path": "lessons/ethics-moral-machine/",
+      "duration": 25,
+      "difficulty": "보통",
+      "status": "published"
     }
   ]
 }
