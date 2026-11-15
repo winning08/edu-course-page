@@ -108,32 +108,12 @@
           >
         </section>
 
-        <section class="results-form" aria-labelledby="results-form-title">
-          <div>
-            <p class="step">2단계</p>
-            <h2 id="results-form-title">모럴머신 결과 기록하기</h2>
-            <p>
-              체험 결과에 나온 선호도와 중요 기준을 Google 설문에 기록하세요.
-              학급의 응답을 모으면 서로 어떤 가치를 중요하게 생각했는지 비교할
-              수 있습니다.
-            </p>
-            <small>Google 설문이 새 탭에서 열리며 이메일 입력이 필요합니다.</small>
-          </div>
-          <a
-            class="results-link"
-            href="https://docs.google.com/forms/d/e/1FAIpQLScDFeHDZme1rcofIBD5ROUXwImnl1CdXoGL7rMbT209OCD4lw/viewform"
-            target="_blank"
-            rel="noopener noreferrer"
-            >결과 설문 제출하기 ↗</a
-          >
-        </section>
-
         <section class="worksheet" aria-labelledby="worksheet-title">
-          <p class="step">3단계</p>
-          <h2 id="worksheet-title">나의 판단 기준을 활동지로 제출하기</h2>
+          <p class="step">2단계</p>
+          <h2 id="worksheet-title">결과와 생각을 한 번에 기록하기</h2>
           <p class="lead">
-            모럴머신 체험을 마친 뒤 작성하세요. 윤리적 판단은 결론보다 근거가
-            중요합니다.
+            모럴머신의 결과 화면을 보며 결과를 먼저 기록한 뒤, 나의 선택과
+            생각을 정리하세요. 모든 내용은 마지막에 한 번만 제출합니다.
           </p>
           <form id="ethics-form" novalidate>
             <div class="student-fields">
@@ -153,6 +133,29 @@
               ><input name="completed" type="checkbox" value="yes" required />
               모럴머신 활동을 직접 완료했습니다.</label
             >
+            <fieldset class="result-record">
+              <legend>체험 결과 기록</legend>
+              <label
+                >결과에서 가장 많이 보호한 대상<input
+                  name="result_saved"
+                  required
+                  placeholder="예: 보행자, 어린이, 많은 사람"
+              /></label>
+              <label
+                >결과에서 가장 많이 희생된 대상<input
+                  name="result_sacrificed"
+                  required
+                  placeholder="예: 탑승자, 동물, 적은 사람"
+              /></label>
+              <label class="full-width"
+                >결과에서 드러난 나의 판단 경향<textarea
+                  name="result_pattern"
+                  rows="3"
+                  required
+                  placeholder="예: 규칙 준수보다 더 많은 생명을 살리는 선택을 자주 했다."
+                ></textarea>
+              </label>
+            </fieldset>
             <label
               >가장 고민되었던 상황은 무엇이었나요?<textarea
                 name="hard_scenario"

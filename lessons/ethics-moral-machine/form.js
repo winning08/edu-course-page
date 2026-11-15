@@ -27,6 +27,9 @@ form.addEventListener("submit", async (event) => {
   const required = [
     "student_number",
     "student_name",
+    "result_saved",
+    "result_sacrificed",
+    "result_pattern",
     "hard_scenario",
     "choice",
     "criterion",
@@ -57,8 +60,8 @@ form.addEventListener("submit", async (event) => {
   const payload = {
     student_number: String(data.student_number).trim(),
     student_name: String(data.student_name).trim(),
-    question: `[모럴머신] 가장 고민된 상황: ${String(data.hard_scenario).trim()}\n나의 선택: ${String(data.choice).trim()}`,
-    reason: `중요 기준: ${String(data.criterion).trim()}\n이유: ${String(data.reason).trim()}`,
+    question: `[모럴머신 결과] 가장 많이 보호한 대상: ${String(data.result_saved).trim()}\n가장 많이 희생된 대상: ${String(data.result_sacrificed).trim()}\n판단 경향: ${String(data.result_pattern).trim()}\n\n[생각 정리] 가장 고민된 상황: ${String(data.hard_scenario).trim()}\n나의 선택: ${String(data.choice).trim()}`,
+    reason: `중요 기준: ${String(data.criterion).trim()}\n선택 이유: ${String(data.reason).trim()}`,
     followup: `[모럴머신] 책임 주체: ${String(data.responsibility).trim()}`,
     followup_reason: String(data.reflection).trim(),
   };
@@ -76,6 +79,9 @@ form.addEventListener("submit", async (event) => {
       throw new Error(result.message || "제출하지 못했습니다.");
     form.hidden = true;
     summary.replaceChildren();
+    addSummary("가장 많이 보호한 대상", String(data.result_saved).trim());
+    addSummary("가장 많이 희생된 대상", String(data.result_sacrificed).trim());
+    addSummary("나의 판단 경향", String(data.result_pattern).trim());
     addSummary("가장 고민된 상황", String(data.hard_scenario).trim());
     addSummary("나의 선택", String(data.choice).trim());
     addSummary("중요 기준", String(data.criterion).trim());
