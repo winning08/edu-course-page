@@ -53,6 +53,10 @@ test("제출 스크립트는 학번과 필수 응답을 검증하고 모럴머�
   assert.match(script, /result_saved/);
   assert.match(script, /result_sacrificed/);
   assert.match(script, /result_pattern/);
+  assert.match(
+    script,
+    /AKfycbxGsJyw_w11KylS-VkgKpmN9xTtrQ--zlwAJD3wNE2itdUogNCAYiK8y44Jh8zpYsI3\/exec/,
+  );
   assert.match(script, /textContent/);
   assert.doesNotMatch(script, /summary\.innerHTML/);
 });

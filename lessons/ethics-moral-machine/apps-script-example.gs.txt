@@ -1,0 +1,79 @@
+// 인공지능 윤리 활동지 제출용 Google Apps Script
+// 대상 스프레드시트:
+// https://docs.google.com/spreadsheets/d/17Zp3A2hNyNa_YGgQqJFXGzTQJq3QxXokc2HuPFfpgro/edit
+//
+// 1. 위 스프레드시트에서 확장 프로그램 → Apps Script를 엽니다.
+// 2. 이 코드를 붙여넣고 저장합니다.
+// 3. 배포 → 새 배포 → 웹 앱을 선택합니다.
+// 4. 실행 계정은 '나', 액세스 권한은 '모든 사용자'로 설정합니다.
+// 5. 발급된 /exec 주소를 활동지 form.js의 ENDPOINT에 넣습니다.
+
+const SPREADSHEET_ID = "17Zp3A2hNyNa_YGgQqJFXGzTQJq3QxXokc2HuPFfpgro";
+const SHEET_NAME = "인공지능 윤리";
+const HEADERS = [
+  "제출시각",
+  "학번",
+  "이름",
+  "모럴머신 결과와 선택",
+  "중요 기준과 이유",
+  "책임 주체",
+  "윤리적 판단에 대한 생각",
+];
+
+function doPost(e) {
+  const lock = LockService.getScriptLock();
+
+  try {
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    if (!sheet) sheet = spreadsheet.insertSheet(SHEET_NAME);
+    if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
+
+    const data = JSON.parse(e.postData.contents);
+    const studentNumber = String(data.student_number || "").trim();
+    const studentName = String(data.student_name || "").trim();
+    const question = String(data.question || "").trim();
+    const reason = String(data.reason || "").trim();
+    const followup = String(data.followup || "").trim();
+    const followupReason = String(data.followup_reason || "").trim();
+
+    if (
+      !/^\d{5}$/.test(studentNumber) ||
+      !studentName ||
+      !question ||
+      !reason ||
+      !followup ||
+      !followupReason
+    ) {
+      return jsonResponse(false, "필수 응답을 모두 입력해 주세요.");
+    }
+
+    lock.waitLock(10000);
+    sheet.appendRow([
+      new Date(),
+      safeCell(studentNumber),
+      safeCell(studentName),
+      safeCell(question),
+      safeCell(reason),
+      safeCell(followup),
+      safeCell(followupReason),
+    ]);
+
+    return jsonResponse(true, "제출이 완료되었습니다.");
+  } catch (error) {
+    return jsonResponse(false, "제출 중 오류가 발생했습니다.");
+  } finally {
+    if (lock.hasLock()) lock.releaseLock();
+  }
+}
+
+function safeCell(value) {
+  const text = String(value || "");
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
+}
+
+function jsonResponse(success, message) {
+  return ContentService.createTextOutput(
+    JSON.stringify({ success: success, message: message }),
+  ).setMimeType(ContentService.MimeType.JSON);
+}

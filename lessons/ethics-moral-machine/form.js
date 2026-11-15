@@ -1,5 +1,5 @@
 const ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbxGFBgTVZXRSQDt0iCehQVhacrYmHQLrQqH-HBV_uKTokIzJsrc27Y6lUpB3uHJ27exNw/exec";
+  "https://script.google.com/macros/s/AKfycbxGsJyw_w11KylS-VkgKpmN9xTtrQ--zlwAJD3wNE2itdUogNCAYiK8y44Jh8zpYsI3/exec";
 const form = document.querySelector("#ethics-form");
 const button = document.querySelector("#submit-button");
 const errorBox = document.querySelector("#form-error");
