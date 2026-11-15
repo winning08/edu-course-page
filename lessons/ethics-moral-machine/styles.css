@@ -213,6 +213,7 @@ fieldset label {
   display: block;
   padding: 0.9rem 1rem 1rem;
   background: #fbf8fc;
+  overflow-x: auto;
 }
 .scale-question legend {
   font-size: 0.95rem;
@@ -220,6 +221,7 @@ fieldset label {
 .scale-row {
   display: grid;
   grid-template-columns: minmax(92px, 1fr) repeat(5, 48px) minmax(92px, 1fr);
+  min-width: 520px;
   gap: 0.35rem;
   align-items: center;
   text-align: center;
@@ -353,19 +355,6 @@ footer {
   }
   .result-record .full-width {
     grid-column: auto;
-  }
-  .scale-row {
-    grid-template-columns: repeat(5, 1fr);
-  }
-  .scale-row > span {
-    grid-column: span 2;
-  }
-  .scale-row > span:last-child {
-    grid-column: 4 / span 2;
-    grid-row: 1;
-  }
-  .scale-row label {
-    grid-row: 2;
   }
   .activity {
     display: grid;

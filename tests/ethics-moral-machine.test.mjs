@@ -49,6 +49,17 @@ test("활동지는 외부 모럴머신 체험과 윤리 성찰 제출 흐름을 
   }
   assert.match(html, /중요하지 않음/);
   assert.match(html, /매우 중요함/);
+  assert.match(html, /7\. 성별 선호도/);
+  assert.match(html, /<span>남성<\/span>/);
+  assert.match(html, /<span>여성<\/span>/);
+  assert.match(html, /<span>인간<\/span>/);
+  assert.match(html, /<span>애완동물<\/span>/);
+  assert.match(html, /<span>젊은이<\/span>/);
+  assert.match(html, /<span>노인<\/span>/);
+  assert.match(html, /<span>건강인<\/span>/);
+  assert.match(html, /<span>비만인<\/span>/);
+  assert.match(html, /<span>높음<\/span>/);
+  assert.match(html, /<span>낮음<\/span>/);
   assert.equal((html.match(/class="scale-question"/g) ?? []).length, 9);
   assert.equal((html.match(/type="radio" name="preference_/g) ?? []).length, 45);
   assert.match(html, /name="criterion_1"/);

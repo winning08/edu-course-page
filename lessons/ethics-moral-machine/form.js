@@ -68,15 +68,15 @@ form.addEventListener("submit", async (event) => {
   }
 
   const preferences = [
-    ["희생자 숫자", data.preference_count],
-    ["승객 보호", data.preference_passenger],
-    ["법규 준수 여부", data.preference_law],
-    ["개입 회피", data.preference_inaction],
-    ["성별", data.preference_gender],
-    ["종", data.preference_species],
-    ["연령", data.preference_age],
-    ["체력", data.preference_fitness],
-    ["사회적 가치관", data.preference_social],
+    ["희생자 숫자(1 중요하지 않음↔5 매우 중요함)", data.preference_count],
+    ["승객 보호(1 중요하지 않음↔5 매우 중요함)", data.preference_passenger],
+    ["법규 준수(1 중요하지 않음↔5 매우 중요함)", data.preference_law],
+    ["개입 회피(1 중요하지 않음↔5 매우 중요함)", data.preference_inaction],
+    ["성별(1 남성↔5 여성)", data.preference_gender],
+    ["종(1 인간↔5 애완동물)", data.preference_species],
+    ["연령(1 젊은이↔5 노인)", data.preference_age],
+    ["체력(1 건강인↔5 비만인)", data.preference_fitness],
+    ["사회적 가치관(1 높음↔5 낮음)", data.preference_social],
   ].map(([label, value]) => `${label}: ${value}`).join(" / ");
 
   const payload = {
