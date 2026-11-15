@@ -10,7 +10,11 @@ test("인공지능의 사회적 영향 단원과 모럴머신 활동이 등록�
   );
   const group = groups.groups.find(({ id }) => id === "ai-ethics");
   assert.ok(group);
-  assert.equal(group.title, "인공지능의 사회적 영향");
+  assert.equal(
+    group.title,
+    "인공지능 윤리 - 자율주행자동차는 누구를 지켜야 할까?",
+  );
+  assert.equal(group.path, "lessons/ethics-moral-machine/");
   assert.equal(group.active, true);
   assert.deepEqual(
     group.children.map(({ id }) => id),
