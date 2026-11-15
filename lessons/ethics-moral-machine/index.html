@@ -110,7 +110,7 @@
 
         <section class="worksheet" aria-labelledby="worksheet-title">
           <p class="step">2단계</p>
-          <h2 id="worksheet-title">결과와 생각을 한 번에 기록하기</h2>
+          <h2 id="worksheet-title">결과를 바탕으로 생각 기록하기</h2>
           <p class="lead">
             모럴머신의 결과 화면을 보며 결과를 먼저 기록한 뒤, 나의 선택과
             생각을 정리하세요. 모든 내용은 마지막에 한 번만 제출합니다.
@@ -129,111 +129,51 @@
                 >이름<input name="student_name" autocomplete="name" required
               /></label>
             </div>
-            <label class="completed"
-              ><input name="completed" type="checkbox" value="yes" required />
-              모럴머신 활동을 직접 완료했습니다.</label
-            >
             <fieldset class="result-record">
               <legend>체험 결과 기록</legend>
               <label
-                >결과에서 가장 많이 보호한 대상<input
+                >가장 많이 살린 사람<input
                   name="result_saved"
                   required
-                  placeholder="예: 보행자, 어린이, 많은 사람"
+                  placeholder="결과 화면에 나온 대상을 적으세요."
               /></label>
               <label
-                >결과에서 가장 많이 희생된 대상<input
+                >가장 많이 죽인 사람<input
                   name="result_sacrificed"
                   required
-                  placeholder="예: 탑승자, 동물, 적은 사람"
+                  placeholder="결과 화면에 나온 대상을 적으세요."
               /></label>
-              <label class="full-width"
-                >결과에서 드러난 나의 판단 경향<textarea
-                  name="result_pattern"
-                  rows="3"
-                  required
-                  placeholder="예: 규칙 준수보다 더 많은 생명을 살리는 선택을 자주 했다."
-                ></textarea>
-              </label>
             </fieldset>
-            <label
-              >가장 고민되었던 상황은 무엇이었나요?<textarea
-                name="hard_scenario"
-                rows="4"
-                required
-                placeholder="예: 승객을 지키면 여러 보행자가 위험해지는 상황"
-              ></textarea>
-            </label>
-            <label
-              >그 상황에서 어떤 결과를 선택했나요?<textarea
-                name="choice"
-                rows="3"
-                required
-              ></textarea>
-            </label>
-            <label
-              >가장 중요하게 고려한 기준<select name="criterion" required>
-                <option value="">선택하세요</option>
-                <option>더 많은 생명 보호</option>
-                <option>교통법규 준수</option>
-                <option>승객 보호</option>
-                <option>보행자 보호</option>
-                <option>어린이·노약자 등 취약한 사람 보호</option>
-                <option>개인의 특성으로 차별하지 않기</option>
-                <option>기타</option>
-              </select></label
-            >
-            <label
-              >그 기준을 중요하게 생각한 이유<textarea
-                name="reason"
-                rows="4"
-                required
-              ></textarea>
-            </label>
-            <fieldset>
-              <legend>
-                판단 기준을 정할 때 가장 큰 책임을 져야 하는 주체는 누구라고
-                생각하나요?
-              </legend>
-              <label
-                ><input
-                  type="radio"
-                  name="responsibility"
-                  value="개발자와 기업"
-                  required
-                />
-                개발자와 기업</label
-              ><label
-                ><input
-                  type="radio"
-                  name="responsibility"
-                  value="정부와 법률"
-                />
-                정부와 법률</label
-              ><label
-                ><input
-                  type="radio"
-                  name="responsibility"
-                  value="자동차 사용자"
-                />
-                자동차 사용자</label
-              ><label
-                ><input
-                  type="radio"
-                  name="responsibility"
-                  value="사회적 합의"
-                />
-                시민이 참여한 사회적 합의</label
-              >
+            <fieldset class="preference-record">
+              <legend>나의 윤리적 판단 선호도</legend>
+              <p class="scale-help">각 항목을 1(낮음)부터 5(높음)까지 선택하세요.</p>
+              <div class="preference-grid">
+                <label>희생자 숫자의 중요도<select name="preference_count" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                <label>승객 보호 선호도<select name="preference_passenger" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                <label>법규 준수 여부의 선호도<select name="preference_law" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                <label>개입에 대한 회피 선호도<select name="preference_inaction" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                <label>성별 선호도<select name="preference_gender" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                <label>종에 대한 선호도<select name="preference_species" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                <label>연령 선호도<select name="preference_age" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                <label>체력 선호도<select name="preference_fitness" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+                <label>사회적 가치관 선호도<select name="preference_social" required><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+              </div>
             </fieldset>
-            <label
-              >인공지능의 윤리적 판단에서 가장 중요하다고 생각한 점<textarea
-                name="reflection"
-                rows="5"
-                required
-                placeholder="활동 전후에 생각이 달라졌다면 함께 적어 보세요."
-              ></textarea>
-            </label>
+            <fieldset class="criteria-record">
+              <legend>가장 중요한 기준과 그 이유</legend>
+              <div class="criterion-row"><label>1순위<select name="criterion_1" required><option value="">기준 선택</option><option>희생자 숫자</option><option>승객 보호</option><option>법규 준수 여부</option><option>개입 회피</option><option>성별</option><option>종</option><option>연령</option><option>체력</option><option>사회적 가치관</option></select></label><label>1순위로 생각한 이유<textarea name="criterion_reason_1" rows="3" required></textarea></label></div>
+              <div class="criterion-row"><label>2순위<select name="criterion_2" required><option value="">기준 선택</option><option>희생자 숫자</option><option>승객 보호</option><option>법규 준수 여부</option><option>개입 회피</option><option>성별</option><option>종</option><option>연령</option><option>체력</option><option>사회적 가치관</option></select></label><label>2순위로 생각한 이유<textarea name="criterion_reason_2" rows="3" required></textarea></label></div>
+              <div class="criterion-row"><label>3순위<select name="criterion_3" required><option value="">기준 선택</option><option>희생자 숫자</option><option>승객 보호</option><option>법규 준수 여부</option><option>개입 회피</option><option>성별</option><option>종</option><option>연령</option><option>체력</option><option>사회적 가치관</option></select></label><label>3순위로 생각한 이유<textarea name="criterion_reason_3" rows="3" required></textarea></label></div>
+            </fieldset>
+            <fieldset class="least-criterion-record">
+              <legend>② 자신의 판단에 가장 적게 영향을 미친 기준</legend>
+              <label>가장 적게 영향을 미친 기준<select name="criterion_least" required><option value="">기준 선택</option><option>희생자 숫자</option><option>승객 보호</option><option>법규 준수 여부</option><option>개입 회피</option><option>성별</option><option>종</option><option>연령</option><option>체력</option><option>사회적 가치관</option></select></label>
+              <label>그 이유는 무엇이라고 생각하나요?<textarea name="criterion_least_reason" rows="3" required></textarea></label>
+            </fieldset>
+            <div class="scenario-record">
+              <label>가장 고민되었던 상황<textarea name="hard_scenario" rows="4" required placeholder="어떤 대상들 사이에서 선택해야 했는지 적으세요."></textarea></label>
+              <label>그 상황에서 선택한 결과<textarea name="choice" rows="4" required placeholder="어느 쪽을 살리기로 선택했는지 적으세요."></textarea></label>
+            </div>
             <p id="form-error" class="form-error" role="alert" hidden></p>
             <button id="submit-button" type="submit">활동지 제출하기</button>
           </form>

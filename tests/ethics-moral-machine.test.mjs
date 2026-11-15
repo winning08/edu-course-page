@@ -30,14 +30,32 @@ test("활동지는 외부 모럴머신 체험과 윤리 성찰 제출 흐름을 
   assert.match(html, /https:\/\/www\.moralmachine\.net\//);
   assert.doesNotMatch(html, /docs\.google\.com\/forms/);
   assert.match(html, /체험 결과 기록/);
-  assert.match(html, /결과와 생각을 한 번에 기록하기/);
+  assert.match(html, /결과를 바탕으로 생각 기록하기/);
   assert.match(html, /name="result_saved"/);
   assert.match(html, /name="result_sacrificed"/);
-  assert.match(html, /name="result_pattern"/);
+  assert.doesNotMatch(html, /name="completed"/);
+  for (const field of [
+    "preference_count",
+    "preference_passenger",
+    "preference_law",
+    "preference_inaction",
+    "preference_gender",
+    "preference_species",
+    "preference_age",
+    "preference_fitness",
+    "preference_social",
+  ]) {
+    assert.match(html, new RegExp(`name="${field}"`));
+  }
+  assert.match(html, /1\(낮음\)부터 5\(높음\)/);
+  assert.match(html, /name="criterion_1"/);
+  assert.match(html, /name="criterion_2"/);
+  assert.match(html, /name="criterion_3"/);
+  assert.match(html, /name="criterion_least"/);
+  assert.match(html, /name="criterion_least_reason"/);
   assert.match(html, /정답을 맞히는 활동이 아닙니다/);
   assert.match(html, /가장 고민되었던 상황/);
-  assert.match(html, /가장 중요하게 고려한 기준/);
-  assert.match(html, /가장 큰 책임을 져야 하는 주체/);
+  assert.match(html, /그 상황에서 선택한 결과/);
   assert.match(html, /id="ethics-form"/);
   assert.match(html, /data-guard-group="ai-ethics"/);
 });
@@ -48,11 +66,12 @@ test("제출 스크립트는 학번과 필수 응답을 검증하고 모럴머�
     "utf8",
   );
   assert.match(script, /\^\\d\{5\}\$/);
-  assert.match(script, /\[모럴머신\]/);
-  assert.match(script, /form\.elements\.completed\.checked/);
+  assert.match(script, /\[모럴머신 결과\]/);
+  assert.doesNotMatch(script, /form\.elements\.completed/);
   assert.match(script, /result_saved/);
   assert.match(script, /result_sacrificed/);
-  assert.match(script, /result_pattern/);
+  assert.match(script, /criterion_least_reason/);
+  assert.match(script, /new Set\(rankedCriteria\)/);
   assert.match(
     script,
     /AKfycbxGsJyw_w11KylS-VkgKpmN9xTtrQ--zlwAJD3wNE2itdUogNCAYiK8y44Jh8zpYsI3\/exec/,

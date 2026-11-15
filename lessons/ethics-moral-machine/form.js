@@ -29,13 +29,25 @@ form.addEventListener("submit", async (event) => {
     "student_name",
     "result_saved",
     "result_sacrificed",
-    "result_pattern",
+    "preference_count",
+    "preference_passenger",
+    "preference_law",
+    "preference_inaction",
+    "preference_gender",
+    "preference_species",
+    "preference_age",
+    "preference_fitness",
+    "preference_social",
+    "criterion_1",
+    "criterion_reason_1",
+    "criterion_2",
+    "criterion_reason_2",
+    "criterion_3",
+    "criterion_reason_3",
+    "criterion_least",
+    "criterion_least_reason",
     "hard_scenario",
     "choice",
-    "criterion",
-    "reason",
-    "responsibility",
-    "reflection",
   ];
   const missing = required.find((key) => !String(data[key] || "").trim());
   if (missing) {
@@ -49,21 +61,31 @@ form.addEventListener("submit", async (event) => {
     );
     return;
   }
-  if (!form.elements.completed.checked) {
-    showError(
-      "모럴머신 활동을 마쳤는지 확인해 주세요.",
-      form.elements.completed,
-    );
+  const rankedCriteria = [data.criterion_1, data.criterion_2, data.criterion_3];
+  if (new Set(rankedCriteria).size !== rankedCriteria.length) {
+    showError("1·2·3순위는 서로 다른 기준으로 선택하세요.", form.elements.criterion_1);
     return;
   }
+
+  const preferences = [
+    ["희생자 숫자", data.preference_count],
+    ["승객 보호", data.preference_passenger],
+    ["법규 준수 여부", data.preference_law],
+    ["개입 회피", data.preference_inaction],
+    ["성별", data.preference_gender],
+    ["종", data.preference_species],
+    ["연령", data.preference_age],
+    ["체력", data.preference_fitness],
+    ["사회적 가치관", data.preference_social],
+  ].map(([label, value]) => `${label}: ${value}`).join(" / ");
 
   const payload = {
     student_number: String(data.student_number).trim(),
     student_name: String(data.student_name).trim(),
-    question: `[모럴머신 결과] 가장 많이 보호한 대상: ${String(data.result_saved).trim()}\n가장 많이 희생된 대상: ${String(data.result_sacrificed).trim()}\n판단 경향: ${String(data.result_pattern).trim()}\n\n[생각 정리] 가장 고민된 상황: ${String(data.hard_scenario).trim()}\n나의 선택: ${String(data.choice).trim()}`,
-    reason: `중요 기준: ${String(data.criterion).trim()}\n선택 이유: ${String(data.reason).trim()}`,
-    followup: `[모럴머신] 책임 주체: ${String(data.responsibility).trim()}`,
-    followup_reason: String(data.reflection).trim(),
+    question: `[모럴머신 결과] 가장 많이 살린 사람: ${String(data.result_saved).trim()}\n가장 많이 죽인 사람: ${String(data.result_sacrificed).trim()}\n\n[윤리적 판단 선호도 1~5] ${preferences}`,
+    reason: `[중요 기준] 1순위 ${String(data.criterion_1).trim()}: ${String(data.criterion_reason_1).trim()}\n2순위 ${String(data.criterion_2).trim()}: ${String(data.criterion_reason_2).trim()}\n3순위 ${String(data.criterion_3).trim()}: ${String(data.criterion_reason_3).trim()}\n\n[가장 적게 영향을 미친 기준] ${String(data.criterion_least).trim()}: ${String(data.criterion_least_reason).trim()}`,
+    followup: `[가장 고민된 상황] ${String(data.hard_scenario).trim()}`,
+    followup_reason: `[선택한 결과] ${String(data.choice).trim()}`,
   };
 
   button.disabled = true;
@@ -79,13 +101,15 @@ form.addEventListener("submit", async (event) => {
       throw new Error(result.message || "제출하지 못했습니다.");
     form.hidden = true;
     summary.replaceChildren();
-    addSummary("가장 많이 보호한 대상", String(data.result_saved).trim());
-    addSummary("가장 많이 희생된 대상", String(data.result_sacrificed).trim());
-    addSummary("나의 판단 경향", String(data.result_pattern).trim());
+    addSummary("가장 많이 살린 사람", String(data.result_saved).trim());
+    addSummary("가장 많이 죽인 사람", String(data.result_sacrificed).trim());
+    addSummary("윤리적 판단 선호도", preferences);
+    addSummary("중요 기준 1순위", String(data.criterion_1).trim());
+    addSummary("중요 기준 2순위", String(data.criterion_2).trim());
+    addSummary("중요 기준 3순위", String(data.criterion_3).trim());
+    addSummary("가장 적게 영향을 미친 기준", String(data.criterion_least).trim());
     addSummary("가장 고민된 상황", String(data.hard_scenario).trim());
-    addSummary("나의 선택", String(data.choice).trim());
-    addSummary("중요 기준", String(data.criterion).trim());
-    addSummary("책임 주체", String(data.responsibility).trim());
+    addSummary("선택한 결과", String(data.choice).trim());
     successBox.hidden = false;
     successBox.focus();
   } catch (submitError) {
