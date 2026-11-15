@@ -105,7 +105,7 @@ test("제출 스크립트는 학번과 필수 응답을 검증하고 모럴머�
   assert.match(script, /new Set\(rankedCriteria\)/);
   assert.match(
     script,
-    /AKfycbxGsJyw_w11KylS-VkgKpmN9xTtrQ--zlwAJD3wNE2itdUogNCAYiK8y44Jh8zpYsI3\/exec/,
+    /AKfycby0Qm475qCXoJcoY8nHEdGw5qo89acXw7Sf_vhKHbU_svmTopvUuDizH9xl1xjbsIir\/exec/,
   );
   assert.match(script, /textContent/);
   assert.doesNotMatch(script, /summary\.innerHTML/);
