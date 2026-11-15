@@ -194,6 +194,10 @@ fieldset label {
 .criteria-record {
   display: block;
 }
+.result-record .preference-record {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
 .scale-help {
   margin: 0 0 0.9rem;
   color: var(--muted);
@@ -211,6 +215,8 @@ fieldset label {
 }
 .scale-question {
   display: block;
+  min-width: 0;
+  min-inline-size: 0;
   padding: 0.9rem 1rem 1rem;
   background: #fbf8fc;
   overflow-x: auto;
