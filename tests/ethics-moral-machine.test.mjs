@@ -69,8 +69,10 @@ test("활동지는 외부 모럴머신 체험과 윤리 성찰 제출 흐름을 
   assert.match(html, /name="criterion_least_reason"/);
   assert.doesNotMatch(html, /② 자신의 판단에/);
   assert.match(html, /정답을 맞히는 활동이 아닙니다/);
-  assert.match(html, /가장 고민되었던 상황/);
-  assert.match(html, /그 상황에서 선택한 결과/);
+  assert.match(html, /선택하기 어려웠던 상황의 두 선택지/);
+  assert.match(html, /두 선택지 사이에서 고민했던 이유/);
+  assert.match(html, /name="dilemma_reason"/);
+  assert.match(html, /최종적으로 선택한 결과/);
   assert.match(html, /id="ethics-form"/);
   assert.match(html, /data-guard-group="ai-ethics"/);
 });
@@ -86,6 +88,7 @@ test("제출 스크립트는 학번과 필수 응답을 검증하고 모럴머�
   assert.match(script, /result_saved/);
   assert.match(script, /result_sacrificed/);
   assert.match(script, /criterion_least_reason/);
+  assert.match(script, /dilemma_reason/);
   assert.match(script, /new Set\(rankedCriteria\)/);
   assert.match(
     script,

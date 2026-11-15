@@ -47,6 +47,7 @@ form.addEventListener("submit", async (event) => {
     "criterion_least",
     "criterion_least_reason",
     "hard_scenario",
+    "dilemma_reason",
     "choice",
   ];
   const missing = required.find((key) => !String(data[key] || "").trim());
@@ -84,7 +85,7 @@ form.addEventListener("submit", async (event) => {
     student_name: String(data.student_name).trim(),
     question: `[모럴머신 결과] 가장 많이 살린 사람: ${String(data.result_saved).trim()}\n가장 많이 죽인 사람: ${String(data.result_sacrificed).trim()}\n\n[윤리적 판단 선호도 1~5] ${preferences}`,
     reason: `[중요 기준] 1순위 ${String(data.criterion_1).trim()}: ${String(data.criterion_reason_1).trim()}\n2순위 ${String(data.criterion_2).trim()}: ${String(data.criterion_reason_2).trim()}\n3순위 ${String(data.criterion_3).trim()}: ${String(data.criterion_reason_3).trim()}\n\n[가장 적게 영향을 미친 기준] ${String(data.criterion_least).trim()}: ${String(data.criterion_least_reason).trim()}`,
-    followup: `[가장 고민된 상황] ${String(data.hard_scenario).trim()}`,
+    followup: `[선택하기 어려웠던 상황의 두 선택지] ${String(data.hard_scenario).trim()}\n[두 선택지 사이에서 고민했던 이유] ${String(data.dilemma_reason).trim()}`,
     followup_reason: `[선택한 결과] ${String(data.choice).trim()}`,
   };
 
@@ -109,6 +110,7 @@ form.addEventListener("submit", async (event) => {
     addSummary("중요 기준 3순위", String(data.criterion_3).trim());
     addSummary("가장 적게 영향을 미친 기준", String(data.criterion_least).trim());
     addSummary("가장 고민된 상황", String(data.hard_scenario).trim());
+    addSummary("고민했던 이유", String(data.dilemma_reason).trim());
     addSummary("선택한 결과", String(data.choice).trim());
     successBox.hidden = false;
     successBox.focus();

@@ -276,6 +276,9 @@ fieldset label {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.8rem;
 }
+.scenario-record .full-width {
+  grid-column: 1 / -1;
+}
 .least-criterion-record {
   grid-template-columns: minmax(180px, 0.35fr) 1fr;
 }
@@ -354,6 +357,9 @@ footer {
     grid-template-columns: 1fr;
   }
   .result-record .full-width {
+    grid-column: auto;
+  }
+  .scenario-record .full-width {
     grid-column: auto;
   }
   .activity {
