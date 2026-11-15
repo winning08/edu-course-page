@@ -190,7 +190,7 @@
     {
       "id": "ethics-moral-machine",
       "subject": "인공지능 기초",
-      "unit": "인공지능 윤리",
+      "unit": "인공지능의 사회적 영향",
       "order": 1,
       "title": "자율주행자동차는 누구를 지켜야 할까?",
       "path": "lessons/ethics-moral-machine/",

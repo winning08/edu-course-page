@@ -39,7 +39,7 @@ test("루트 허브에는 인공지능의 이해와 인공지능과 학습 단�
   assert.ok(understandingHeading < activity01);
   assert.ok(activity01 < activity03);
   assert.match(html, /id="machine-learning-unit-title">\s*인공지능과 학습/);
-  assert.match(html, /id="ethics-unit-title">\s*인공지능 윤리/);
+  assert.match(html, /id="ethics-unit-title">\s*인공지능의 사회적 영향/);
   assert.match(html, /data-group-card="ai-ethics"/);
 });
 

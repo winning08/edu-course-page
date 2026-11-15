@@ -212,7 +212,7 @@
     {
       "id": "ai-ethics",
       "order": 6,
-      "title": "인공지능 윤리",
+      "title": "인공지능의 사회적 영향",
       "description": "자율주행자동차가 피할 수 없는 사고 상황에서 어떤 판단을 내려야 하는지 모럴머신으로 체험하고, 인공지능의 결정 기준과 책임을 윤리적으로 성찰합니다.",
       "path": "units/ai-ethics/",
       "status": "published",
