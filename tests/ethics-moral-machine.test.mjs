@@ -91,6 +91,9 @@ test("제출 스크립트는 학번과 필수 응답을 검증하고 모럴머�
   assert.match(script, /result_saved/);
   assert.match(script, /result_sacrificed/);
   assert.match(script, /criterion_least_reason/);
+  assert.match(script, /result_saved: String\(data\.result_saved\)/);
+  assert.match(script, /preference_social: String\(data\.preference_social\)/);
+  assert.match(script, /hard_scenario: String\(data\.hard_scenario\)/);
   assert.match(script, /dilemma_reason/);
   assert.match(script, /payload\.motivation = payload\.question/);
   assert.match(script, /payload\.usage_improvement = payload\.reason/);
@@ -106,4 +109,21 @@ test("제출 스크립트는 학번과 필수 응답을 검증하고 모럴머�
   );
   assert.match(script, /textContent/);
   assert.doesNotMatch(script, /summary\.innerHTML/);
+});
+
+test("윤리 전용 Apps Script는 각 응답을 스프레드시트의 개별 열에 저장한다", async () => {
+  const script = await readFile(
+    new URL(
+      "lessons/ethics-moral-machine/apps-script-example.gs.txt",
+      repoRoot,
+    ),
+    "utf8",
+  );
+  assert.match(script, /const SHEET_NAME = "인공지능 윤리"/);
+  assert.match(script, /"가장 많이 살린 사람"/);
+  assert.match(script, /"희생자 숫자 중요도"/);
+  assert.match(script, /"중요 기준 1순위"/);
+  assert.match(script, /"가장 선택하기 어려웠던 상황"/);
+  assert.match(script, /"dilemma_reason"/);
+  assert.match(script, /\.\.\.answers\.map\(safeCell\)/);
 });
