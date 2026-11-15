@@ -334,16 +334,23 @@ button:disabled {
 }
 .submit-success dl {
   display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.45rem 0.8rem;
+  grid-template-columns: minmax(180px, 0.35fr) 1fr;
+  gap: 0;
+  margin-bottom: 0;
+  border-top: 1px solid #b9dccc;
 }
 .submit-success dt {
   color: var(--accent);
   font-weight: 800;
+  padding: 0.75rem;
+  border-bottom: 1px solid #cfe6db;
 }
 .submit-success dd {
   margin: 0;
+  padding: 0.75rem;
   white-space: pre-wrap;
+  border-bottom: 1px solid #cfe6db;
+  background: rgba(255, 255, 255, 0.55);
 }
 footer {
   padding: 2rem;

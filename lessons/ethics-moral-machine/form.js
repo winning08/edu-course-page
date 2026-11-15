@@ -110,13 +110,21 @@ form.addEventListener("submit", async (event) => {
     summary.replaceChildren();
     addSummary("가장 많이 살린 사람", String(data.result_saved).trim());
     addSummary("가장 많이 죽인 사람", String(data.result_sacrificed).trim());
-    addSummary("윤리적 판단 선호도", preferences);
-    addSummary("중요 기준 1순위", String(data.criterion_1).trim());
-    addSummary("중요 기준 2순위", String(data.criterion_2).trim());
-    addSummary("중요 기준 3순위", String(data.criterion_3).trim());
-    addSummary("가장 적게 영향을 미친 기준", String(data.criterion_least).trim());
-    addSummary("가장 고민된 상황", String(data.hard_scenario).trim());
-    addSummary("고민했던 이유", String(data.dilemma_reason).trim());
+    addSummary("희생자 숫자의 중요도", `${data.preference_count} / 5`);
+    addSummary("승객 보호 선호도", `${data.preference_passenger} / 5`);
+    addSummary("법규 준수 여부의 선호도", `${data.preference_law} / 5`);
+    addSummary("개입 회피 선호도", `${data.preference_inaction} / 5`);
+    addSummary("성별 선호도", `${data.preference_gender} / 5 (1 남성 ↔ 5 여성)`);
+    addSummary("종에 대한 선호도", `${data.preference_species} / 5 (1 인간 ↔ 5 애완동물)`);
+    addSummary("연령 선호도", `${data.preference_age} / 5 (1 젊은이 ↔ 5 노인)`);
+    addSummary("체력 선호도", `${data.preference_fitness} / 5 (1 건강인 ↔ 5 비만인)`);
+    addSummary("사회적 가치관 선호도", `${data.preference_social} / 5 (1 높음 ↔ 5 낮음)`);
+    addSummary("중요 기준 1순위", `${String(data.criterion_1).trim()}\n${String(data.criterion_reason_1).trim()}`);
+    addSummary("중요 기준 2순위", `${String(data.criterion_2).trim()}\n${String(data.criterion_reason_2).trim()}`);
+    addSummary("중요 기준 3순위", `${String(data.criterion_3).trim()}\n${String(data.criterion_reason_3).trim()}`);
+    addSummary("가장 적게 영향을 미친 기준", `${String(data.criterion_least).trim()}\n${String(data.criterion_least_reason).trim()}`);
+    addSummary("선택하기 어려웠던 상황", String(data.hard_scenario).trim());
+    addSummary("두 선택지 사이에서 고민한 이유", String(data.dilemma_reason).trim());
     successBox.hidden = false;
     successBox.focus();
   } catch (submitError) {

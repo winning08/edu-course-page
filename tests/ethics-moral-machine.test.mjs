@@ -93,6 +93,10 @@ test("제출 스크립트는 학번과 필수 응답을 검증하고 모럴머�
   assert.match(script, /payload\.motivation = payload\.question/);
   assert.match(script, /payload\.usage_improvement = payload\.reason/);
   assert.match(script, /payload\.code =/);
+  assert.match(script, /희생자 숫자의 중요도/);
+  assert.match(script, /1 남성 ↔ 5 여성/);
+  assert.match(script, /criterion_reason_1/);
+  assert.match(script, /criterion_least_reason/);
   assert.match(script, /new Set\(rankedCriteria\)/);
   assert.match(
     script,
