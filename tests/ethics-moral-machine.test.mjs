@@ -68,8 +68,12 @@ test("활동지는 외부 모럴머신 체험과 윤리 성찰 제출 흐름을 
   assert.match(html, /name="criterion_3"/);
   assert.match(html, /name="criterion_least"/);
   assert.match(html, /name="criterion_least_reason"/);
-  assert.match(html, /<legend>가장 적게 영향을 미친 기준<\/legend>/);
-  assert.doesNotMatch(html, /자신의 판단에 가장 적게 영향을 미친 기준/);
+  assert.match(html, /<legend>나의 판단에 가장 큰 영향을 미친 기준<\/legend>/);
+  assert.match(html, /<legend>나의 판단에 가장 적게 영향을 미친 기준<\/legend>/);
+  assert.equal(
+    (html.match(/>나의 판단에 가장 적게 영향을 미친 기준</g) ?? []).length,
+    1,
+  );
   assert.doesNotMatch(html, /② 자신의 판단에/);
   assert.match(html, /정답을 맞히는 활동이 아닙니다/);
   assert.match(html, /가장 선택하기 어려웠던 상황은 무엇인가요\?/);
