@@ -293,6 +293,11 @@ fieldset label {
   gap: 0.4rem;
   font-weight: 750;
 }
+.least-criterion-record > select {
+  width: min(100%, 240px);
+  justify-self: start;
+  align-self: start;
+}
 input:focus,
 textarea:focus,
 select:focus,
