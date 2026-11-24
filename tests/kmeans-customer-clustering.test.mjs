@@ -22,7 +22,8 @@ test("활동은 K-means 체험과 Orange3 활동지 흐름을 제공한다", asy
   for (const k of [2, 3, 4, 5, 6]) assert.match(html, new RegExp(`name="silhouette_${k}"`));
   assert.match(html, /name="final_k"/);
   assert.match(html, /id="cluster-cards"/);
-  assert.match(html, /인쇄·PDF 저장/);
+  assert.match(html, /구글 시트에 저장되었습니다/);
+  assert.doesNotMatch(html, /인쇄·PDF 저장/);
   assert.match(html, /data-guard-group="machine-learning-clustering"/);
   assert.match(html, /data-guard-lesson="kmeans-customer-clustering"/);
 });
