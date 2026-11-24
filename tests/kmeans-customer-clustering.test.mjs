@@ -33,7 +33,7 @@ test("선택한 K에 맞춰 군집 분석 카드를 만들고 결과를 안전�
   assert.match(js, /index<=Number\(selected\)/);
   assert.match(js, /cluster_\$\{index\}_name/);
   assert.match(js, /cluster_\$\{index\}_features/);
-  assert.match(js, /cluster_\$\{index\}_evidence/);
+  assert.doesNotMatch(js, /name="cluster_\$\{index\}_evidence"/);
   assert.match(js, /cluster_\$\{index\}_strategy/);
   assert.match(js, /textContent/);
   assert.doesNotMatch(js, /resultContent\.innerHTML/);
