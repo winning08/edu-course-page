@@ -1,5 +1,5 @@
 const COLORS=["#1d72b8","#d94f4f","#2e9d69","#8b5cc7","#e48a1f","#247a85"];
-const ENDPOINT="https://script.google.com/macros/s/AKfycbwD1lDIJcNkuC1Pgv9CA53n9LqUKPW_VrGhWz4gkb0-0IMXVFPNA7PeYZ8X_jJSwV1r/exec";
+const ENDPOINT="https://script.google.com/macros/s/AKfycbx1ZkNr1bOKPpc7GB5L-aPU2Zv6_xaCv2g_BDcRW6nVAIZwUIWY28rr4m3gevR-MYTV/exec";
 const POINTS=[[12,76],[18,69],[22,82],[27,72],[31,87],[58,48],[64,53],[69,43],[73,57],[77,49],[72,16],[79,25],[84,20],[88,31],[92,14],[43,22],[48,29],[52,18],[47,36],[55,31],[38,68],[44,75],[49,62],[53,71]];
 const chart=document.querySelector("#cluster-chart"),pointLayer=document.querySelector("#point-layer"),centroidLayer=document.querySelector("#centroid-layer"),gridLayer=document.querySelector("#grid-layer");
 const kSelect=document.querySelector("#k-select"),iterationLabel=document.querySelector("#iteration-label"),iterationHelp=document.querySelector("#iteration-help");
