@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>document.documentElement.setAttribute("data-guard", "pending");</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="K-means를 체험하고 Orange3로 쇼핑몰 고객 군집을 분석하는 활동지" />
+    <title>쇼핑몰 고객 군집화</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../../assets/fonts.css">
+    <link rel="stylesheet" href="../../assets/guard.css">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="../../assets/group-guard.js"></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body data-guard-scope="page" data-guard-group="machine-learning-clustering" data-guard-lesson="kmeans-customer-clustering">
+    <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
+    <div id="guard-blocked" class="guard-panel">
+      <h1>아직 준비 중인 활동입니다</h1>
+      <a class="guard-home-link" href="../../">전체 활동지 홈으로 돌아가기</a>
+    </div>
+    <div id="guard-content">
+      <header class="topbar"><a href="../../units/machine-learning-clustering/">군집 활동 목록</a><strong>활동 01 · 쇼핑몰 고객 군집화</strong></header>
+      <main>
+        <section class="hero">
+          <p class="eyebrow">K-MEANS × ORANGE3</p>
+          <h1>쇼핑몰 고객 군집화</h1>
+          <p>여러분은 쇼핑몰의 마케팅 담당자입니다. 고객 데이터를 분석하여 비슷한 특성을 가진 고객들을 하나의 집단으로 묶고, 각 집단의 특성에 맞는 마케팅 전략을 수립해 봅시다.</p>
+        </section>
+
+        <section class="panel" aria-labelledby="kmeans-title">
+          <div class="section-title"><span>알고리즘 체험</span><h2 id="kmeans-title">K-means는 어떻게 집단을 찾을까?</h2></div>
+          <p class="lead">K를 정하면 임의의 중심점에서 시작합니다. 각 고객을 가장 가까운 중심에 배정하고, 군집의 평균 위치로 중심을 옮기는 과정을 반복해 보세요.</p>
+          <div class="simulator">
+            <div class="chart-wrap">
+              <svg id="cluster-chart" viewBox="0 0 640 400" role="img" aria-labelledby="chart-title chart-desc">
+                <title id="chart-title">쇼핑몰 고객 데이터 산점도</title>
+                <desc id="chart-desc">가로축은 연간 소득, 세로축은 소비 점수이며 점 색은 현재 군집을 나타냅니다.</desc>
+                <g id="grid-layer"></g><g id="point-layer"></g><g id="centroid-layer"></g>
+              </svg>
+              <span class="axis axis-x">연간 소득 →</span><span class="axis axis-y">소비 점수 →</span>
+            </div>
+            <div class="sim-controls">
+              <label>K(군집 개수)<select id="k-select"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></label>
+              <div class="button-row"><button id="reset-sim" type="button">새 중심점</button><button id="step-sim" type="button">한 단계 실행</button><button id="run-sim" type="button">끝까지 실행</button></div>
+              <div class="status-card" aria-live="polite"><strong id="iteration-label">준비</strong><p id="iteration-help">중심점을 만든 뒤 한 단계 실행을 눌러 보세요.</p></div>
+              <ol class="algorithm-steps"><li>가장 가까운 중심점 찾기</li><li>같은 색 점끼리 군집 만들기</li><li>군집의 평균으로 중심점 이동</li><li>중심이 거의 움직이지 않을 때까지 반복</li></ol>
+            </div>
+          </div>
+        </section>
+
+        <form id="worksheet" novalidate>
+          <section class="panel" aria-labelledby="student-title">
+            <div class="section-title"><span>활동지</span><h2 id="student-title">쇼핑몰 고객 군집화 분석</h2></div>
+            <div class="student-grid"><label>학번<input name="student_number" inputmode="numeric" maxlength="5" pattern="[0-9]{5}" required></label><label>이름<input name="student_name" required></label></div>
+          </section>
+
+          <section class="panel" aria-labelledby="predict-title">
+            <div class="section-title"><span>활동 1</span><h2 id="predict-title">군집화 결과 예상하기</h2></div>
+            <p class="lead">Orange3에서 알고리즘을 적용하기 전, 교과서의 쇼핑몰 고객 산점도를 살펴보세요.</p>
+            <div class="two-col"><label>몇 개의 집단으로 구분할 수 있을까요?<select name="predicted_k" required><option value="">선택</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label><label>그렇게 판단한 이유<textarea name="prediction_reason" rows="4" required></textarea></label></div>
+          </section>
+
+          <section class="panel" aria-labelledby="orange-title">
+            <div class="section-title"><span>활동 2</span><h2 id="orange-title">Orange3로 군집 개수 비교하기</h2></div>
+            <p class="lead">K=2~6으로 K-means를 실행하고 실루엣 계수를 기록하세요. 값이 클수록 군집 안은 가깝고 군집 사이는 잘 분리된 편이지만, 가장 큰 값만으로 결정하지 말고 해석 가능성도 함께 살펴보세요.</p>
+            <div class="silhouette-grid" aria-label="군집 개수별 실루엣 계수">
+              <strong>군집 개수</strong><strong>실루엣 계수</strong>
+              <span>2개</span><input name="silhouette_2" type="number" min="-1" max="1" step="0.001" required>
+              <span>3개</span><input name="silhouette_3" type="number" min="-1" max="1" step="0.001" required>
+              <span>4개</span><input name="silhouette_4" type="number" min="-1" max="1" step="0.001" required>
+              <span>5개</span><input name="silhouette_5" type="number" min="-1" max="1" step="0.001" required>
+              <span>6개</span><input name="silhouette_6" type="number" min="-1" max="1" step="0.001" required>
+            </div>
+            <fieldset class="final-k"><legend>최종적으로 선택한 군집 개수</legend><div class="k-options"><label><input type="radio" name="final_k" value="2" required>2개</label><label><input type="radio" name="final_k" value="3">3개</label><label><input type="radio" name="final_k" value="4">4개</label><label><input type="radio" name="final_k" value="5">5개</label><label><input type="radio" name="final_k" value="6">6개</label></div></fieldset>
+            <label class="full-label">해당 군집 개수를 선정한 이유<textarea name="final_k_reason" rows="4" required placeholder="실루엣 계수와 군집의 해석 가능성을 함께 근거로 적으세요."></textarea></label>
+          </section>
+
+          <section class="panel" aria-labelledby="strategy-title">
+            <div class="section-title"><span>활동 3</span><h2 id="strategy-title">군집별 고객 특성과 마케팅 전략</h2></div>
+            <p class="lead">선택한 K에 맞춰 작성 칸이 나타납니다. 군집 번호는 실행할 때 달라질 수 있으므로 산점도 위치와 변수 값을 근거로 특징을 설명하세요.</p>
+            <div id="cluster-cards" class="cluster-cards"><p class="empty-message">활동 2에서 최종 군집 개수를 선택하세요.</p></div>
+          </section>
+          <p id="form-error" class="form-error" role="alert" hidden></p>
+          <div class="submit-row"><button type="submit">활동지 완성하기</button></div>
+        </form>
+
+        <section id="result" class="panel result" tabindex="-1" hidden>
+          <div class="section-title"><span>분석 완료</span><h2>쇼핑몰 고객 군집화 결과</h2></div>
+          <div id="result-content"></div>
+          <div class="button-row"><button id="edit-result" type="button">내용 수정하기</button><button id="print-result" type="button">인쇄·PDF 저장</button></div>
+        </section>
+      </main>
+      <footer>중·고등학교 정보·인공지능 수업 자료</footer>
+    </div>
+  </body>
+</html>

@@ -22,6 +22,9 @@ test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 
   assert.match(html, /<h1>양지고 인공지능 기초 활동지 모음<\/h1>/);
   assert.doesNotMatch(html, /data-group-card="ai-learning"/);
   assert.match(html, /data-group-card="machine-learning-algorithms"/);
+  assert.match(html, /data-group-card="machine-learning-clustering"/);
+  assert.match(html, /기계학습 알고리즘 - 분류/);
+  assert.match(html, /기계학습 알고리즘 - 군집/);
   const directLessonLinks = html.match(/href="lessons\/[^"]+\/"/g) ?? [];
   assert.deepEqual(directLessonLinks, [
     'href="lessons/ethics-moral-machine/"',

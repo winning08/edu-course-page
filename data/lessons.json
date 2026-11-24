@@ -197,6 +197,17 @@
       "duration": 25,
       "difficulty": "보통",
       "status": "published"
+    },
+    {
+      "id": "kmeans-customer-clustering",
+      "subject": "인공지능 기초",
+      "unit": "기계학습 알고리즘 - 군집",
+      "order": 1,
+      "title": "쇼핑몰 고객 군집화",
+      "path": "lessons/kmeans-customer-clustering/",
+      "duration": 45,
+      "difficulty": "보통",
+      "status": "published"
     }
   ]
 }

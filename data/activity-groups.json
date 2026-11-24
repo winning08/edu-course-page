@@ -47,8 +47,8 @@
     {
       "id": "machine-learning-algorithms",
       "order": 5,
-      "title": "기계학습 알고리즘",
-      "description": "회귀·분류·군집을 체험하고, KNN과 의사결정트리가 데이터를 이용해 예측하고 분류하는 방식을 비교합니다.",
+      "title": "기계학습 알고리즘 - 분류",
+      "description": "회귀와 분류를 체험하고, KNN과 의사결정트리가 데이터를 이용해 예측하고 분류하는 방식을 비교합니다.",
       "path": "units/machine-learning-algorithms/",
       "status": "published",
       "active": true,
@@ -96,6 +96,28 @@
           "status": "published",
           "active": true,
           "objective": "손그림을 입력 데이터로 사용해 여러 클래스 중 하나를 예측하는 분류 모델의 작동 과정을 체험한다."
+        }
+      ]
+    },
+    {
+      "id": "machine-learning-clustering",
+      "order": 6,
+      "title": "기계학습 알고리즘 - 군집",
+      "description": "K-means 알고리즘에서 중심점과 군집이 달라지는 과정을 체험하고, Orange3로 쇼핑몰 고객 데이터를 군집화해 고객 집단별 마케팅 전략을 수립합니다.",
+      "path": "units/machine-learning-clustering/",
+      "status": "published",
+      "active": true,
+      "children": [
+        {
+          "id": "kmeans-customer-clustering",
+          "order": 1,
+          "title": "쇼핑몰 고객 군집화",
+          "path": "lessons/kmeans-customer-clustering/",
+          "duration": 45,
+          "difficulty": "보통",
+          "status": "published",
+          "active": true,
+          "objective": "K-means의 중심점 이동과 반복 과정을 체험하고, Orange3의 실루엣 계수와 군집 특성을 근거로 쇼핑몰 고객 집단별 마케팅 전략을 수립한다."
         }
       ]
     },
@@ -211,7 +233,7 @@
     },
     {
       "id": "ai-ethics",
-      "order": 6,
+      "order": 7,
       "title": "인공지능 윤리 - 자율주행자동차는 누구를 지켜야 할까?",
       "description": "자율주행자동차가 피할 수 없는 사고 상황에서 어떤 판단을 내려야 하는지 모럴머신으로 체험하고, 인공지능의 결정 기준과 책임을 윤리적으로 성찰합니다.",
       "path": "lessons/ethics-moral-machine/",

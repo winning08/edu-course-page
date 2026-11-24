@@ -20,6 +20,10 @@ const GROUP_PAGES = {
     "lessons/decision-tree-score/index.html",
     "lessons/quick-draw/index.html",
   ],
+  "machine-learning-clustering": [
+    "units/machine-learning-clustering/index.html",
+    "lessons/kmeans-customer-clustering/index.html",
+  ],
   "ai-evaluation": [
     "units/ai-evaluation/index.html",
     "lessons/turing-test-questions/index.html",
@@ -53,13 +57,18 @@ test("모든 활동지를 공개한다", async () => {
   const algorithms = data.groups.find(
     (candidate) => candidate.id === "machine-learning-algorithms",
   );
+  const clustering = data.groups.find(
+    (candidate) => candidate.id === "machine-learning-clustering",
+  );
   assert.equal(search.active, true);
   assert.equal(problemCases.active, true);
   assert.equal(algorithms.active, true);
+  assert.equal(clustering.active, true);
   assert.deepEqual(
     algorithms.children.map(({ active }) => active),
     [true, true, true, true],
   );
+  assert.deepEqual(clustering.children.map(({ active }) => active), [true]);
   assert.deepEqual(
     search.children.map(({ active }) => active),
     [true, true, true, true],
@@ -210,6 +219,7 @@ test("모든 활동 페이지(<body>)는 data-guard-lesson으로 자기 자신�
     "lessons/ai-prediction-lab/index.html": "ai-prediction-lab",
     "lessons/knn-neighbors/index.html": "knn-neighbors",
     "lessons/decision-tree-score/index.html": "decision-tree-score",
+    "lessons/kmeans-customer-clustering/index.html": "kmeans-customer-clustering",
     "lessons/search-tictactoe-minimax/index.html": "search-tictactoe-minimax",
     "lessons/turing-test-questions/index.html": "turing-test-questions",
     "lessons/arc-puzzle-challenge/index.html": "arc-puzzle-challenge",
