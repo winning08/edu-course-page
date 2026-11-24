@@ -37,3 +37,14 @@ test("선택한 K에 맞춰 군집 분석 카드를 만들고 결과를 안전�
   assert.match(js, /textContent/);
   assert.doesNotMatch(js, /resultContent\.innerHTML/);
 });
+
+test("군집 활동지를 지정된 Apps Script에 저장한 뒤 완료 화면을 연다", async () => {
+  const html = await readFile(new URL("lessons/kmeans-customer-clustering/index.html", root), "utf8");
+  const js = await readFile(new URL("lessons/kmeans-customer-clustering/app.js", root), "utf8");
+  assert.match(html, /id="submit-button"/);
+  assert.match(js, /AKfycbwD1lDIJcNkuC1Pgv9CA53n9LqUKPW_VrGhWz4gkb0-0IMXVFPNA7PeYZ8X_jJSwV1r/);
+  assert.match(js, /await fetch\(ENDPOINT/);
+  assert.match(js, /"Content-Type":"text\/plain;charset=utf-8"/);
+  assert.match(js, /clusters,activity:/);
+  assert.match(js, /if\(!responseData\.success\)throw/);
+});
