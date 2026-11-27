@@ -37,7 +37,10 @@ test("5개 군집 분석 카드를 만들고 결과를 안전하게 표시한다
   const js = await readFile(new URL("lessons/kmeans-customer-clustering/app.js", root), "utf8");
   assert.match(js, /index<=5/);
   assert.match(js, /INITIAL_CENTROIDS/);
-  assert.match(js, /kSelect\.addEventListener\("change",resetSimulation\)/);
+  assert.match(js, /function randomCentroids\(k\)/);
+  assert.match(js, /Math\.random\(\)/);
+  assert.match(js, /reset-sim"\)\.addEventListener\("click",randomizeSimulation\)/);
+  assert.match(js, /kSelect\.addEventListener\("change",randomizeSimulation\)/);
   assert.match(js, /cluster_\$\{index\}_name/);
   assert.match(js, /cluster_\$\{index\}_features/);
   assert.doesNotMatch(js, /name="cluster_\$\{index\}_evidence"/);
