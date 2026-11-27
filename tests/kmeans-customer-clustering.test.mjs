@@ -10,6 +10,7 @@ test("군집 활동지와 쇼핑몰 고객 군집화 활동이 등록되어 있�
   const clustering = data.groups.find(({ id }) => id === "machine-learning-clustering");
   assert.equal(classification.title, "기계학습 알고리즘 - 분류");
   assert.equal(clustering.title, "기계학습 알고리즘 - 군집");
+  assert.equal(clustering.path, "lessons/kmeans-customer-clustering/");
   assert.deepEqual(clustering.children.map(({ id }) => id), ["kmeans-customer-clustering"]);
 });
 

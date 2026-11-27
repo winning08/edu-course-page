@@ -27,6 +27,7 @@ test("루트 허브는 메인 제목과 활동지 카드를 보여주고 그룹 
   assert.match(html, /기계학습 알고리즘 - 군집/);
   const directLessonLinks = html.match(/href="lessons\/[^"]+\/"/g) ?? [];
   assert.deepEqual(directLessonLinks, [
+    'href="lessons/kmeans-customer-clustering/"',
     'href="lessons/ethics-moral-machine/"',
   ]);
 });

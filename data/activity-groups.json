@@ -104,7 +104,7 @@
       "order": 6,
       "title": "기계학습 알고리즘 - 군집",
       "description": "K-means 알고리즘에서 중심점과 군집이 달라지는 과정을 체험하고, Orange3로 쇼핑몰 고객 데이터를 군집화해 고객 집단별 마케팅 전략을 수립합니다.",
-      "path": "units/machine-learning-clustering/",
+      "path": "lessons/kmeans-customer-clustering/",
       "status": "published",
       "active": true,
       "children": [
