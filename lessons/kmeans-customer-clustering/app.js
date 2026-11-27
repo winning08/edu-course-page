@@ -1,5 +1,5 @@
 const COLORS=["#1d72b8","#d94f4f","#2e9d69","#8b5cc7","#e48a1f","#247a85"];
-const ENDPOINT="https://script.google.com/macros/s/AKfycbx1ZkNr1bOKPpc7GB5L-aPU2Zv6_xaCv2g_BDcRW6nVAIZwUIWY28rr4m3gevR-MYTV/exec";
+const ENDPOINT="https://script.google.com/macros/s/AKfycbzSq5ivPPG27llHKbi3dIsfWxK4ghq1o3dvRGPsH-3v1DJGygkTqPawGH3onQYDb6Ik/exec";
 const POINTS=[[12,76],[18,69],[22,82],[27,72],[31,87],[58,48],[64,53],[69,43],[73,57],[77,49],[72,16],[79,25],[84,20],[88,31],[92,14],[43,22],[48,29],[52,18],[47,36],[55,31],[38,68],[44,75],[49,62],[53,71]];
 const INITIAL_CENTROIDS={2:[[92.3,53.1],[51.6,12.1]],3:[[10.6,35.4],[36.2,83.9],[5.6,81.2]],4:[[45.4,77.2],[29.8,61.6],[85.8,15.9],[53.3,79.4]],5:[[29.6,45.4],[53.4,61.7],[65.7,53.4],[69,83.7],[86.5,75]],6:[[86,22.2],[44.9,67.4],[93.9,60.9],[14.9,61],[24.2,55.9],[34.3,64.5]]};
 const chart=document.querySelector("#cluster-chart"),pointLayer=document.querySelector("#point-layer"),centroidLayer=document.querySelector("#centroid-layer"),gridLayer=document.querySelector("#grid-layer");

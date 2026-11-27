@@ -82,7 +82,7 @@ test("군집 활동지를 지정된 Apps Script에 저장한 뒤 완료 화면�
   const html = await readFile(new URL("lessons/kmeans-customer-clustering/index.html", root), "utf8");
   const js = await readFile(new URL("lessons/kmeans-customer-clustering/app.js", root), "utf8");
   assert.match(html, /id="submit-button"/);
-  assert.match(js, /AKfycbx1ZkNr1bOKPpc7GB5L-aPU2Zv6_xaCv2g_BDcRW6nVAIZwUIWY28rr4m3gevR-MYTV/);
+  assert.match(js, /AKfycbzSq5ivPPG27llHKbi3dIsfWxK4ghq1o3dvRGPsH-3v1DJGygkTqPawGH3onQYDb6Ik/);
   assert.match(js, /await fetch\(ENDPOINT/);
   assert.match(js, /"Content-Type":"text\/plain;charset=utf-8"/);
   assert.match(js, /clusters,activity:/);
