@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../assets/guard.css">
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="../../assets/group-guard.js"></script>
-    <script type="module" src="app.js?v=20261127-1"></script>
+    <script type="module" src="app.js?v=20261127-2"></script>
   </head>
   <body data-guard-scope="page" data-guard-group="machine-learning-clustering" data-guard-lesson="kmeans-customer-clustering">
     <div id="guard-loading" class="guard-panel"><p>활동 정보를 확인하는 중입니다…</p></div>
@@ -41,7 +41,7 @@
               <span class="axis axis-x">연간 소득 →</span><span class="axis axis-y">소비 점수 →</span>
             </div>
             <div class="sim-controls">
-              <div class="status-card"><strong>군집 개수: 5개</strong></div>
+              <label>K(군집 개수)<select id="k-select"><option>2</option><option>3</option><option>4</option><option selected>5</option><option>6</option></select></label>
               <div class="button-row"><button id="reset-sim" type="button">새 중심점</button><button id="step-sim" type="button">한 단계 실행</button><button id="run-sim" type="button">끝까지 실행</button></div>
               <div class="status-card" aria-live="polite"><strong id="iteration-label">준비</strong><p id="iteration-help">중심점을 만든 뒤 한 단계 실행을 눌러 보세요.</p></div>
               <ol class="algorithm-steps"><li>가장 가까운 중심점 찾기</li><li>같은 색 점끼리 군집 만들기</li><li>군집의 평균으로 중심점 이동</li><li>중심이 거의 움직이지 않을 때까지 반복</li></ol>

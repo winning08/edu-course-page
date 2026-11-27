@@ -1,23 +1,24 @@
 const COLORS=["#1d72b8","#d94f4f","#2e9d69","#8b5cc7","#e48a1f","#247a85"];
 const ENDPOINT="https://script.google.com/macros/s/AKfycbx1ZkNr1bOKPpc7GB5L-aPU2Zv6_xaCv2g_BDcRW6nVAIZwUIWY28rr4m3gevR-MYTV/exec";
 const POINTS=[[12,76],[18,69],[22,82],[27,72],[31,87],[58,48],[64,53],[69,43],[73,57],[77,49],[72,16],[79,25],[84,20],[88,31],[92,14],[43,22],[48,29],[52,18],[47,36],[55,31],[38,68],[44,75],[49,62],[53,71]];
+const INITIAL_CENTROIDS={2:[[92.3,53.1],[51.6,12.1]],3:[[10.6,35.4],[36.2,83.9],[5.6,81.2]],4:[[45.4,77.2],[29.8,61.6],[85.8,15.9],[53.3,79.4]],5:[[29.6,45.4],[53.4,61.7],[65.7,53.4],[69,83.7],[86.5,75]],6:[[86,22.2],[44.9,67.4],[93.9,60.9],[14.9,61],[24.2,55.9],[34.3,64.5]]};
 const chart=document.querySelector("#cluster-chart"),pointLayer=document.querySelector("#point-layer"),centroidLayer=document.querySelector("#centroid-layer"),gridLayer=document.querySelector("#grid-layer");
-const iterationLabel=document.querySelector("#iteration-label"),iterationHelp=document.querySelector("#iteration-help");
+const kSelect=document.querySelector("#k-select"),iterationLabel=document.querySelector("#iteration-label"),iterationHelp=document.querySelector("#iteration-help");
 let centroids=[],assignments=[],iteration=0,converged=false;
 const sx=x=>42+x*5.65,sy=y=>365-y*3.25;
 
 function svg(name,attrs={}){const node=document.createElementNS("http://www.w3.org/2000/svg",name);for(const [key,value] of Object.entries(attrs))node.setAttribute(key,value);return node}
 function drawGrid(){for(let n=0;n<=100;n+=20){gridLayer.append(svg("line",{x1:sx(n),x2:sx(n),y1:40,y2:365,stroke:"#e1e7ef"}),svg("line",{x1:42,x2:607,y1:sy(n),y2:sy(n),stroke:"#e1e7ef"}))}}
-function initialCentroids(k){const seeds=[1,7,12,17,21,4];return seeds.slice(0,k).map((index,i)=>[Math.min(96,POINTS[index][0]+i*2),Math.max(4,POINTS[index][1]-i*2)])}
+function initialCentroids(k){return INITIAL_CENTROIDS[k].map(center=>[...center])}
 function distance(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1])}
 function assign(points,centers){return points.map(point=>centers.reduce((best,center,index)=>distance(point,center)<best.distance?{index,distance:distance(point,center)}:best,{index:0,distance:Infinity}).index)}
 function moveCenters(points,groups,k,oldCenters){return Array.from({length:k},(_,index)=>{const members=points.filter((_,pointIndex)=>groups[pointIndex]===index);if(!members.length)return oldCenters[index];return [members.reduce((sum,p)=>sum+p[0],0)/members.length,members.reduce((sum,p)=>sum+p[1],0)/members.length]})}
 function render(){pointLayer.replaceChildren();centroidLayer.replaceChildren();POINTS.forEach((point,index)=>pointLayer.append(svg("circle",{cx:sx(point[0]),cy:sy(point[1]),r:7,fill:assignments.length?COLORS[assignments[index]]:"#9aa8b8",stroke:"#fff","stroke-width":2})));centroids.forEach((center,index)=>{const mark=svg("g",{"aria-label":`군집 ${index+1} 중심점`});mark.append(svg("circle",{cx:sx(center[0]),cy:sy(center[1]),r:13,fill:COLORS[index],stroke:"#172033","stroke-width":3}),svg("text",{x:sx(center[0]),y:sy(center[1])+5,"text-anchor":"middle",fill:"#fff","font-size":13,"font-weight":800}));mark.lastChild.textContent="C";centroidLayer.append(mark)})}
-function resetSimulation(){iteration=0;converged=false;assignments=[];centroids=initialCentroids(5);iterationLabel.textContent="준비";iterationHelp.textContent="회색 고객 점과 C로 표시된 초기 중심점을 확인하세요.";render()}
+function resetSimulation(){iteration=0;converged=false;assignments=[];centroids=initialCentroids(Number(kSelect.value));iterationLabel.textContent="준비";iterationHelp.textContent="회색 고객 점과 C로 표시된 초기 중심점을 확인하세요.";render()}
 function stepSimulation(){if(converged)return;const nextAssignments=assign(POINTS,centroids),nextCenters=moveCenters(POINTS,nextAssignments,centroids.length,centroids);const movement=Math.max(...centroids.map((center,index)=>distance(center,nextCenters[index])));assignments=nextAssignments;centroids=nextCenters;iteration+=1;converged=movement<0.05;iterationLabel.textContent=converged?`${iteration}회 반복 · 완료`:`${iteration}회 반복`;iterationHelp.textContent=converged?"중심점이 거의 움직이지 않아 군집화가 끝났습니다.":"점 배정과 중심점 이동을 한 번 실행했습니다.";render()}
 function runSimulation(){let guard=0;while(!converged&&guard<30){stepSimulation();guard+=1}}
 drawGrid();resetSimulation();
-document.querySelector("#reset-sim").addEventListener("click",resetSimulation);document.querySelector("#step-sim").addEventListener("click",stepSimulation);document.querySelector("#run-sim").addEventListener("click",runSimulation);
+document.querySelector("#reset-sim").addEventListener("click",resetSimulation);document.querySelector("#step-sim").addEventListener("click",stepSimulation);document.querySelector("#run-sim").addEventListener("click",runSimulation);kSelect.addEventListener("change",resetSimulation);
 
 const form=document.querySelector("#worksheet"),cards=document.querySelector("#cluster-cards"),errorBox=document.querySelector("#form-error"),result=document.querySelector("#result"),resultContent=document.querySelector("#result-content"),submitButton=document.querySelector("#submit-button");
 function clusterCard(index){const article=document.createElement("article");article.className="cluster-card";article.dataset.cluster=index;article.innerHTML=`<h3>군집 ${index}</h3><div class="cluster-fields"><label>군집 이름<input name="cluster_${index}_name" required></label><label class="wide">고객 집단의 특징<textarea name="cluster_${index}_features" rows="3" required></textarea></label><label class="wide">맞춤형 마케팅 전략<textarea name="cluster_${index}_strategy" rows="3" required></textarea></label></div>`;return article}
